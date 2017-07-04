@@ -1,0 +1,50 @@
+﻿<Window x:Class="TaskList.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskList"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="1" ShowGridLines="True">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Row="0" Grid.Column="0">
+                <TextBlock Text="Важные и срочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
+                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListBox Style="{StaticResource TasksList}"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <TextBlock Text="Важные и несрочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
+                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListBox Style="{StaticResource TasksList}"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1" Grid.Column="0">
+                <TextBlock Text="Неважные и срочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
+                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListBox Style="{StaticResource TasksList}"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Неважные и несрочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
+                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListBox Style="{StaticResource TasksList}"/>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>
