@@ -35,7 +35,10 @@ namespace TaskList.Model
             _status = status;
         }
 
-        public void CloseTask() { }
+        public void CloseTask()
+        {
+            _endDate = DateTime.Now.Date;
+        }
 
     }
 }
