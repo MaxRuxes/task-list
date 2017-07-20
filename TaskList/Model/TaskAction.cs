@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace TaskList.Model
 {
-    public class Task
+    public class TaskAction
     {
         private string _content;
         private string _status;
@@ -20,9 +20,10 @@ namespace TaskList.Model
         public string StartDate { get { return _startDate.ToShortDateString(); } }
         public string EndDate { get { return _endDate.ToShortDateString(); } }
 
-        public Task()
+        public TaskAction()
         {
             _startDate = DateTime.Now.Date;
+            _content = "1";
         }
 
         public void SetContent(string content)

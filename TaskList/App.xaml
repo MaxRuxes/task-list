@@ -21,5 +21,6 @@
             <Setter Property="ListBox.Margin" Value="5"/>
             <Setter Property="ListBox.Padding" Value="3"/>
         </Style>
+
     </Application.Resources>
 </Application>
