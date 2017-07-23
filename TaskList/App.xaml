@@ -1,6 +1,7 @@
 ﻿<Application x:Class="TaskList.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ViewModel="clr-namespace:TaskList.ViewModel"
              xmlns:local="clr-namespace:TaskList"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
@@ -21,6 +22,8 @@
             <Setter Property="ListBox.Margin" Value="5"/>
             <Setter Property="ListBox.Padding" Value="3"/>
         </Style>
+
+        <ViewModel:UrgentImportantTasksViewModel x:Key="TaskViewModel"/>
 
     </Application.Resources>
 </Application>
