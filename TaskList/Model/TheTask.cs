@@ -15,7 +15,7 @@ namespace TaskList.Model
         private DateTime _startDate;
         private DateTime _endDate;
 
-        public string Content { get { return _content; } }
+        public string Content { get { return _content; } set { _content = value; } }
         public string Status { get { return _status; } }
         public string StartDate { get { return _startDate.ToShortDateString(); } }
         public string EndDate { get { return _endDate.ToShortDateString(); } }
@@ -23,12 +23,13 @@ namespace TaskList.Model
         public TheTask()
         {
             _startDate = DateTime.Now.Date;
-            _content = "1";
+            _content = DateTime.Now.Millisecond.ToString();
         }
 
         public void SetContent(string content)
         {
             _content = content;
+
         }
 
         public void SetStatus(string status)
@@ -40,11 +41,5 @@ namespace TaskList.Model
         {
             _endDate = DateTime.Now.Date;
         }
-
-        public override string ToString()
-        {
-            return this.Content;
-        }
-
     }
 }

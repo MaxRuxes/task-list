@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace TaskList.ViewModel
 {
@@ -16,7 +11,7 @@ namespace TaskList.ViewModel
             var handler = PropertyChanged;
             if(handler!=null)
             {
-                handler(this, new PropertyChangedEventArgs(propertyName)); 
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

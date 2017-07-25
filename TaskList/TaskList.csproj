@@ -63,11 +63,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\TaskAction.cs" />
+    <Compile Include="ViewModel\NonUrgentImportantTasksVM.cs" />
+    <Compile Include="ViewModel\NonUrgentUnimportantTasksVM.cs" />
+    <Compile Include="Model\TheTask.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\IDelegateCommand.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
-    <Compile Include="ViewModel\TaskViewModel.cs" />
+    <Compile Include="ViewModel\UrgentImportantTasksVM.cs" />
+    <Compile Include="ViewModel\UrgentUnimportantTasksVM.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

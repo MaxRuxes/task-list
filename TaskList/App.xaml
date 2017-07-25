@@ -23,7 +23,7 @@
             <Setter Property="ListBox.Padding" Value="3"/>
         </Style>
 
-        <ViewModel:UrgentImportantTasksViewModel x:Key="TaskViewModel"/>
+        <ViewModel:UrgentImportantTasksVM x:Key="TaskViewModel"/>
 
     </Application.Resources>
 </Application>

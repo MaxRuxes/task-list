@@ -25,13 +25,21 @@
 
             <DockPanel Grid.Row="0" Grid.Column="0">
                 <TextBlock Text="Важные и срочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
-                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource TaskViewModel}, Path= AddTask}"/>
-                <ListBox Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path=Task1, UpdateSourceTrigger=PropertyChanged}"
-                         SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path=CurrentTask1}"/>
+                <Button Content="Выполнено" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource TaskViewModel}, Path= CompleteTask}"/>
+                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource TaskViewModel}, Path= AddTask}"/>
+                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path = TaskCollection,  UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path = CurrentTask, UpdateSourceTrigger=PropertyChanged}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </DockPanel>
 
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <TextBlock Text="Важные и несрочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
+                <Button Content="-" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
                 <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
                 <ListBox Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path=Task2, UpdateSourceTrigger=PropertyChanged}"
                          SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path=CurrentTask2}"/>
