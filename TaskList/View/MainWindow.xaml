@@ -6,7 +6,7 @@
         xmlns:ViewModels ="clr-namespace:TaskList.ViewModel"
         xmlns:local="clr-namespace:TaskList"
         mc:Ignorable="d"
-        Title="TaskList" Height="550" Width="525">
+        Title="Список дел" Height="550" Width="525">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -23,12 +23,15 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.Row="0" Grid.Column="0">
-                <TextBlock Text="Важные и срочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
-                <Button Content="Выполнено" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource TaskViewModel}, Path= CompleteTask}"/>
-                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource TaskViewModel}, Path= AddTask}"/>
-                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path = TaskCollection,  UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path = CurrentTask, UpdateSourceTrigger=PropertyChanged}">
+            <!--Важные и срочные дела-->
+            <DockPanel Grid.Row="0" Grid.Column="0" Background="LimeGreen">
+                <TextBlock Text="Важные и срочные дела (DO IT IMMEDIATELY)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
+                           TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <Button Content="Пометь как 'Выполнено'" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"
+                        Command="{Binding Source={StaticResource UrgImpTVM}, Path= CompleteTask}"/>
+                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource UrgImpTVM}, Path= AddTask}"/>
+                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource UrgImpTVM}, Path = TaskCollection,  UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Source={StaticResource UrgImpTVM}, Path = CurrentTask, UpdateSourceTrigger=PropertyChanged}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
@@ -37,26 +40,53 @@
                 </ListView>
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="1">
-                <TextBlock Text="Важные и несрочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
-                <Button Content="-" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
-                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
-                <ListBox Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path=Task2, UpdateSourceTrigger=PropertyChanged}"
-                         SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path=CurrentTask2}"/>
+            <!--Важные и несрочные дела-->
+            <DockPanel Grid.Row="0" Grid.Column="1" Background="LightGreen">
+                <TextBlock Text="Важные и несрочные дела (DECIDE WHEN YOU WILL DO IT)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
+                           TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <Button Content="Пометить как 'Выполнено'" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"/>
+                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                
+                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource NonurgImpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
+                         SelectedItem="{Binding Source={StaticResource NonurgImpTVM}, Path=CurrentTask}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
+            
+            <!--Неважне и срочные дела-->
+            <DockPanel Grid.Row="1" Grid.Column="0" Background="LightSalmon">
+                <TextBlock Text="Неважные и срочные дела (DELEGATE TO SOMEBODY ELSE)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
+                           TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <Button Content="Пометить как 'Выполнено'" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"/>
+                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource UrgUnimpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
+                         SelectedItem="{Binding Source={StaticResource UrgUnimpTVM}, Path=CurrentTask}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </DockPanel>
 
-            <DockPanel Grid.Row="1" Grid.Column="0">
-                <TextBlock Text="Неважные и срочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
-                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
-                <ListBox Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path=Task3, UpdateSourceTrigger=PropertyChanged}"
-                         SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path=CurrentTask3}"/>
-            </DockPanel>
-
-            <DockPanel Grid.Row="1" Grid.Column="1">
-                <TextBlock Text="Неважные и несрочные дела" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"/>
-                <Button Content="+" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
-                <ListBox Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource TaskViewModel}, Path=Task4, UpdateSourceTrigger=PropertyChanged}"
-                         SelectedItem="{Binding Source={StaticResource TaskViewModel}, Path=CurrentTask4}"/>
+            <!--Неважные и несрочные дела-->
+            <DockPanel Grid.Row="1" Grid.Column="1" Background="LightGray">
+                <TextBlock Text="Неважные и несрочные дела (DO IT LATER)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
+                           TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <Button Content="Пометить как 'Выполнено'" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"/>
+                <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"/>
+                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource NonurgUnimpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
+                         SelectedItem="{Binding Source={StaticResource NonurgUnimpTVM}, Path=CurrentTask}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </DockPanel>
         </Grid>
     </Grid>

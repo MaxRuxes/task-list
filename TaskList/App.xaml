@@ -6,24 +6,26 @@
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
         <Style x:Key="HeaderContentText">
-            <Setter Property="TextBlock.Margin" Value="5,5,5,0"/>
+            <Setter Property="TextBlock.Margin" Value="15,15,15,0"/>
             <Setter Property="TextBlock.Padding" Value="3"/>
             <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
             <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
         </Style>
 
         <Style x:Key="AddButton">
-            <Setter Property="Button.Margin" Value="5,0,5,5"/>
-            <Setter Property="Button.Padding" Value="3"/>
+            <Setter Property="Button.Margin" Value="15,0,15,5"/>
+            <Setter Property="Button.Padding" Value="5"/>
             <Setter Property="Button.VerticalAlignment" Value="Bottom"/>
         </Style>
 
         <Style x:Key="TasksList">
-            <Setter Property="ListBox.Margin" Value="5"/>
+            <Setter Property="ListBox.Margin" Value="15"/>
             <Setter Property="ListBox.Padding" Value="3"/>
         </Style>
 
-        <ViewModel:UrgentImportantTasksVM x:Key="TaskViewModel"/>
-
+        <ViewModel:UrgentImportantTasksVM x:Key="UrgImpTVM"/>
+        <ViewModel:NonUrgentImportantTasksVM x:Key="NonurgImpTVM"/>
+        <ViewModel:UrgentUnimportantTasksVM x:Key="UrgUnimpTVM"/>
+        <ViewModel:NonUrgentUnimportantTasksVM x:Key="NonurgUnimpTVM"/>
     </Application.Resources>
 </Application>
