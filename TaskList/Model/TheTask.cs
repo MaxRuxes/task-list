@@ -26,6 +26,12 @@ namespace TaskList.Model
             _content = DateTime.Now.Millisecond.ToString();
         }
 
+        public TheTask(string content)
+        {
+            _startDate = DateTime.Now.Date;
+            _content = content;
+        }
+
         public void SetContent(string content)
         {
             _content = content;

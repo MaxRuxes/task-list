@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TaskList.Model;
+using TaskList.View;
 
 namespace TaskList.ViewModel
 {
@@ -39,7 +40,14 @@ namespace TaskList.ViewModel
             {
                 return new DelegateCommand((o) =>
                 {
-                    _items.Add(new TheTask());
+                    TaskWindow temp = new TaskWindow();
+                    TaskWindowViewModel twvm = (TaskWindowViewModel)temp.DataContext;
+
+                    if (temp.ShowDialog() == true)
+                    {
+                        if (twvm.Content.Trim() != "")
+                            _items.Add(new TheTask(twvm.Content));
+                    }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
                 });
             }

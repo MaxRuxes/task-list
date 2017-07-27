@@ -10,6 +10,9 @@
             <Setter Property="TextBlock.Padding" Value="3"/>
             <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
             <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+            <Setter Property="TextBlock.FontSize" Value="18"/>
+            <Setter Property="TextBlock.FontWeight" Value="DemiBold"/>
+            <Setter Property="TextBlock.FontStyle" Value="Italic"/>
         </Style>
 
         <Style x:Key="AddButton">
