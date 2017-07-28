@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using TaskList.Model;
+using TaskList.View;
 
 namespace TaskList.ViewModel
 {
@@ -39,7 +40,14 @@ namespace TaskList.ViewModel
             {
                 return new DelegateCommand((o) =>
                 {
-                    _items.Add(new TheTask());
+                    TaskWindow temp = new TaskWindow();
+                    TaskWindowViewModel twvm = (TaskWindowViewModel)temp.DataContext;
+
+                    if (temp.ShowDialog() == true)
+                    {
+                        if (twvm.Content.Trim() != "")
+                            _items.Add(new TheTask(twvm.Content));
+                    }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
                 });
             }
@@ -57,8 +65,9 @@ namespace TaskList.ViewModel
                         _ms = new ObservableCollection<TheTask>();
                         if (_items[i].Content == CurrentTask.Content)
                         {
-                            _items[i].CloseTask();
-                            _items[i].SetContent((_items[i].Content + " gg wp"));
+                            _items[i].SetStatus(1);
+                            _items[i].SetContent((_items[i].Content +' '+ _items[i].Status));
+
                             _items.ToList<TheTask>().ForEach((temp) => _ms.Add(temp));
                             _items.Clear();
                             _ms.ToList<TheTask>().ForEach((temp) => _items.Add(temp));

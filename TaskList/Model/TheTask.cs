@@ -23,29 +23,43 @@ namespace TaskList.Model
         public TheTask()
         {
             _startDate = DateTime.Now.Date;
-            _content = DateTime.Now.Millisecond.ToString();
+            _status = "В процессе";
         }
 
         public TheTask(string content)
         {
             _startDate = DateTime.Now.Date;
             _content = content;
+            _status = "В процессе";
         }
 
         public void SetContent(string content)
         {
             _content = content;
-
         }
 
-        public void SetStatus(string status)
+        /// <summary>
+        /// Установить статус выполнения дела:
+        /// 0 -- В процессе;
+        /// 1 -- Выполнено;
+        /// 2 -- Удалено.
+        /// </summary>
+        /// <param name="status"></param>
+        public void SetStatus(int status)
         {
-            _status = status;
+            switch (status)
+            {
+                case 1: _status = "Выполнено"; CloseTask(); break;
+                case 2: _status = "Удалено"; CloseTask(); break;
+                default: _status = "В процессе"; break;
+            }
         }
 
-        public void CloseTask()
+        private void CloseTask()
         {
             _endDate = DateTime.Now.Date;
         }
+
+        private enum StatusCase { InProcess, Complete, Deleted }
     }
 }
