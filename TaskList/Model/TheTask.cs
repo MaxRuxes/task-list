@@ -8,6 +8,7 @@ using System.ComponentModel;
 
 namespace TaskList.Model
 {
+    [Serializable]
     public class TheTask
     {
         private string _content;
@@ -15,10 +16,11 @@ namespace TaskList.Model
         private DateTime _startDate;
         private DateTime _endDate;
 
-        public string Content { get { return _content; } set { _content = value; } }
-        public string Status { get { return _status; } }
-        public string StartDate { get { return _startDate.ToShortDateString(); } }
-        public string EndDate { get { return _endDate.ToShortDateString(); } }
+
+        public string Content { get { return _content; }   set { _content = value; } }
+        public string Status { get { return _status; }  set { _status = value; } }
+        public string StartDate { get { return _startDate.ToShortDateString(); }  set { _startDate = Convert.ToDateTime(value); } }
+        public string EndDate { get { return _endDate.ToShortDateString(); }  set { _startDate = Convert.ToDateTime(value); } }
 
         public TheTask()
         {

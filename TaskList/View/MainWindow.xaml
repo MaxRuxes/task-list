@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
 
             <!--Важные и срочные дела-->
-            <DockPanel Grid.Row="0" Grid.Column="0" Background="LimeGreen">
+            <DockPanel Grid.Row="0" Grid.Column="0" Background="LimeGreen" >
                 <TextBlock Text="Важные и срочные дела (DO IT IMMEDIATELY)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
                            TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
                 <Button Content="Пометь как &quot;Выполнено&quot;" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"

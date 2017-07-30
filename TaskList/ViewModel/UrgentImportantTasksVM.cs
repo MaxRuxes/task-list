@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using TaskList.Model;
 using TaskList.View;
 
@@ -9,7 +12,12 @@ namespace TaskList.ViewModel
 {
     public class UrgentImportantTasksVM : ObservableObject
     {
+        private string _filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\TaskList";
+        private string _fileName = @"\UrgentAndImportant.xml";
+
         private ObservableCollection<TheTask> _ms, _items = new ObservableCollection<TheTask>();
+
+        [XmlArray("Collection"), XmlArrayItem("Item")]
         public ObservableCollection<TheTask> TaskCollection
         {
             get { return _items; }
@@ -20,6 +28,7 @@ namespace TaskList.ViewModel
                     _items = value;
                     RaisePropertyChangedEvent(nameof(TaskCollection));
                 }
+
             }
         }
 
@@ -34,6 +43,17 @@ namespace TaskList.ViewModel
             }
         }
 
+        public UrgentImportantTasksVM()
+        {
+            LoadTask();
+            RaisePropertyChangedEvent(nameof(TaskCollection));
+        }
+
+         ~UrgentImportantTasksVM()
+        {
+            SerializeAndWriteCollection(TaskCollection);
+        }
+
         public ICommand AddTask
         {
             get
@@ -46,7 +66,10 @@ namespace TaskList.ViewModel
                     if (temp.ShowDialog() == true)
                     {
                         if (twvm.Content.Trim() != "")
+                        {
                             _items.Add(new TheTask(twvm.Content));
+                            
+                        }
                     }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
                 });
@@ -66,11 +89,10 @@ namespace TaskList.ViewModel
                         if (_items[i].Content == CurrentTask.Content)
                         {
                             _items[i].SetStatus(1);
-                            _items[i].SetContent((_items[i].Content +' ' + _items[i].Status));
-
-                            _items.ToList<TheTask>().ForEach((temp) => _ms.Add(temp));
+                            _items[i].SetContent((_items[i].Content + ' ' + _items[i].Status));
+                            _items.ToList().ForEach((temp) => _ms.Add(temp));
                             _items.Clear();
-                            _ms.ToList<TheTask>().ForEach((temp) => _items.Add(temp));
+                            _ms.ToList().ForEach((temp) => _items.Add(temp));
                             CurrentTask = _items[i];
                             break;
                         }
@@ -79,5 +101,33 @@ namespace TaskList.ViewModel
                 });
             }
         }
+
+        private void LoadTask()
+        {
+            if (!Directory.Exists(_filePath)) { Directory.CreateDirectory(_filePath); return; }
+            if (!File.Exists(_filePath + _fileName)) { return; }
+            ReadAndDeserializeCollection(ref _items);
+            MessageBox.Show(TaskCollection.Count.ToString());
+        }
+
+        #region (De)SerializeCollection
+        private void SerializeAndWriteCollection(ObservableCollection<TheTask> serializeCollection)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<TheTask>));
+            TextWriter stringWriter = new StringWriter();
+            xmlSerializer.Serialize(stringWriter, serializeCollection);
+
+            File.WriteAllText(_filePath + _fileName, stringWriter.ToString());
+        }
+
+        private void ReadAndDeserializeCollection(ref ObservableCollection<TheTask> deserializeCollection)
+        {
+            string serializedData = File.ReadAllText(_filePath + _fileName);
+
+            var xmlSerializer = new XmlSerializer(typeof(ObservableCollection<TheTask>));
+            var stringReader = new StringReader(serializedData);
+            deserializeCollection = (ObservableCollection<TheTask>)xmlSerializer.Deserialize(stringReader);
+        }
+        #endregion
     }
 }

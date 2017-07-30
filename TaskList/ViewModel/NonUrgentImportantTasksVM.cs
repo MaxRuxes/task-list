@@ -67,7 +67,6 @@ namespace TaskList.ViewModel
                         {
                             _items[i].SetStatus(1);
                             _items[i].SetContent((_items[i].Content +' '+ _items[i].Status));
-
                             _items.ToList<TheTask>().ForEach((temp) => _ms.Add(temp));
                             _items.Clear();
                             _ms.ToList<TheTask>().ForEach((temp) => _items.Add(temp));
