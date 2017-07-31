@@ -49,9 +49,9 @@ namespace TaskList.ViewModel
             RaisePropertyChangedEvent(nameof(TaskCollection));
         }
 
-         ~UrgentImportantTasksVM()
+        ~UrgentImportantTasksVM()
         {
-            SerializeAndWriteCollection(TaskCollection);
+            SerializeAndWriteCollection(_items);
         }
 
         public ICommand AddTask
@@ -67,8 +67,8 @@ namespace TaskList.ViewModel
                     {
                         if (twvm.Content.Trim() != "")
                         {
+                            File.AppendAllText(_filePath+@"\logs.txt", DateTime.Now + "\tВАЖНОЕ И СРОЧНОЕ ДЕЛО" + Environment.NewLine);
                             _items.Add(new TheTask(twvm.Content));
-                            
                         }
                     }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
@@ -109,6 +109,8 @@ namespace TaskList.ViewModel
             ReadAndDeserializeCollection(ref _items);
             MessageBox.Show(TaskCollection.Count.ToString());
         }
+
+
 
         #region (De)SerializeCollection
         private void SerializeAndWriteCollection(ObservableCollection<TheTask> serializeCollection)
