@@ -45,7 +45,7 @@ namespace TaskList.ViewModel
 
         public UrgentImportantTasksVM()
         {
-            LoadTask();
+            LoadTaskFromFile();
             RaisePropertyChangedEvent(nameof(TaskCollection));
         }
 
@@ -89,7 +89,6 @@ namespace TaskList.ViewModel
                         if (_items[i].Content == CurrentTask.Content)
                         {
                             _items[i].SetStatus(1);
-                            _items[i].SetContent((_items[i].Content + ' ' + _items[i].Status));
                             _items.ToList().ForEach((temp) => _ms.Add(temp));
                             _items.Clear();
                             _ms.ToList().ForEach((temp) => _items.Add(temp));
@@ -102,15 +101,12 @@ namespace TaskList.ViewModel
             }
         }
 
-        private void LoadTask()
+        private void LoadTaskFromFile()
         {
             if (!Directory.Exists(_filePath)) { Directory.CreateDirectory(_filePath); return; }
             if (!File.Exists(_filePath + _fileName)) { return; }
             ReadAndDeserializeCollection(ref _items);
-            MessageBox.Show(TaskCollection.Count.ToString());
         }
-
-
 
         #region (De)SerializeCollection
         private void SerializeAndWriteCollection(ObservableCollection<TheTask> serializeCollection)

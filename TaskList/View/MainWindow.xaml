@@ -31,13 +31,17 @@
                 <Button Content="Пометь как &quot;Выполнено&quot;" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"
                         Command="{Binding Source={StaticResource UrgImpTVM}, Path= CompleteTask}"/>
                 <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource UrgImpTVM}, Path= AddTask}"/>
-                <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource UrgImpTVM}, Path = TaskCollection,  UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding Source={StaticResource UrgImpTVM}, Path = CurrentTask, UpdateSourceTrigger=PropertyChanged}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                <ListView Name="ListTask" Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource UrgImpTVM}, Path = TaskCollection,  UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Source={StaticResource UrgImpTVM}, Path = CurrentTask, UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Stretch">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="*" DisplayMemberBinding="{Binding Content, UpdateSourceTrigger=PropertyChanged}">Содержание</GridViewColumn>
+                            <GridViewColumn Width="*" DisplayMemberBinding="{Binding Status, UpdateSourceTrigger=PropertyChanged}">Состояние</GridViewColumn>
+                            <GridViewColumn Width="*" DisplayMemberBinding="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}">Дата начала</GridViewColumn>
+                        </GridView>
+
+                    </ListView.View>
                 </ListView>
             </DockPanel>
 
@@ -49,7 +53,7 @@
                         Command="{Binding Source={StaticResource NonurgImpTVM}, Path= CompleteTask}"/>
                 <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}"
                         Command="{Binding Source={StaticResource NonurgImpTVM}, Path= AddTask}"/>
-                
+
                 <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource NonurgImpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
                          SelectedItem="{Binding Source={StaticResource NonurgImpTVM}, Path=CurrentTask}">
                     <ListView.ItemTemplate>
@@ -59,7 +63,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </DockPanel>
-            
+
             <!--Неважне и срочные дела-->
             <DockPanel Grid.Row="1" Grid.Column="0" Background="LightSalmon">
                 <TextBlock Text="Неважные и срочные дела (DELEGATE TO SOMEBODY ELSE)" DockPanel.Dock="Top" Style="{StaticResource HeaderContentText}"
@@ -67,7 +71,7 @@
                 <Button Content="Пометь как &quot;Выполнено&quot;" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"
                         Command="{Binding Source={StaticResource UrgUnimpTVM}, Path= CompleteTask}"/>
                 <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource UrgUnimpTVM}, Path= AddTask}"/>
-                
+
                 <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource UrgUnimpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
                          SelectedItem="{Binding Source={StaticResource UrgUnimpTVM}, Path=CurrentTask}">
                     <ListView.ItemTemplate>
@@ -85,7 +89,7 @@
                 <Button Content="Пометь как &quot;Выполнено&quot;" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Margin="15,0,15,15"
                         Command="{Binding Source={StaticResource NonurgUnimpTVM}, Path= CompleteTask}"/>
                 <Button Content="Добавить" DockPanel.Dock="Bottom" Style="{StaticResource AddButton}" Command="{Binding Source={StaticResource NonurgUnimpTVM}, Path= AddTask}"/>
-                
+
                 <ListView Style="{StaticResource TasksList}" ItemsSource="{Binding Source={StaticResource NonurgUnimpTVM}, Path=TaskCollection, UpdateSourceTrigger=PropertyChanged}"
                          SelectedItem="{Binding Source={StaticResource NonurgUnimpTVM}, Path=CurrentTask}">
                     <ListView.ItemTemplate>

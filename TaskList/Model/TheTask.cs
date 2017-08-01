@@ -29,7 +29,6 @@ namespace TaskList.Model
         {
             _startDate = DateTime.Now.Date;
             _status = "В процессе";
-            //File.AppendAllText(_filePath, DateTime.Now + "\tСоздано новое дело \"" + this.Content + "\" со статусом \"" + this._status + "\"" + Environment.NewLine);
         }
 
         public TheTask(string content)
@@ -73,6 +72,11 @@ namespace TaskList.Model
         {
             _endDate = DateTime.Now.Date;
             File.AppendAllText(_filePath, DateTime.Now + "\tДело закрыто со статусом \"" + this._status + "\"" + Environment.NewLine);
+        }
+
+        public void DeleteTask()
+        {
+            File.AppendAllText(_filePath, DateTime.Now + "\tДело \"" + this._content + "\" удалено из списка" + Environment.NewLine);
         }
     }
 }
