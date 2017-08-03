@@ -12,11 +12,6 @@ namespace TaskList.ViewModel
         private string _content;
         public string Content { get { return _content; }  set { _content = value; RaisePropertyChangedEvent(nameof(Content)); } }
 
-        public TaskWindowViewModel()
-        {
-            Content = "";
-        }
-
         public DelegateCommand AcceptClick
         {
             get { return new DelegateCommand((o) => { ((Window)o).DialogResult = true; }); }

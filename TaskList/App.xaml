@@ -6,8 +6,8 @@
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
         <Style x:Key="HeaderText">
-            <Setter Property="TextBlock.Margin" Value="5,5,5,0"/>
-            <Setter Property="TextBlock.Padding" Value="3"/>
+            <Setter Property="TextBlock.Margin" Value="5,10,5,10"/>
+            <Setter Property="TextBlock.Padding" Value="0"/>
             <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
             <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
             <Setter Property="TextBlock.FontSize" Value="16"/>
@@ -17,18 +17,18 @@
         </Style>
 
         <Style x:Key="MainButton">
-            <Setter Property="Button.Margin" Value="10,0,10,5"/>
+            <Setter Property="Button.Margin" Value="5,0,5,5"/>
             <Setter Property="Button.Padding" Value="5"/>
             <Setter Property="Button.VerticalAlignment" Value="Bottom"/>
         </Style>
 
         <Style x:Key="AddtButton">
             <Setter Property="Button.Padding" Value="5"/>
-            <Setter Property="Button.Margin" Value="5,10,5,10"/>
+            <Setter Property="Button.Margin" Value="0,10,5,5"/>
         </Style>
         
         <Style x:Key="TasksListBox">
-            <Setter Property="ListBox.Margin" Value="10,10,10,0"/>
+            <Setter Property="ListBox.Margin" Value="5,0,5,0"/>
             <Setter Property="ListBox.Padding" Value="3"/>
         </Style>
 

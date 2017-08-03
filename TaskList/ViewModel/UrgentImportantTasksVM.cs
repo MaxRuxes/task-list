@@ -67,6 +67,7 @@ namespace TaskList.ViewModel
                         {
                             File.AppendAllText(_filePath + @"\logs.txt", new string('.', 25) + "\tВАЖНОЕ И СРОЧНОЕ ДЕЛО" + new string('.', 25) + Environment.NewLine);
                             _items.Add(new TheTask(twvm.Content));
+                            File.AppendAllText(_filePath + @"\logs.txt", new string('.', 80) + Environment.NewLine);
                         }
                     }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
@@ -152,7 +153,6 @@ namespace TaskList.ViewModel
             if (!Directory.Exists(_filePath)) { Directory.CreateDirectory(_filePath); return; }
             if (!File.Exists(_filePath + _fileName)) { return; }
             if (!File.Exists(_filePath + _fileDeletesName)) { File.Create(_filePath + _fileDeletesName); }
-            File.AppendAllText(_filePath + @"\logs.txt", new String('*', 50) + Environment.NewLine);
             ReadAndDeserializeCollection(ref _items);
         }
 
