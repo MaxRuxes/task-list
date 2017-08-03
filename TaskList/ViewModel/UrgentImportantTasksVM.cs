@@ -13,8 +13,7 @@ namespace TaskList.ViewModel
     public class UrgentImportantTasksVM : ObservableObject
     {
         private string _filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\TaskList";
-        private string _fileName = @"\UrgentAndImportant.xml";
-
+        private string _fileName = @"\UrgentAndImportant.xml", _fileDeletesName = @"\UrgentAndImportant(Deletes).txt";
         private ObservableCollection<TheTask> _ms, _items = new ObservableCollection<TheTask>();
 
         [XmlArray("Collection"), XmlArrayItem("Item")]
@@ -23,14 +22,12 @@ namespace TaskList.ViewModel
             get { return _items; }
             set
             {
-                if (_items != value)
-                {
-                    _items = value;
-                    RaisePropertyChangedEvent(nameof(TaskCollection));
-                }
-
+                _items = value;
+                RaisePropertyChangedEvent(nameof(TaskCollection));
             }
         }
+
+        public bool Enabled { get { return CurrentTask != null; } }
 
         private TheTask _current = null;
         public TheTask CurrentTask
@@ -40,6 +37,7 @@ namespace TaskList.ViewModel
             {
                 _current = value;
                 RaisePropertyChangedEvent(nameof(CurrentTask));
+                RaisePropertyChangedEvent(nameof(Enabled));
             }
         }
 
@@ -67,7 +65,7 @@ namespace TaskList.ViewModel
                     {
                         if (twvm.Content.Trim() != "")
                         {
-                            File.AppendAllText(_filePath+@"\logs.txt", DateTime.Now + "\tВАЖНОЕ И СРОЧНОЕ ДЕЛО" + Environment.NewLine);
+                            File.AppendAllText(_filePath + @"\logs.txt", new string('.', 25) + "\tВАЖНОЕ И СРОЧНОЕ ДЕЛО" + new string('.', 25) + Environment.NewLine);
                             _items.Add(new TheTask(twvm.Content));
                         }
                     }
@@ -82,18 +80,58 @@ namespace TaskList.ViewModel
             {
                 return new DelegateCommand((o) =>
                 {
-                    for (int i = 0; i < TaskCollection.Count; i++)
+                    int i = _items.IndexOf(CurrentTask);
+                    if (i != -1)
                     {
-                        if (CurrentTask == null) return;
-                        _ms = new ObservableCollection<TheTask>();
-                        if (_items[i].Content == CurrentTask.Content)
+                        if (CurrentTask.Status == "Выполнено") return;
+                        _items[i].SetStatus(1);
+                        UpdateCollection();
+                        CurrentTask = _items[i];
+                    }
+                    RaisePropertyChangedEvent(nameof(TaskCollection));
+                });
+            }
+        }
+
+        public ICommand DeleteTask
+        {
+            get
+            {
+                return new DelegateCommand((o) =>
+                {
+                    int i = _items.IndexOf(CurrentTask);
+                    if (i != -1)
+                    {
+                        File.AppendAllText(_filePath + _fileDeletesName, String.Format(DateTime.Now + "\tДело \"{0}\" со статусом \"{1}\", начатое {2} удалено из списка." + Environment.NewLine, _items[i].Content, _items[i].Status, _items[i].StartDate));
+                        _items[i].SetStatus(2);
+                        _items[i].DeleteTask();
+                        _items.RemoveAt(i);
+                    }
+                });
+            }
+        }
+
+        public ICommand EditTask
+        {
+            get
+            {
+                return new DelegateCommand((o) =>
+                {
+                    TaskWindow temp = new TaskWindow();
+                    TaskWindowViewModel twvm = (TaskWindowViewModel)temp.DataContext;
+                    twvm.Content = CurrentTask.Content;
+
+                    if (temp.ShowDialog() == true)
+                    {
+                        if (twvm.Content.Trim() != "")
                         {
-                            _items[i].SetStatus(1);
-                            _items.ToList().ForEach((temp) => _ms.Add(temp));
-                            _items.Clear();
-                            _ms.ToList().ForEach((temp) => _items.Add(temp));
-                            CurrentTask = _items[i];
-                            break;
+                            int i = _items.IndexOf(CurrentTask);
+                            if (i != -1)
+                            {
+                                _items[i].SetContent(twvm.Content);
+                                UpdateCollection();
+                                CurrentTask = _items[i];
+                            }
                         }
                     }
                     RaisePropertyChangedEvent(nameof(TaskCollection));
@@ -101,10 +139,20 @@ namespace TaskList.ViewModel
             }
         }
 
+        private void UpdateCollection()
+        {
+            _ms = new ObservableCollection<TheTask>();
+            _items.ToList().ForEach((temp) => _ms.Add(temp));
+            _items.Clear();
+            _ms.ToList().ForEach((temp) => _items.Add(temp));
+        }
+
         private void LoadTaskFromFile()
         {
             if (!Directory.Exists(_filePath)) { Directory.CreateDirectory(_filePath); return; }
             if (!File.Exists(_filePath + _fileName)) { return; }
+            if (!File.Exists(_filePath + _fileDeletesName)) { File.Create(_filePath + _fileDeletesName); }
+            File.AppendAllText(_filePath + @"\logs.txt", new String('*', 50) + Environment.NewLine);
             ReadAndDeserializeCollection(ref _items);
         }
 
@@ -114,14 +162,12 @@ namespace TaskList.ViewModel
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<TheTask>));
             TextWriter stringWriter = new StringWriter();
             xmlSerializer.Serialize(stringWriter, serializeCollection);
-
             File.WriteAllText(_filePath + _fileName, stringWriter.ToString());
         }
 
         private void ReadAndDeserializeCollection(ref ObservableCollection<TheTask> deserializeCollection)
         {
             string serializedData = File.ReadAllText(_filePath + _fileName);
-
             var xmlSerializer = new XmlSerializer(typeof(ObservableCollection<TheTask>));
             var stringReader = new StringReader(serializedData);
             deserializeCollection = (ObservableCollection<TheTask>)xmlSerializer.Deserialize(stringReader);

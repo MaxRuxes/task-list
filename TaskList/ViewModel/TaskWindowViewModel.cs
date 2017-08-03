@@ -9,7 +9,8 @@ namespace TaskList.ViewModel
 {
     public class TaskWindowViewModel : ObservableObject
     {
-        public string Content { get; private set; }
+        private string _content;
+        public string Content { get { return _content; }  set { _content = value; RaisePropertyChangedEvent(nameof(Content)); } }
 
         public TaskWindowViewModel()
         {

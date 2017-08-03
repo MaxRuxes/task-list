@@ -33,7 +33,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.ColumnSpan="4" Text="Введите то, что необходимо сделать:" Margin="5" Padding="3"/>
         <TextBox Grid.Row="1" Grid.ColumnSpan="4" Margin="5,0,5,5" Padding="3" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Grid.Row="2" Grid.Column="1" IsDefault="True" Content="Добавить" Command="{Binding AcceptClick}" CommandParameter="{x:Reference Name=window}"/>
+        <Button Grid.Row="2" Grid.Column="1" IsDefault="True" Content="OK" Command="{Binding AcceptClick}" CommandParameter="{x:Reference Name=window}"/>
         <Button Grid.Row="2" Grid.Column="2" IsCancel="True" Content="Отмена"/>
     </Grid>
 </Window>
