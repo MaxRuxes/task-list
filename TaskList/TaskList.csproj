@@ -77,6 +77,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\TaskType.cs" />
+    <Compile Include="ViewModel\ITaskType.cs" />
     <Compile Include="ViewModel\TaskWindowViewModel.cs" />
     <Compile Include="View\TaskWindow.xaml.cs">
       <DependentUpon>TaskWindow.xaml</DependentUpon>

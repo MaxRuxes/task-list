@@ -6,7 +6,7 @@ namespace TaskList.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent(string propertyName)
+        protected void OnPropertyChangedEvent(string propertyName)
         {
             var handler = PropertyChanged;
             if(handler!=null)

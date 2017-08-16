@@ -8,6 +8,38 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="700" Width="925">
+    <Window.Resources>
+        <Style x:Key="HeaderText">
+            <Setter Property="TextBlock.Margin" Value="5,10,5,10"/>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+            <Setter Property="TextBlock.FontSize" Value="16"/>
+            <Setter Property="TextBlock.FontWeight" Value="Medium"/>
+            <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+            <Setter Property="TextBlock.FontFamily" Value="Trebuchet MS"/>
+        </Style>
+
+        <Style x:Key="MainButton">
+            <Setter Property="Button.Margin" Value="5,0,5,5"/>
+            <Setter Property="Button.Padding" Value="5"/>
+            <Setter Property="Button.VerticalAlignment" Value="Bottom"/>
+        </Style>
+
+        <Style x:Key="AddtButton">
+            <Setter Property="Button.Padding" Value="5"/>
+            <Setter Property="Button.Margin" Value="0,10,5,5"/>
+        </Style>
+
+        <Style x:Key="TasksListBox">
+            <Setter Property="ListBox.Margin" Value="5,0,5,0"/>
+            <Setter Property="ListBox.Padding" Value="3"/>
+        </Style>
+
+        <ViewModels:NonUrgentImportantTasksVM x:Key="NonurgImpTVM"/>
+        <ViewModels:UrgentUnimportantTasksVM x:Key="UrgUnimpTVM"/>
+        <ViewModels:NonUrgentUnimportantTasksVM x:Key="NonurgUnimpTVM"/>
+        <ViewModels:UrgentImportantTasksVM x:Key="UrgImpTVM"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -23,13 +55,13 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-        
+
             <!--Важные и срочные дела-->
             <DockPanel Background="LimeGreen" DataContext="{StaticResource UrgImpTVM}">
                 <TextBlock DockPanel.Dock="Top" Style="{StaticResource HeaderText}" Text="Важные и срочные дела (DO IT IMMEDIATELY)"  
                            TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
                 <Button DockPanel.Dock="Bottom" Style="{StaticResource MainButton}" Margin="5,0,5,5" Content="Пометить как &quot;Выполнено&quot;" 
-                        Command="{Binding CompleteTask}" IsEnabled="{Binding Enabled}"/>
+                        Command="{Binding CompleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -37,8 +69,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Добавить" Style="{StaticResource MainButton}" Command="{Binding AddTask}"/>
-                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding Enabled}" />
-                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding Enabled}"/>
+                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding EnabledProperty}" />
+                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 </Grid>
                 <ListView  ItemsSource="{Binding TaskCollection,  UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TasksListBox}"
                           SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged}">
@@ -57,7 +89,7 @@
                 <TextBlock DockPanel.Dock="Top" Style="{StaticResource HeaderText}" Text="Важные и несрочные дела (DECIDE WHEN YOU WILL DO IT)" 
                            TextWrapping="Wrap" TextAlignment="Center"/>
                 <Button DockPanel.Dock="Bottom" Style="{StaticResource MainButton}" Margin="5,0,5,5" Content="Пометить как &quot;Выполнено&quot;" 
-                        Command="{Binding CompleteTask}"  IsEnabled="{Binding Enabled}"/>
+                        Command="{Binding CompleteTask}"  IsEnabled="{Binding EnabledProperty}"/>
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -65,8 +97,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Добавить" Style="{StaticResource MainButton}" Command="{Binding AddTask}"/>
-                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding Enabled}" />
-                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding Enabled}"/>
+                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding EnabledProperty}" />
+                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 </Grid>
                 <ListView  ItemsSource="{Binding TaskCollection,  UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TasksListBox}"
                           SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged}">
@@ -85,7 +117,7 @@
                 <TextBlock DockPanel.Dock="Top" Style="{StaticResource HeaderText}" Text="Неважные и срочные дела (DELEGATE TO SOMEBODY ELSE)"
                            TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
                 <Button DockPanel.Dock="Bottom" Style="{StaticResource MainButton}" Margin="5,0,5,5" Content="Пометить как &quot;Выполнено&quot;" 
-                        Command="{Binding CompleteTask}" IsEnabled="{Binding Enabled}"/>
+                        Command="{Binding CompleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -93,8 +125,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Добавить" Style="{StaticResource MainButton}" Command="{Binding AddTask}"/>
-                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding Enabled}" />
-                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding Enabled}"/>
+                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding EnabledProperty}" />
+                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 </Grid>
                 <ListView  ItemsSource="{Binding TaskCollection,  UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TasksListBox}"
                           SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged}">
@@ -114,7 +146,7 @@
                            TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
 
                 <Button DockPanel.Dock="Bottom" Style="{StaticResource MainButton}" Margin="5,0,5,5" Content="Пометить как &quot;Выполнено&quot;" 
-                        Command="{Binding CompleteTask}" IsEnabled="{Binding Enabled}"/>
+                        Command="{Binding CompleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -122,8 +154,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Добавить" Style="{StaticResource MainButton}" Command="{Binding AddTask}"/>
-                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding Enabled}" />
-                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding Enabled}"/>
+                    <Button Grid.Column="1" Style="{StaticResource AddtButton}" Content="Изменить" Command="{Binding EditTask}" IsEnabled="{Binding EnabledProperty}" />
+                    <Button Grid.Column="2" Style="{StaticResource AddtButton}" Content="Удалить" Command="{Binding DeleteTask}" IsEnabled="{Binding EnabledProperty}"/>
                 </Grid>
                 <ListView  ItemsSource="{Binding TaskCollection,  UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TasksListBox}"
                           SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged}">
