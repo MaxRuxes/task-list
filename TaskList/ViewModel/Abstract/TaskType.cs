@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using TaskList.Model;
+using TaskList.ToolKit.Command;
+using TaskList.ToolKit.ViewModel;
 using TaskList.View;
+using TaskList.ViewModel.Interfaces;
 
-namespace TaskList.ViewModel
+namespace TaskList.ViewModel.Abstract
 {
-    public class TaskType : ObservableObject, ITaskType
+    public abstract class TaskType : ObservableObject, ITaskType
     {
-        private string _fileName, _fileDeletesName, _filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\TaskList";
+        private string _fileName, _fileDeletesName;
+        private readonly string _filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\TaskList";
         private ObservableCollection<TheTask> _ms, _items = new ObservableCollection<TheTask>();
 
         ~TaskType()
@@ -25,7 +26,7 @@ namespace TaskList.ViewModel
         [XmlArray("Collection"), XmlArrayItem("Item")]
         public ObservableCollection<TheTask> TaskCollection
         {
-            get { return _items; }
+            get => _items;
             set
             {
                 _items = value;
@@ -33,15 +34,12 @@ namespace TaskList.ViewModel
             }
         }
 
-        public bool EnabledProperty
-        {
-            get { return CurrentTask != null; }
-        }
+        public bool EnabledProperty => CurrentTask != null;
 
-        private TheTask _current = null;
+        private TheTask _current;
         public TheTask CurrentTask
         {
-            get { return _current; }
+            get => _current;
             set
             {
                 _current = value;
@@ -74,12 +72,12 @@ namespace TaskList.ViewModel
             }
         }
 
-        private DelegateCommand completeTask;
+        private DelegateCommand _completeTask;
         public ICommand CompleteTask
         {
             get
             {
-                return completeTask ?? (completeTask = new DelegateCommand((o) =>
+                return _completeTask ?? (_completeTask = new DelegateCommand((o) =>
                 {
                     int i = _items.IndexOf(CurrentTask);
                     if (i != -1)
@@ -94,12 +92,12 @@ namespace TaskList.ViewModel
             }
         }
 
-        private DelegateCommand deleteTask;
+        private DelegateCommand _deleteTask;
         public ICommand DeleteTask
         {
             get
             {
-                return deleteTask ?? (deleteTask = new DelegateCommand(o =>
+                return _deleteTask ?? (_deleteTask = new DelegateCommand(o =>
                 {
                     int i = _items.IndexOf(CurrentTask);
                     if (i != -1)
@@ -113,12 +111,12 @@ namespace TaskList.ViewModel
             }
         }
 
-        private DelegateCommand editTask;
+        private DelegateCommand _editTask;
         public ICommand EditTask
         {
             get
             {
-                return editTask ?? (editTask = new DelegateCommand((o) =>
+                return _editTask ?? (_editTask = new DelegateCommand((o) =>
                {
                    TaskWindow temp = new TaskWindow();
                    TaskWindowViewModel twvm = (TaskWindowViewModel)temp.DataContext;
@@ -160,9 +158,9 @@ namespace TaskList.ViewModel
         private void UpdateCollection()
         {
             _ms = new ObservableCollection<TheTask>();
-            _items.ToList().ForEach((temp) => _ms.Add(temp));
+            _items.ToList().ForEach(temp => _ms.Add(temp));
             _items.Clear();
-            _ms.ToList().ForEach((temp) => _items.Add(temp));
+            _ms.ToList().ForEach(temp => _items.Add(temp));
         }
 
         #region (De)SerializeCollection
@@ -176,6 +174,7 @@ namespace TaskList.ViewModel
 
         private void ReadAndDeserializeCollection(ref ObservableCollection<TheTask> deserializeCollection)
         {
+            if (deserializeCollection == null) return;
             string serializedData = File.ReadAllText(_filePath + _fileName);
             var xmlSerializer = new XmlSerializer(typeof(ObservableCollection<TheTask>));
             var stringReader = new StringReader(serializedData);

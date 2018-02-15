@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using TaskList.ToolKit.Command;
+using TaskList.ToolKit.ViewModel;
 
 namespace TaskList.ViewModel
 {

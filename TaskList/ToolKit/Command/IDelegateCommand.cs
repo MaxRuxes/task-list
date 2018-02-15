@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace TaskList.ViewModel
+namespace TaskList.ToolKit.Command
 {
     public interface IDelegateCommand : ICommand
     {

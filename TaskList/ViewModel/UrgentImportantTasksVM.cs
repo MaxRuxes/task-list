@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using TaskList.Model;
 using TaskList.View;
+using TaskList.ViewModel.Abstract;
 
 namespace TaskList.ViewModel
 {

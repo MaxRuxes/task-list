@@ -77,8 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModel\TaskType.cs" />
-    <Compile Include="ViewModel\ITaskType.cs" />
+    <Compile Include="Model\Data.cs" />
+    <Compile Include="ViewModel\Abstract\TaskType.cs" />
+    <Compile Include="ViewModel\Interfaces\ITaskType.cs" />
     <Compile Include="ViewModel\TaskWindowViewModel.cs" />
     <Compile Include="View\TaskWindow.xaml.cs">
       <DependentUpon>TaskWindow.xaml</DependentUpon>
@@ -94,9 +95,9 @@
     <Compile Include="ViewModel\NonUrgentImportantTasksVM.cs" />
     <Compile Include="ViewModel\NonUrgentUnimportantTasksVM.cs" />
     <Compile Include="Model\TheTask.cs" />
-    <Compile Include="ViewModel\DelegateCommand.cs" />
-    <Compile Include="ViewModel\IDelegateCommand.cs" />
-    <Compile Include="ViewModel\ObservableObject.cs" />
+    <Compile Include="ToolKit\Command\DelegateCommand.cs" />
+    <Compile Include="ToolKit\Command\IDelegateCommand.cs" />
+    <Compile Include="ToolKit\ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\UrgentImportantTasksVM.cs" />
     <Compile Include="ViewModel\UrgentUnimportantTasksVM.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -147,6 +148,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

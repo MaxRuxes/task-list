@@ -1,22 +1,23 @@
 ﻿using System;
+using TaskList.ViewModel;
 
-namespace TaskList.ViewModel
+namespace TaskList.ToolKit.Command
 {
     public class DelegateCommand : IDelegateCommand
     {
         private readonly Action<object> _execute;
-        private Func<object, bool> _canExecute;
+        private readonly Func<object, bool> _canExecute;
 
         public DelegateCommand(Action<object> execute, Func<object, bool> canExecute)
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            _execute = execute;
+            _canExecute = canExecute;
         }
 
         public DelegateCommand(Action<object> execute)
         {
-            this._execute = execute;
-            this._canExecute = this.AlwaysCanExecute;
+            _execute = execute;
+            _canExecute = AlwaysCanExecute;
         }
 
         public void Execute(object parameter)
@@ -31,8 +32,7 @@ namespace TaskList.ViewModel
 
         public void RaiseCanExecuteChanged()
         {
-            if (CanExecuteChanged != null)
-                CanExecuteChanged(this, EventArgs.Empty);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private bool AlwaysCanExecute(object parameter)

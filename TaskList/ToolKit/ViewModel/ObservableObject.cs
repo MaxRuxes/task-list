@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TaskList.ViewModel
+namespace TaskList.ToolKit.ViewModel
 {
     public class ObservableObject : INotifyPropertyChanged
     {
@@ -9,10 +9,7 @@ namespace TaskList.ViewModel
         protected void OnPropertyChangedEvent(string propertyName)
         {
             var handler = PropertyChanged;
-            if(handler!=null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
