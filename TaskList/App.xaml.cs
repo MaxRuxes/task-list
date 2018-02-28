@@ -8,9 +8,6 @@ using System.Windows;
 
 namespace TaskList
 {
-    /// <summary>
-    /// Логика взаимодействия для App.xaml
-    /// </summary>
     public partial class App : Application
     {
     }
