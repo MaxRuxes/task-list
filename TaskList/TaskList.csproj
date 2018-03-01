@@ -164,9 +164,6 @@
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ToolKit\todolist_logo.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="ToolKit\todolist_logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
