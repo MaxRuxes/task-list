@@ -106,6 +106,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
+    <Page Include="Views\AuthorizationWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GlobalResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -114,7 +122,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\AuthorizationWindowViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\AuthorizationWindowView.xaml.cs">
+      <DependentUpon>AuthorizationWindowView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>

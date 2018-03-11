@@ -12,6 +12,37 @@
         <Style TargetType="{x:Type Grid}">
             <Setter Property="ShowGridLines" Value="False"/>
         </Style>
+        
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="4"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"
+                                       RadiusX="10" RadiusY="10" 
+                                       Fill="{TemplateBinding Background}"/>
+                            <TextBlock Padding="15,5"
+                                       TextAlignment="Center"
+                                       FontSize="13"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding Content}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="Beige"/>
+                                <Setter Property="Foreground" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -85,26 +116,11 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <Style TargetType="Button">
-                    <Style.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="7"/>
-                        </Style>
-                    </Style.Resources>
-                    <Setter Property="Margin" Value="7"/>
-                    <Setter Property="Padding" Value="7"/>
-                </Style>
-            </Grid.Resources>
 
-            <Button Grid.Row="0"
-                    Margin="10" Content="Важные и срочные" />
-            <Button Grid.Row="1"
-                    Margin="10" Content="Важные и несрочные" />
-            <Button Grid.Row="2" 
-                    Margin="10" Content="Неважные и срочные"/>
-            <Button Grid.Row="3"
-                    Margin="10" Content="Неважные и несрочные" />
+            <Button Grid.Row="0" Content="Важные и срочные" />
+            <Button Grid.Row="1" Content="Важные и несрочные" />
+            <Button Grid.Row="2" Content="Неважные и срочные"/>
+            <Button Grid.Row="3" Content="Неважные и несрочные" />
         </Grid>
 
         <Border Grid.Row="1" Grid.Column="1"
@@ -113,6 +129,8 @@
             <Grid>
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -131,7 +149,7 @@
                                      ItemsPerPage="3"
                                          ItemsSource="{Binding CarouselItems}"
                                      RadiusX="0" SelectedIndex="4"
-                                     Grid.Row="0" Grid.RowSpan="1"
+                                     Grid.Row="2" Grid.RowSpan="1"
                                      Grid.Column="0" Grid.ColumnSpan="3">
                         <syncfusion:Carousel.Path>
                             <Path Data="M0,300 L600,300" Stroke="Blue" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
