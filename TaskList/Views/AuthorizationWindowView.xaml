@@ -4,17 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskList.Views"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Height="350" Width="500"
+        MinHeight="350" MinWidth="480"
+        MaxHeight="400" MaxWidth="500"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="True"
         Title="Авторизация">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="GlobalResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Background="AliceBlue">
+    <Grid Background="#7C4DFF" Grid.IsSharedSizeScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -28,8 +40,9 @@
         <Grid Grid.Row="1" 
               HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="qq"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="qq"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -39,21 +52,41 @@
                        Text="Login"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <TextBox Grid.Row="0" Grid.Column="1"
+            <TextBox x:Name="Login"
+                     Grid.Row="0" Grid.Column="1"
                      MinHeight="30" MinWidth="200"
                      Margin="2,4"/>
-            
+
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Pass"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     MinHeight="30" MinWidth="200"
-                     Margin="2,4"/>
+            <PasswordBox Name="passwordBox" Grid.Row="1" Grid.Column="1"
+                         MinHeight="30" MinWidth="200"
+                         Margin="2,4"/>
         </Grid>
-        <Button Grid.Row="2"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Content="Sign in"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="5"
+                    Content="Sign in"
+                   
+                    IsEnabled="{Binding EnabledButton, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SignIn">
+                            <cal:Parameter Value="{Binding ElementName=passwordBox}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <Button x:Name="CancelCommand"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="5"
+                    Content="Cancel"/>
+        </StackPanel>
     </Grid>
 </Window>
