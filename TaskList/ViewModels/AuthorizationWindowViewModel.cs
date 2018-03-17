@@ -1,20 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Caliburn.Micro;
 using System.Windows;
 using System.Windows.Controls;
+using System.ComponentModel.Composition;
+using System.Dynamic;
 
 namespace TaskList.ViewModels
 {
-    public class AuthorizationWindowViewModel : PropertyChangedBase
+    [Export(typeof(AuthorizationWindowViewModel))]
+    public class AuthorizationWindowViewModel : Screen
     {
+        private readonly IWindowManager _windowManager;
+
         private bool _enabledButton;
-        private string _password;
         private string _login;
+
+        [ImportingConstructor]
+        public AuthorizationWindowViewModel(IWindowManager windowManager) :this()
+        {
+            _windowManager = windowManager;
+        }
 
         public AuthorizationWindowViewModel()
         {
@@ -28,16 +35,6 @@ namespace TaskList.ViewModels
             {
                 _enabledButton = value;
                 NotifyOfPropertyChange(() => EnabledButton);
-            }
-        }
-
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                NotifyOfPropertyChange(() => Password);
             }
         }
 
@@ -68,8 +65,14 @@ namespace TaskList.ViewModels
             try
             {
                 await connection.OpenAsync();
-                MessageBox.Show("AllGood");
                 await connection.CloseAsync();
+
+                dynamic settings = new ExpandoObject(); 
+                settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
+
+                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, Login), null, settings);
+
+                (GetView() as Window).Close();
             }
             catch(Exception ex)
             {

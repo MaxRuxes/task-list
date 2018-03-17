@@ -7,12 +7,13 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="700" Width="925"
+        MinWidth="1280" MinHeight="790"
         d:DataContext="">
     <Window.Resources>
         <Style TargetType="{x:Type Grid}">
             <Setter Property="ShowGridLines" Value="False"/>
         </Style>
-        
+
         <Style TargetType="Button">
             <Setter Property="Margin" Value="4"></Setter>
             <Setter Property="Template">
@@ -43,6 +44,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate x:Key="todoItemTemplate">
+            <Border Height="200" Width="150" Background="LightBlue"
+                                        CornerRadius="20" BorderThickness="2"
+                                        BorderBrush="RosyBrown">
+                <ContentControl Content="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -64,7 +73,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Grid.Resources>
@@ -82,31 +91,81 @@
                     <Setter Property="HorizontalAlignment" Value="Center"/>
                 </Style>
             </Grid.Resources>
-
+            
             <Image Source="/TaskList;component/ToolKit/todolist_logo.jpg" />
-            <Border Grid.Column="1">
-                <TextBlock Text="Выбранное дело" />
+            
+            <!--Текущее дело-->
+            <Border Grid.Column="1" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Выбранное дело" />
+                    <Border Grid.Row="1" Margin="0,2"
+                            BorderThickness="0">
+                        <Grid>
+                            <ContentControl Content="{Binding ElementName=carousel, Path=SelectedItem}">
+                                <ContentControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0"
+                                                   Text="{Binding}" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </ContentControl.ContentTemplate>
+                            </ContentControl>
+                        </Grid>
+                    </Border>
+                </Grid>
             </Border>
 
+            <!--Какие-то заметки-->
             <Border Grid.Column="2">
                 <TextBlock Text="Заметки" />
             </Border>
 
+            <!--Временные данные мб какие-то-->
             <Border Grid.Column="3">
                 <TextBlock Text="Temp_Content" />
             </Border>
 
+            <!--Уведомления мб или инфо про юзверя-->
             <Border Grid.Column="4">
                 <TextBlock Text="Уведомления" />
             </Border>
 
-            <Border Grid.Column="5">
-                <TextBlock Text="Авторизация" />
-            </Border>
+            <!--Инфо о входе-->
+            <Grid Grid.Column="5" VerticalAlignment="Center">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="0,2"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
+                <TextBlock Text="Пользователь: " 
+                           Grid.Row="0" Grid.Column="0" />
+
+                <TextBlock x:Name="Login" 
+                           Grid.Row="0" Grid.Column="1"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Время входа: " 
+                           Grid.Row="1" Grid.Column="0"/>
+
+                <TextBlock x:Name="DateTimeSignIn" 
+                           Grid.Row="1" Grid.Column="1"
+                           HorizontalAlignment="Center"/>
+            </Grid>
         </Grid>
 
-
+        <!--Боковая часть-->        
         <Grid Grid.Row="1" Grid.Column="0"
               Margin="10">
             <Grid.RowDefinitions>
@@ -116,13 +175,13 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-
             <Button Grid.Row="0" Content="Важные и срочные" />
             <Button Grid.Row="1" Content="Важные и несрочные" />
             <Button Grid.Row="2" Content="Неважные и срочные"/>
             <Button Grid.Row="3" Content="Неважные и несрочные" />
         </Grid>
 
+        <!--Рабочая часть-->
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="1,1,0,0"
                 BorderBrush="Bisque">
@@ -144,31 +203,22 @@
                     </Grid.ColumnDefinitions>
 
                     <syncfusion:Carousel x:Name="carousel" 
-                                     VisualMode="CustomPath"
-                                     VerticalAlignment="Top"
-                                     ItemsPerPage="3"
+                                         Grid.Row="0" Grid.RowSpan="1"
+                                         Grid.Column="0" Grid.ColumnSpan="3"
                                          ItemsSource="{Binding CarouselItems}"
-                                     RadiusX="0" SelectedIndex="4"
-                                     Grid.Row="2" Grid.RowSpan="1"
-                                     Grid.Column="0" Grid.ColumnSpan="3">
+                                         ItemTemplate="{StaticResource todoItemTemplate}"
+                                         VisualMode="CustomPath"
+                                         ItemsPerPage="4"
+                                         RadiusX="0" SelectedIndex="4">
                         <syncfusion:Carousel.Path>
-                            <Path Data="M0,300 L600,300" Stroke="Blue" StrokeThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <Path Data="M0,300 L600,300"
+                                  Stroke="Blue" StrokeThickness="2" 
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </syncfusion:Carousel.Path>
-                        <syncfusion:Carousel.ItemTemplate>
-                            <DataTemplate>
-                                <Border Height="200" Width="150" Background="LightBlue"
-                                        CornerRadius="20" BorderThickness="2"
-                                        BorderBrush="RosyBrown">
-                                    <ContentControl Content="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </DataTemplate>
-                        </syncfusion:Carousel.ItemTemplate>
                     </syncfusion:Carousel>
-
 
                 </Grid>
             </Grid>
         </Border>
     </Grid>
-
 </Window>
