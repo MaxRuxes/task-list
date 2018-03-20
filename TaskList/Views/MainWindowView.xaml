@@ -208,7 +208,7 @@
                                          ItemsSource="{Binding CarouselItems}"
                                          ItemTemplate="{StaticResource todoItemTemplate}"
                                          VisualMode="CustomPath"
-                                         ItemsPerPage="4"
+                                         ItemsPerPage="7"
                                          RadiusX="0" SelectedIndex="4">
                         <syncfusion:Carousel.Path>
                             <Path Data="M0,300 L600,300"

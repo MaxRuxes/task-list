@@ -175,6 +175,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DAL\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
