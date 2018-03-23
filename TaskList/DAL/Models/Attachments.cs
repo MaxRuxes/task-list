@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskList.DAL.Models
@@ -7,9 +6,8 @@ namespace TaskList.DAL.Models
     [Table("attachments")]
     public class Attachments
     {
-        [Key]
         [Column("idAttachments")]
-        public int IdAttach { get; set; }
+        public int AttachmentsId { get; set; }
 
         [Column("content")]
         public string Content { get; set; }

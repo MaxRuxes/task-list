@@ -21,18 +21,18 @@ namespace TaskList.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Attachments>();
             modelBuilder.Entity<AttachmentType>();
-            modelBuilder.Entity<PriorityType>( );
-            modelBuilder.Entity<RolesType>( );
-            modelBuilder.Entity<TeamInfo>( );
-            modelBuilder.Entity<Teams>( );
-            modelBuilder.Entity<Todo>( );
-            modelBuilder.Entity<TodoAndAttaches>( );
-            modelBuilder.Entity<TodoAndUsers>( );
-            modelBuilder.Entity<User>( );
+            modelBuilder.Entity<PriorityType>();
+            modelBuilder.Entity<RolesType>();
+            modelBuilder.Entity<TeamInfo>();
+            modelBuilder.Entity<Teams>();
+            modelBuilder.Entity<Todo>();
+            modelBuilder.Entity<TodoAndAttaches>();
+            modelBuilder.Entity<TodoAndUsers>();
+            modelBuilder.Entity<User>();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

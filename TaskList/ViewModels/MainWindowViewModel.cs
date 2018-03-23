@@ -33,7 +33,6 @@ namespace TaskList.ViewModels
                 CarouselItems.Clear();
                 context.Attachments.ToList().ForEach(n=> CarouselItems.Add(n.Content));
             }
-
         }
 
         public string Login

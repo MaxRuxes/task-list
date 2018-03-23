@@ -206,6 +206,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BLL\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskList.DAL.Models
@@ -7,9 +6,8 @@ namespace TaskList.DAL.Models
     [Table("todo")]
     public class Todo
     {
-        [Key]
         [Column("idTodo")]
-        public int IdTodo { get; set; }
+        public int TodoId { get; set; }
 
         [Column("idPriority")]
         public int IdPriority { get; set; }

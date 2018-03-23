@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskList.DAL.Models
 {
     [Table("team")]
     public class TeamInfo
     {
-        [Key]
         [Column("idTeam")]
-        public int IdTeam { get; set; }
+        public int TeamInfoId { get; set; }
 
         [Column("name")]
         public string NameTeam { get; set; }
