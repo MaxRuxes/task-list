@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace TaskList.ViewModels
 {
@@ -14,10 +15,10 @@ namespace TaskList.ViewModels
         private string _login;
 
         [ImportingConstructor]
-        public MainWindowViewModel(IWindowManager windowManager, string login)
+        public MainWindowViewModel(IWindowManager windowManager, string connectionString)
         {
             _windowManager = windowManager;
-            Login = login;
+            Login = connectionString.Split(';').ToList().Where(n => n.IndexOf("uid=") != -1).ToList()[0];
             _signInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
 
             NotifyOfPropertyChange(() => DateTimeSignIn);
@@ -26,6 +27,13 @@ namespace TaskList.ViewModels
             {
                 CarouselItems.Add($"item{i.ToString()}");
             }
+
+            using (DAL.TaskListContext context = new DAL.TaskListContext(connectionString))
+            {
+                CarouselItems.Clear();
+                context.Attachments.ToList().ForEach(n=> CarouselItems.Add(n.Content));
+            }
+
         }
 
         public string Login

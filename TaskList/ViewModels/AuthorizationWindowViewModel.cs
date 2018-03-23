@@ -59,7 +59,7 @@ namespace TaskList.ViewModels
 
             var box = (PasswordBox)xx;
 
-            var connectionString = $"Server=localhost;database=mydb;uid={Login};pwd={box.Password};pooling=true;";
+            var connectionString = $"Server=127.0.0.1;database=mydb;uid={Login};pwd={box.Password};SslMode=none;";
             var connection = new MySqlConnection(connectionString);
 
             try
@@ -70,7 +70,7 @@ namespace TaskList.ViewModels
                 dynamic settings = new ExpandoObject(); 
                 settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
 
-                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, Login), null, settings);
+                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, connectionString), null, settings);
 
                 (GetView() as Window).Close();
             }
