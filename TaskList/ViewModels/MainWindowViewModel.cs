@@ -3,6 +3,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading;
+using TaskList.DAL.Models;
 
 namespace TaskList.ViewModels
 {
@@ -13,6 +15,7 @@ namespace TaskList.ViewModels
 
         private string _signInTime;
         private string _login;
+        private string _selectedItem;
 
         [ImportingConstructor]
         public MainWindowViewModel(IWindowManager windowManager, string connectionString)
@@ -23,15 +26,37 @@ namespace TaskList.ViewModels
 
             NotifyOfPropertyChange(() => DateTimeSignIn);
 
-            for (int i = 0; i < 20; i++)
-            {
-                CarouselItems.Add($"item{i.ToString()}");
-            }
 
-            using (DAL.TaskListContext context = new DAL.TaskListContext(connectionString))
+            using (var context = new DAL.Repositories.EFUnitOfWork(connectionString))
             {
-                CarouselItems.Clear();
-                context.Attachments.ToList().ForEach(n=> CarouselItems.Add(n.Content));
+
+                //var item = (Attachments)context.Attachments.Find(o => o.Content == "записывайся блять").FirstOrDefault();
+
+                //if (item != null)
+                //{
+                //    item.Content = "пяздец";
+                //    context.Attachments.Update(item);
+                //    context.Save();
+                //}
+
+                //CarouselItems.Clear();
+                context.Attachments.GetAll().ToList().ForEach(n => CarouselItems.Add(n.Content));
+                SelectedItem = CarouselItems.First();
+
+                //var item = new DAL.Models.Attachments() { AttachTypeId = 2, Content = "записывайся блять", CreateDate = DateTime.UtcNow.Date};
+                //context.Attachments.Create(item);
+                
+
+            }
+        }
+
+        public string SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                NotifyOfPropertyChange(() => SelectedItem);
             }
         }
 

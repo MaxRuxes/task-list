@@ -127,17 +127,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DAL\Models\Attachments.cs" />
-    <Compile Include="DAL\Models\AttachmentType.cs" />
-    <Compile Include="DAL\Models\PriorityType.cs" />
-    <Compile Include="DAL\Models\RolesType.cs" />
-    <Compile Include="DAL\Models\Team.cs" />
-    <Compile Include="DAL\Models\Teams.cs" />
-    <Compile Include="DAL\Models\Todo.cs" />
-    <Compile Include="DAL\Models\TodoAndAttaches.cs" />
-    <Compile Include="DAL\Models\TodoAndUsers.cs" />
-    <Compile Include="DAL\Models\User.cs" />
-    <Compile Include="DAL\TaskListContext.cs" />
+    <Compile Include="DAL\Entities\Attachments.cs" />
+    <Compile Include="DAL\Entities\AttachmentType.cs" />
+    <Compile Include="DAL\Entities\PriorityType.cs" />
+    <Compile Include="DAL\Entities\RolesType.cs" />
+    <Compile Include="DAL\Entities\TeamInfo.cs" />
+    <Compile Include="DAL\Entities\Teams.cs" />
+    <Compile Include="DAL\Entities\Todo.cs" />
+    <Compile Include="DAL\Entities\TodoAndAttaches.cs" />
+    <Compile Include="DAL\Entities\TodoAndUsers.cs" />
+    <Compile Include="DAL\Entities\User.cs" />
+    <Compile Include="DAL\EF\TaskListContext.cs" />
+    <Compile Include="DAL\Interfaces\IRepository.cs" />
+    <Compile Include="DAL\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="DAL\Repositories\AttachmentsRepository.cs" />
+    <Compile Include="DAL\Repositories\AttachmentTypeRepository.cs" />
+    <Compile Include="DAL\Repositories\EFUnitOfWork.cs" />
+    <Compile Include="DAL\Repositories\PriorityRepository.cs" />
+    <Compile Include="DAL\Repositories\RolesRepository.cs" />
+    <Compile Include="DAL\Repositories\TeamInfoRepository.cs" />
+    <Compile Include="DAL\Repositories\TeamsRepository.cs" />
+    <Compile Include="DAL\Repositories\TodoAndAttachesRepository.cs" />
+    <Compile Include="DAL\Repositories\TodoAndUsersRepository.cs" />
+    <Compile Include="DAL\Repositories\TodosRepository.cs" />
+    <Compile Include="DAL\Repositories\UsersRepository.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
     <Page Include="Views\AuthorizationWindowView.xaml">
       <SubType>Designer</SubType>
@@ -207,7 +220,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BLL\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ToolKit\todolist_logo.jpg" />

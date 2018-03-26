@@ -13,5 +13,9 @@ namespace TaskList.DAL.Models
 
         [Column("idTodo")]
         public int IdTodo { get; set; }
+
+        public virtual Attachments Attachments { get; set; }
+
+        public virtual Todo Todo { get; set; }
     }
 }

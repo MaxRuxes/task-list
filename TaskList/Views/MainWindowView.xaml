@@ -91,9 +91,9 @@
                     <Setter Property="HorizontalAlignment" Value="Center"/>
                 </Style>
             </Grid.Resources>
-            
+
             <Image Source="/TaskList;component/ToolKit/todolist_logo.jpg" />
-            
+
             <!--Текущее дело-->
             <Border Grid.Column="1" Padding="0">
                 <Grid>
@@ -165,7 +165,7 @@
             </Grid>
         </Grid>
 
-        <!--Боковая часть-->        
+        <!--Боковая часть-->
         <Grid Grid.Row="1" Grid.Column="0"
               Margin="10">
             <Grid.RowDefinitions>
@@ -202,20 +202,26 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:Carousel x:Name="carousel" 
-                                         Grid.Row="0" Grid.RowSpan="1"
+
+                    <ListView ItemsSource="{Binding CarouselItems,UpdateSourceTrigger=PropertyChanged}"
+                              Grid.Row="0" Grid.ColumnSpan="3"
+                              Grid.RowSpan="2" 
+                              BorderThickness="0"/>
+
+
+
+                    <!--<syncfusion:Carousel Grid.Row="0" Grid.RowSpan="3"
                                          Grid.Column="0" Grid.ColumnSpan="3"
-                                         ItemsSource="{Binding CarouselItems}"
                                          ItemTemplate="{StaticResource todoItemTemplate}"
+                                         ItemsSource="{Binding CarouselItems,UpdateSourceTrigger=PropertyChanged}"
                                          VisualMode="CustomPath"
-                                         ItemsPerPage="7"
-                                         RadiusX="0" SelectedIndex="4">
+                                         >
                         <syncfusion:Carousel.Path>
                             <Path Data="M0,300 L600,300"
                                   Stroke="Blue" StrokeThickness="2" 
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </syncfusion:Carousel.Path>
-                    </syncfusion:Carousel>
+                    </syncfusion:Carousel>-->
 
                 </Grid>
             </Grid>

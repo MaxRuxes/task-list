@@ -8,10 +8,16 @@ namespace TaskList.DAL.Models
         [Column("idTodoAndUsers")]
         public int TodoAndUsersId { get; set; }
 
+        [ForeignKey("User")]
         [Column("idUser")]
         public int Iduser { get; set; }
 
+        [ForeignKey("Todo")]
         [Column("idTodo")]
         public int IdTodo { get; set; }
+
+        public virtual User User { get; set; }
+
+        public virtual Todo Todo { get; set; }
     }
 }

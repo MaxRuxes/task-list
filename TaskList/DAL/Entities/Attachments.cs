@@ -12,13 +12,16 @@ namespace TaskList.DAL.Models
         [Column("content")]
         public string Content { get; set; }
 
+        [ForeignKey("AttachType")]
         [Column("idAttachType")]
-        public int IdAttachType { get; set; }
+        public int AttachTypeId { get; set; }
 
         [Column("size")]
         public double? Size { get; set; }
 
         [Column("createDate")]
         public DateTime CreateDate { get; set; }
+        
+        public virtual AttachmentType AttachType { get; set; }
     }
 }

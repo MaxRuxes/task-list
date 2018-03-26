@@ -9,6 +9,7 @@ namespace TaskList.DAL.Models
         [Column("idTodo")]
         public int TodoId { get; set; }
 
+        [ForeignKey("Priority")]
         [Column("idPriority")]
         public int IdPriority { get; set; }
 
@@ -23,5 +24,7 @@ namespace TaskList.DAL.Models
 
         [Column("estimatedHours")]
         public int EstimatedHours { get; set; }
+
+        public virtual PriorityType Priority { get; set; }
     }
 }

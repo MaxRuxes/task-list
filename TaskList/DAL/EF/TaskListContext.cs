@@ -6,7 +6,10 @@ namespace TaskList.DAL
     [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     public class TaskListContext : DbContext
     {
-        public TaskListContext(string connectionString) : base(connectionString) { }
+        public TaskListContext(string connectionString) : base(connectionString)
+        {
+
+        }
 
         public DbSet<Attachments> Attachments { get; set; }
         public DbSet<AttachmentType> AttachmentTypes { get; set; }

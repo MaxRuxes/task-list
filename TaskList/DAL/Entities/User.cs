@@ -16,5 +16,7 @@ namespace TaskList.DAL.Models
 
         [Column("telegramContact")]
         public string TelegramContact { get; set; }
+
+        public virtual RolesType Role { get; set; }
     }
 }

@@ -59,7 +59,7 @@ namespace TaskList.ViewModels
 
             var box = (PasswordBox)xx;
 
-            var connectionString = $"Server=127.0.0.1;database=mydb;uid={Login};pwd={box.Password};SslMode=none;";
+            var connectionString = $"Server=127.0.0.1;database=mydb;uid={Login};pwd={box.Password};SslMode=none;Allow Zero Datetime=true";
             var connection = new MySqlConnection(connectionString);
 
             try

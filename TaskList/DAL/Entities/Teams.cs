@@ -13,5 +13,9 @@ namespace TaskList.DAL.Models
 
         [Column("idUser")]
         public int IdUser { get; set; }
+
+        public virtual User User { get; set; }
+
+        public virtual TeamInfo TeamInfo { get; set; }
     }
 }
