@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Caliburn.Micro;
 using System.Windows;
@@ -14,7 +13,6 @@ namespace TaskList.ViewModels
     {
         private readonly IWindowManager _windowManager;
 
-        private bool _enabledButton;
         private string _login;
 
         [ImportingConstructor]
@@ -25,17 +23,6 @@ namespace TaskList.ViewModels
 
         public AuthorizationWindowViewModel()
         {
-            EnabledButton = true;
-        }
-
-        public bool EnabledButton
-        {
-            get => _enabledButton;
-            set
-            {
-                _enabledButton = value;
-                NotifyOfPropertyChange(() => EnabledButton);
-            }
         }
 
         public string Login
@@ -53,9 +40,8 @@ namespace TaskList.ViewModels
             Environment.Exit(0);
         }
 
-        public async Task SignIn(object xx)
+        public void SignIn(object xx)
         {
-            EnabledButton = false;
 
             var box = (PasswordBox)xx;
 
@@ -64,8 +50,8 @@ namespace TaskList.ViewModels
 
             try
             {
-                await connection.OpenAsync();
-                await connection.CloseAsync();
+                connection.Open();
+                connection.Close();
 
                 dynamic settings = new ExpandoObject(); 
                 settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
@@ -80,7 +66,6 @@ namespace TaskList.ViewModels
             }
             finally
             {
-                EnabledButton = true;
                 connection.Dispose();
             }
         }

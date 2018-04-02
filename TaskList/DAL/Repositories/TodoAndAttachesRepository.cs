@@ -42,7 +42,7 @@ namespace TaskList.DAL.Repositories
 
         public IEnumerable<TodoAndAttaches> GetAll()
         {
-            return db.TodoAndAttachments.Include(o => o.Todo).Include(o => o.Attachments);
+            return db.TodoAndAttachments.Include(o => o.Todo).Include(o => o.Attachment);
         }
 
         public void Update(TodoAndAttaches item)

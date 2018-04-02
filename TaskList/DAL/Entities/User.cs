@@ -8,6 +8,7 @@ namespace TaskList.DAL.Models
         [Column("idUser")]
         public int UserId { get; set; }
 
+        [ForeignKey("Role")]
         [Column("role")]
         public int IdRole { get; set; }
 

@@ -58,6 +58,9 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.4.0.0-alpha.1\lib\netstandard1.0\Caliburn.Micro.dll</HintPath>
     </Reference>
@@ -100,6 +103,7 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
@@ -127,6 +131,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BLL\DTO\AttachmentsDTO.cs" />
+    <Compile Include="BLL\DTO\AttachmentTypeDTO.cs" />
+    <Compile Include="BLL\DTO\PriorityTypeDTO.cs" />
+    <Compile Include="BLL\DTO\RolesTypeDTO.cs" />
+    <Compile Include="BLL\DTO\TeamsDTO.cs" />
+    <Compile Include="BLL\DTO\TodoAndAttachesDTO.cs" />
+    <Compile Include="BLL\DTO\TodoAndUsersDTO.cs" />
+    <Compile Include="BLL\DTO\TodoDTO.cs" />
+    <Compile Include="BLL\DTO\UserDTO.cs" />
+    <Compile Include="BLL\Infrastructure\ValidationException.cs" />
+    <Compile Include="BLL\DTO\TeamInfoDTO.cs" />
+    <Compile Include="BLL\Interfaces\IAttachmentService.cs" />
+    <Compile Include="BLL\Interfaces\ITeamService.cs" />
+    <Compile Include="BLL\Interfaces\ITodoService.cs" />
+    <Compile Include="BLL\Interfaces\IUserService.cs" />
+    <Compile Include="BLL\Services\AttachmentService.cs" />
+    <Compile Include="BLL\Services\FunctionManagerService.cs" />
+    <Compile Include="BLL\Services\TeamService.cs" />
+    <Compile Include="BLL\Services\TodoService.cs" />
+    <Compile Include="BLL\Services\UserService.cs" />
     <Compile Include="DAL\Entities\Attachments.cs" />
     <Compile Include="DAL\Entities\AttachmentType.cs" />
     <Compile Include="DAL\Entities\PriorityType.cs" />
@@ -151,7 +175,15 @@
     <Compile Include="DAL\Repositories\TodoAndUsersRepository.cs" />
     <Compile Include="DAL\Repositories\TodosRepository.cs" />
     <Compile Include="DAL\Repositories\UsersRepository.cs" />
+    <Compile Include="Models\PriorityModel.cs" />
+    <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="Models\TodoModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
+    <Compile Include="ViewModels\UserInfoWindowViewModel.cs" />
+    <Compile Include="Views\UserInfoWindowView.xaml.cs">
+      <DependentUpon>UserInfoWindowView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\AuthorizationWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +209,10 @@
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\UserInfoWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -219,10 +255,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BLL\" />
+    <Folder Include="BLL\BusinessModels\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ToolKit\todolist_logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ToolKit\iconsMan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ToolKit\iconsInfo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

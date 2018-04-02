@@ -4,6 +4,7 @@ using System.Linq;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Models;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 
 namespace TaskList.DAL.Repositories
 {
@@ -47,7 +48,7 @@ namespace TaskList.DAL.Repositories
 
         public void Update(Todo item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            db.Todos.AddOrUpdate(item);
         }
     }
 }

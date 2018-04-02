@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using TaskList.DAL.Models;
 
 namespace TaskList.DAL

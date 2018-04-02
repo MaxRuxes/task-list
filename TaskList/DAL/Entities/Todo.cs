@@ -17,13 +17,13 @@ namespace TaskList.DAL.Models
         public string Content { get; set; }
 
         [Column("startDate")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [Column("endRealDate")]
-        public DateTime EndRealDate { get; set; }
+        public DateTime? EndRealDate { get; set; }
 
         [Column("estimatedHours")]
-        public int EstimatedHours { get; set; }
+        public int? EstimatedHours { get; set; }
 
         public virtual PriorityType Priority { get; set; }
     }

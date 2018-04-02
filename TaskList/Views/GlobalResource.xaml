@@ -8,20 +8,23 @@
 
     <Style TargetType="Button">
         <Setter Property="Margin" Value="5,5,0,5"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid>
+                    <Grid Width="{TemplateBinding Width}"
+                          Height="{TemplateBinding Height}"
+                          MinHeight="{TemplateBinding MinHeight}"
+                          MaxHeight="{TemplateBinding MaxHeight}">
                         <Rectangle HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch"
-                                       RadiusX="10" RadiusY="10" 
-                                       Fill="{TemplateBinding Background}"/>
+                                   VerticalAlignment="Stretch"
+                                   RadiusX="10" RadiusY="10" 
+                                   Fill="{TemplateBinding Background}"/>
                         <TextBlock Padding="15,5"
-                                       TextAlignment="Center"
-                                       FontSize="13"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Text="{TemplateBinding Content}"/>
+                                   TextAlignment="Center"
+                                   FontSize="13"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Text="{TemplateBinding Content}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -30,6 +33,9 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="Beige"/>
                             <Setter Property="Foreground" Value="DarkGray"/>
+                        </Trigger>
+                        <Trigger Property="Button.IsFocused" Value="True">
+                            <Setter Property="Background" Value="LightBlue"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

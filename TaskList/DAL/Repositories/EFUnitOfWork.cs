@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Models;
 
@@ -25,6 +26,8 @@ namespace TaskList.DAL.Repositories
         {
             db = new TaskListContext(connectionString);
         }
+
+        public Database Database => db.Database;
 
         public IRepository<Attachments> Attachments
         {
