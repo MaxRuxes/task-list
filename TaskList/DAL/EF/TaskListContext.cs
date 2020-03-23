@@ -5,12 +5,12 @@ using TaskList.DAL.Models;
 
 namespace TaskList.DAL
 {
-    [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
+    [DbConfigurationType(typeof(MySql.Data.EntityFramework.MySqlEFConfiguration))]
     public class TaskListContext : DbContext
     {
         public TaskListContext(string connectionString) : base(connectionString)
         {
-
+            //MySqlProviderServices se = null;
         }
 
         public DbSet<Attachments> Attachments { get; set; }

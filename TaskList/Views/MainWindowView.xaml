@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ViewModels="clr-namespace:TaskList.ViewModels"
+        xmlns:VModels="clr-namespace:TaskList.Models"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
@@ -26,7 +28,40 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="CornerRadius" Value="15" />
             </Style>
+            <DataTemplate x:Key="todoItemTemplate" DataType="{x:Type VModels:TodoModel}">
+                <Border Width="150" Background="LightBlue"
+                                        CornerRadius="20" BorderThickness="2"
+                                        BorderBrush="RosyBrown">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal"
+                                    Margin="10">
+                            <TextBlock Text="Описание:"/>
+                            <TextBlock Text="{Binding Path=ContentTodo}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                    Margin="10,0">
+                            <TextBlock Text="Оцененное время:"/>
+                            <TextBlock Text="{Binding Path=EstimatedHours}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                    Margin="10">
+                            <TextBlock Text="Приоритет: "/>
+                            <TextBlock Text="{Binding Path=Priority.PriorityContent}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </DataTemplate>
         </ResourceDictionary>
+
+        
     </Window.Resources>
 
     <Grid>
@@ -204,7 +239,8 @@
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="4.5*"/>
+                        <RowDefinition Height="2*"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -216,11 +252,24 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Список задач: "
                                Margin="5,5,5,0" />
-                    <ListView x:Name="items"
+                    <syncfusion:Carousel x:Name="carousel" 
+                                         Grid.Row="1"
+                                         Margin="0"
+                                         Grid.Column="1" Grid.ColumnSpan="3"
+                                         ItemsSource="{Binding CarouselItems}"
+                                         ItemTemplate="{StaticResource todoItemTemplate}"
+                                         VisualMode="CustomPath"
+                                         VerticalAlignment="Top" 
+                                         ItemsPerPage="7"
+                                         RadiusX="250" SelectedIndex="4">
+                    </syncfusion:Carousel>
+                    <!--<ListView x:Name="items"
                               SelectedItem="{Binding SelectedItem}"
                               ItemsSource="{Binding CarouselItems, UpdateSourceTrigger=PropertyChanged}"
                               Grid.Row="1" Grid.RowSpan="1"  
@@ -233,11 +282,11 @@
                                 </WrapPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                    </ListView>
+                    </ListView>-->
 
-                    <Border Grid.Row="2" 
+                    <Border Grid.Row="3" 
                             BorderBrush="Aqua" BorderThickness="0,0,0,2"
-                            Grid.Column="0" Grid.ColumnSpan="3"
+                            Grid.Column="0" Grid.ColumnSpan="5"
                             Margin="5"
                             Visibility="{Binding }">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -256,8 +305,8 @@
 
                     </Border>
 
-                    <Border Grid.Row="3" Grid.RowSpan="4"
-                            Grid.Column="0" Grid.ColumnSpan="3"
+                    <Border Grid.Row="4" Grid.RowSpan="4"
+                            Grid.Column="0" Grid.ColumnSpan="5"
                             Margin="5,0,5,5">
                         <StackPanel>
                             <!-- содержание-->

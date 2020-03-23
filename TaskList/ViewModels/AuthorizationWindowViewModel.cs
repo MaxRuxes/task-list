@@ -43,31 +43,37 @@ namespace TaskList.ViewModels
         public void SignIn(object xx)
         {
 
-            var box = (PasswordBox)xx;
+            try {
+                var box = (PasswordBox)xx;
 
-            var connectionString = $"Server=127.0.0.1;database=mydb;uid={Login};pwd={box.Password};SslMode=none;Allow Zero Datetime=true";
-            var connection = new MySqlConnection(connectionString);
+                var connectionString = $"Server=127.0.0.1;database=mydb;uid={Login};pwd={box.Password};SslMode=Required;Allow Zero Datetime=true";
+                var connection = new MySqlConnection(connectionString);
 
-            try
-            {
-                connection.Open();
-                connection.Close();
+                try
+                {
+                    connection.Open();
+                    connection.Close();
 
-                dynamic settings = new ExpandoObject(); 
-                settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
+                    dynamic settings = new ExpandoObject();
+                    settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
 
-                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, connectionString), null, settings);
+                    _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, connectionString), null, settings);
 
-                (GetView() as Window).Close();
+                    (GetView() as Window).Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    connection.Dispose();
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            finally
-            {
-                connection.Dispose();
             }
-        }
     }
 }
