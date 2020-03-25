@@ -22,10 +22,9 @@ namespace TaskList.ViewModels
         private IUnitOfWork uow;
         private IMapper mapper;
 
-        private IAttachmentService attachmentService;
         private ITodoService todoService;
         private IUserService userService;
-        private ITeamService teamService;
+        private IProjectService teamService;
 
         private TodoModel _selectedItem;
 
@@ -65,9 +64,8 @@ namespace TaskList.ViewModels
             uow = new DAL.Repositories.EFUnitOfWork(connectionString);
 
             todoService = new TodoService(uow);
-            attachmentService = new AttachmentService(uow);
             userService = new UserService(uow);
-            teamService = new TeamService(uow);
+            teamService = new ProjectService(uow);
 
             Login = connectionString.Split(';').ToList().Where(n => n.IndexOf("uid=") != -1).ToList()[0].Substring(4);
             CurrentUser = ResolveCurrentUser(Login);
@@ -146,7 +144,7 @@ namespace TaskList.ViewModels
             dynamic settings = new ExpandoObject();
             settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
 
-            var teams = mapper.Map<IEnumerable<TeamInfoDTO>, List<TeamModel>>(teamService.GetTeamsForUser(CurrentUser.UserId));
+            var teams = mapper.Map<IEnumerable<ProjectInfoDTO>, List<TeamModel>>(teamService.GetTeamsForUser(CurrentUser.UserId));
 
             _windowManager.ShowWindow(new UserInfoWindowViewModel(_windowManager, CurrentUser, teams), null, settings);
         }

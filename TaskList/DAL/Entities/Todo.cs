@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TaskList.DAL.Models
+namespace TaskList.DAL.Entities
 {
     [Table("todo")]
     public class Todo

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TaskList.DAL.Models
+namespace TaskList.DAL.Entities
 {
     [Table("user")]
     public class User

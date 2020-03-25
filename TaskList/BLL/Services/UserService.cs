@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
-using TaskList.DAL.Models;
+using TaskList.DAL.Entities;
 
 namespace TaskList.BLL.Services
 {

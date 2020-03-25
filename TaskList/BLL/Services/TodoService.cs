@@ -4,7 +4,7 @@ using TaskList.BLL.DTO;
 using TaskList.BLL.Infrastructure;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
-using TaskList.DAL.Models;
+using TaskList.DAL.Entities;
 
 namespace TaskList.BLL.Services
 {
@@ -48,16 +48,6 @@ namespace TaskList.BLL.Services
             if (todoItem != null)
             {
                 Database.Todos.Delete(idTodo);
-            }
-
-            // Чистим связанные записи в таблице приложений
-            var todosInAttachList = Database.TodoAndAttaches.Find(o => o.IdTodo == idTodo);
-            if (todosInAttachList != null)
-            {
-                foreach (var item in todosInAttachList)
-                {
-                    Database.TodoAndAttaches.Delete(item.TodoAndAttachesId);
-                }
             }
 
             // удаляем из связанных таблиц

@@ -1,6 +1,6 @@
 ﻿namespace TaskList.BLL.DTO
 {
-    public class TeamInfoDTO
+    public class ProjectInfoDTO
     {
         public int TeamInfoId { get; set; }
         public string NameTeam { get; set; }

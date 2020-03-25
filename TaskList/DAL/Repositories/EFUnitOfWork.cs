@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Data.Entity;
 using TaskList.DAL.Interfaces;
-using TaskList.DAL.Models;
+using TaskList.DAL.Entities;
 
 namespace TaskList.DAL.Repositories
 {
     public class EFUnitOfWork : IUnitOfWork
     {
-        private TaskListContext db;
+        private readonly TaskListContext _databaseContext;
 
-        private AttachmentsRepository attachmentsRepository;
-        private AttachmentTypeRepository attachmentTypeRepository;
         private PriorityRepository priorityRepository;
         private RolesRepository rolesRepository;
-        private TeamInfoRepository teamInfoRepository;
-        private TeamsRepository teamsRepository;
+        private ProjectInfoRepository teamInfoRepository;
+        private ProjectsRepository teamsRepository;
         private TodosRepository todosRepository;
-        private TodoAndAttachesRepository todoAndAttachesRepository;
+        private TodoAndProjectsRepository todoAndProjectsRepository;
         private TodoAndUsersRepository todoAndUsersRepository;
         private UsersRepository usersRepository;
 
@@ -24,34 +22,10 @@ namespace TaskList.DAL.Repositories
 
         public EFUnitOfWork(string connectionString)
         {
-            db = new TaskListContext(connectionString);
+            _databaseContext = new TaskListContext(connectionString);
         }
 
-        public Database Database => db.Database;
-
-        public IRepository<Attachments> Attachments
-        {
-            get
-            {
-                if (attachmentsRepository == null)
-                {
-                    attachmentsRepository = new AttachmentsRepository(db);
-                }
-                return attachmentsRepository;
-            }
-        }
-
-        public IRepository<AttachmentType> AttachmentTypes
-        {
-            get
-            {
-                if (attachmentTypeRepository == null)
-                {
-                    attachmentTypeRepository = new AttachmentTypeRepository(db);
-                }
-                return attachmentTypeRepository;
-            }
-        }
+        public Database Database => _databaseContext.Database;
 
         public IRepository<PriorityType> PriorityTypes
         {
@@ -59,8 +33,9 @@ namespace TaskList.DAL.Repositories
             {
                 if (priorityRepository == null)
                 {
-                    priorityRepository = new PriorityRepository(db);
+                    priorityRepository = new PriorityRepository(_databaseContext);
                 }
+
                 return priorityRepository;
             }
         }
@@ -71,31 +46,32 @@ namespace TaskList.DAL.Repositories
             {
                 if (rolesRepository == null)
                 {
-                    rolesRepository = new RolesRepository(db);
+                    rolesRepository = new RolesRepository(_databaseContext);
                 }
+
                 return rolesRepository;
             }
         }
 
-        public IRepository<TeamInfo> TeamInfos
+        public IRepository<ProjectInfo> TeamInfos
         {
             get
             {
                 if (teamInfoRepository == null)
                 {
-                    teamInfoRepository = new TeamInfoRepository(db);
+                    teamInfoRepository = new ProjectInfoRepository(_databaseContext);
                 }
                 return teamInfoRepository;
             }
         }
 
-        public IRepository<Teams> Teams
+        public IRepository<Projects> Teams
         {
             get
             {
                 if (teamsRepository == null)
                 {
-                    teamsRepository = new TeamsRepository(db);
+                    teamsRepository = new ProjectsRepository(_databaseContext);
                 }
                 return teamsRepository;
             }
@@ -107,21 +83,21 @@ namespace TaskList.DAL.Repositories
             {
                 if (todosRepository == null)
                 {
-                    todosRepository = new TodosRepository(db);
+                    todosRepository = new TodosRepository(_databaseContext);
                 }
                 return todosRepository;
             }
         }
 
-        public IRepository<TodoAndAttaches> TodoAndAttaches
+        public IRepository<TodoAndProjects> TodoAndProjects
         {
             get
             {
-                if (todoAndAttachesRepository == null)
+                if (todoAndProjectsRepository == null)
                 {
-                    todoAndAttachesRepository = new TodoAndAttachesRepository(db);
+                    todoAndProjectsRepository = new TodoAndProjectsRepository(_databaseContext);
                 }
-                return todoAndAttachesRepository;
+                return todoAndProjectsRepository;
             }
         }
 
@@ -131,7 +107,7 @@ namespace TaskList.DAL.Repositories
             {
                 if (todoAndUsersRepository == null)
                 {
-                    todoAndUsersRepository = new TodoAndUsersRepository(db);
+                    todoAndUsersRepository = new TodoAndUsersRepository(_databaseContext);
                 }
                 return todoAndUsersRepository;
             }
@@ -143,7 +119,7 @@ namespace TaskList.DAL.Repositories
             {
                 if (usersRepository == null)
                 {
-                    usersRepository = new UsersRepository(db);
+                    usersRepository = new UsersRepository(_databaseContext);
                 }
                 return usersRepository;
             }
@@ -155,7 +131,7 @@ namespace TaskList.DAL.Repositories
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    _databaseContext.Dispose();
                 }
                 disposed = true;
             }
@@ -169,7 +145,7 @@ namespace TaskList.DAL.Repositories
 
         public void Save()
         {
-            db.SaveChanges();
+            _databaseContext.SaveChanges();
         }
     }
 }

@@ -2,52 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using TaskList.DAL.Interfaces;
-using TaskList.DAL.Models;
+using TaskList.DAL.Entities;
 using System.Data.Entity;
 
 namespace TaskList.DAL.Repositories
 {
     public class UsersRepository : IRepository<User>
     {
-        private TaskListContext db;
+        private readonly TaskListContext _databaseContext;
 
         public UsersRepository(TaskListContext taskListContext)
         {
-            db = taskListContext;
+            _databaseContext = taskListContext;
         }
 
         public void Create(User item)
         {
-            db.Users.Add(item);
+            _databaseContext.Users.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = db.Users.Find(id);
+            var item = _databaseContext.Users.Find(id);
             if(item != null)
             {
-                db.Users.Remove(item);
+                _databaseContext.Users.Remove(item);
             }
         }
 
         public IEnumerable<User> Find(Func<User, bool> predicate)
         {
-            return db.Users.Where(predicate).ToList();
+            return _databaseContext.Users.Where(predicate).ToList();
         }
 
         public User Get(int id)
         {
-            return db.Users.Find(id);
+            return _databaseContext.Users.Find(id);
         }
 
         public IEnumerable<User> GetAll()
         {
-            return db.Users.Include(o => o.Role);
+            return _databaseContext.Users.Include(o => o.Role);
         }
 
         public void Update(User item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _databaseContext.Entry(item).State = EntityState.Modified;
         }
     }
 }

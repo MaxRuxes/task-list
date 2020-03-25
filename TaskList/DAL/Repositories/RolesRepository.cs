@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TaskList.DAL.Interfaces;
-using TaskList.DAL.Models;
+using TaskList.DAL.Entities;
 
 namespace TaskList.DAL.Repositories
 {
