@@ -34,8 +34,8 @@
                             <Setter Property="Background" Value="Beige"/>
                             <Setter Property="Foreground" Value="DarkGray"/>
                         </Trigger>
-                        <Trigger Property="Button.IsFocused" Value="True">
-                            <Setter Property="Background" Value="LightBlue"/>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#89CDE4"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -53,7 +53,7 @@ namespace TaskList.DAL.Repositories
             }
         }
 
-        public IRepository<ProjectInfo> TeamInfos
+        public IRepository<ProjectInfo> ProjectInfo
         {
             get
             {
@@ -65,7 +65,7 @@ namespace TaskList.DAL.Repositories
             }
         }
 
-        public IRepository<Projects> Teams
+        public IRepository<Projects> Projects
         {
             get
             {

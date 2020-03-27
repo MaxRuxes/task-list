@@ -12,6 +12,7 @@ using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
 using TaskList.Models;
+using TaskList.ViewModels.Helpers;
 
 namespace TaskList.ViewModels
 {
@@ -19,21 +20,21 @@ namespace TaskList.ViewModels
     public class MainWindowViewModel : PropertyChangedBase, IDisposable
     {
         private readonly IWindowManager _windowManager;
-        private IUnitOfWork uow;
-        private IMapper mapper;
+        private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
-        private ITodoService todoService;
-        private IUserService userService;
-        private IProjectService teamService;
+        private readonly ITodoService todoService;
+        private readonly IUserService userService;
+        private readonly IProjectService projectService;
 
         private TodoModel _selectedItem;
 
-        private string _signInTime;
+        private readonly string _signInTime;
         private string _login;
         private int idPriorityType;
         private Visibility _isEditModeVisibility;
 
-        private UserModel CurrentUser { get; set; }
+        private UserModel _currentUser;
 
 
         [ImportingConstructor]
@@ -43,32 +44,16 @@ namespace TaskList.ViewModels
 
             IsEditModeVisibility = Visibility.Hidden;
 
-            mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<TodoDTO, TodoModel>()
-                    .ForMember(x => x.ContentTodo, x => x.MapFrom(m => m.Content));
-                cfg.CreateMap<TodoModel, TodoDTO>()
-                    .ForMember(x => x.Content, x => x.MapFrom(m => m.ContentTodo));
-
-                cfg.CreateMap<PriorityTypeDTO, PriorityModel>()
-                    .ForMember(x => x.PriorityContent, x => x.MapFrom(m => m.NamePriority))
-                    .ForMember(x => x.PriorityId, x => x.MapFrom(m => m.PriorityTypeId));
-                cfg.CreateMap<PriorityModel, PriorityTypeDTO>()
-                    .ForMember(x => x.NamePriority, x => x.MapFrom(m => m.PriorityContent))
-                    .ForMember(x => x.PriorityTypeId, x => x.MapFrom(m => m.PriorityId));
-
-                cfg.CreateMap<UserDTO, UserModel>().ForMember(x => x.Role, x => x.MapFrom(m => m.Role));
-                cfg.CreateMap<UserModel, UserDTO>();
-            }).CreateMapper();
+            mapper = MapperHelpers.CreateAutoMapper();
 
             uow = new DAL.Repositories.EFUnitOfWork(connectionString);
 
             todoService = new TodoService(uow);
             userService = new UserService(uow);
-            teamService = new ProjectService(uow);
+            projectService = new ProjectService(uow);
 
             Login = connectionString.Split(';').ToList().Where(n => n.IndexOf("uid=") != -1).ToList()[0].Substring(4);
-            CurrentUser = ResolveCurrentUser(Login);
+            _currentUser = ResolveCurrentUser(Login);
 
             _signInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
             NotifyOfPropertyChange(() => DateTimeSignIn);
@@ -144,9 +129,9 @@ namespace TaskList.ViewModels
             dynamic settings = new ExpandoObject();
             settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
 
-            var teams = mapper.Map<IEnumerable<ProjectInfoDTO>, List<TeamModel>>(teamService.GetTeamsForUser(CurrentUser.UserId));
+            var teams = mapper.Map<IEnumerable<ProjectInfoDTO>, List<ProjectModel>>(projectService.GetProjectsForUser(_currentUser.UserId));
 
-            _windowManager.ShowWindow(new UserInfoWindowViewModel(_windowManager, CurrentUser, teams), null, settings);
+            _windowManager.ShowWindow(new UserInfoWindowViewModel(_windowManager, _currentUser, teams), null, settings);
         }
 
         private void UpdateItemCollection(int id)
@@ -249,7 +234,7 @@ namespace TaskList.ViewModels
             }
             else
             {
-                todoService.CreateTodo(CurrentUser.UserId, mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                todoService.CreateTodo(_currentUser.UserId, mapper.Map<TodoModel, TodoDTO>(SelectedItem));
             }
 
             UpdateItemCollection(idPriorityType);

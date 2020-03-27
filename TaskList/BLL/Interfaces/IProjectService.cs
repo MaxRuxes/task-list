@@ -5,8 +5,8 @@ namespace TaskList.BLL.Interfaces
 {
     public interface IProjectService
     {
-        IEnumerable<ProjectInfoDTO> GetTeamsForUser(int userId);
-        IEnumerable<ProjectInfoDTO> GetAllTeamInfo();
+        IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId);
+        IEnumerable<ProjectInfoDTO> GetAllProjects();
         ProjectInfoDTO GetTeamInfo(int? id);
     }
 }

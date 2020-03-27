@@ -23,6 +23,7 @@ namespace TaskList.ViewModels
 
         public AuthorizationWindowViewModel()
         {
+
         }
 
         public string Login
@@ -54,10 +55,7 @@ namespace TaskList.ViewModels
                     connection.Open();
                     connection.Close();
 
-                    dynamic settings = new ExpandoObject();
-                    settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
-
-                    _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, connectionString), null, settings);
+                    _windowManager.ShowWindow(new ProjectsViewModel(_windowManager, connectionString));
 
                     (GetView() as Window).Close();
                 }

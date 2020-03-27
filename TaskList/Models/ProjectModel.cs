@@ -1,8 +1,8 @@
 ﻿namespace TaskList.Models
 {
-    public class TeamModel
+    public class ProjectModel
     {
-        public int TeamInfoId { get; set; }
+        public int ProjectId { get; set; }
 
         public string NameTeam { get; set; }
         public string Location { get; set; }

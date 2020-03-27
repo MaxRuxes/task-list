@@ -11,7 +11,7 @@ namespace TaskList.BLL.Services
     public class TodoService : ITodoService
     {
         private IUnitOfWork Database { get; set; }
-        private IMapper mapper;
+        private readonly IMapper mapper;
 
         public TodoService(IUnitOfWork uow)
         {
@@ -70,12 +70,15 @@ namespace TaskList.BLL.Services
 
         public IEnumerable<TodoDTO> GetAllTodos(int idPrior)
         {
-            return mapper.Map<IEnumerable<Todo>, List<TodoDTO>>(Database.Todos.Find(o => o.IdPriority == idPrior));
+            return mapper
+                .Map<IEnumerable<Todo>, List<TodoDTO>>(Database
+                .Todos
+                .Find(o => o.IdPriority == idPrior));
         }
 
         public TodoDTO GetTodo(int idTodo)
         {
-            return mapper.Map<Todo, TodoDTO>(Database.Todos.Get(idTodo) ?? default(Todo));
+            return mapper.Map<Todo, TodoDTO>(Database.Todos.Get(idTodo) ?? default);
         }
 
         public void UpdateTodo(TodoDTO todo)

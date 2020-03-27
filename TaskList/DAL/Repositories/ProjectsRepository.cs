@@ -18,32 +18,32 @@ namespace TaskList.DAL.Repositories
 
         public void Create(Projects item)
         {
-            _databaseContext.Teams.Add(item);
+            _databaseContext.Projects.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.Teams.Find(id);
+            var item = _databaseContext.Projects.Find(id);
             if (item != null)
             {
-                _databaseContext.Teams.Remove(item);
+                _databaseContext.Projects.Remove(item);
             }
         }
 
         public IEnumerable<Projects> Find(Func<Projects, bool> predicate)
         {
-            return _databaseContext.Teams.Where(predicate).ToList();
+            return _databaseContext.Projects.Where(predicate).ToList();
         }
 
         public Projects Get(int id)
         {
-            return _databaseContext.Teams.Find(id);
+            return _databaseContext.Projects.Find(id);
         }
 
         public IEnumerable<Projects> GetAll()
         {
             return _databaseContext
-                .Teams
+                .Projects
                 .Include(o => o.ProjectInfo)
                 .Include(o => o.User);
         }

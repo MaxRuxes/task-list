@@ -7,8 +7,8 @@ namespace TaskList.DAL.Interfaces
     {
         IRepository<PriorityType> PriorityTypes { get; }
         IRepository<RolesType> RolesTypes { get; }
-        IRepository<ProjectInfo> TeamInfos { get; }
-        IRepository<Projects> Teams { get; }
+        IRepository<ProjectInfo> ProjectInfo { get; }
+        IRepository<Projects> Projects { get; }
         IRepository<Todo> Todos { get; }
         IRepository<TodoAndProjects> TodoAndProjects { get; }
         IRepository<TodoAndUsers> TodoAndUsers { get; }

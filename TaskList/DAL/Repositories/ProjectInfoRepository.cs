@@ -18,31 +18,31 @@ namespace TaskList.DAL.Repositories
 
         public void Create(ProjectInfo item)
         {
-            db.TeamsInfo.Add(item);
+            db.ProjectInfo.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = db.TeamsInfo.Find(id);
+            var item = db.ProjectInfo.Find(id);
             if (item != null)
             {
-                db.TeamsInfo.Remove(item);
+                db.ProjectInfo.Remove(item);
             }
         }
 
         public IEnumerable<ProjectInfo> Find(Func<ProjectInfo, bool> predicate)
         {
-            return db.TeamsInfo.Where(predicate).ToList();
+            return db.ProjectInfo.Where(predicate).ToList();
         }
 
         public ProjectInfo Get(int id)
         {
-            return db.TeamsInfo.Find(id);
+            return db.ProjectInfo.Find(id);
         }
 
         public IEnumerable<ProjectInfo> GetAll()
         {
-            return db.TeamsInfo;
+            return db.ProjectInfo;
         }
 
         public void Update(ProjectInfo item)

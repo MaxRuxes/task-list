@@ -13,17 +13,17 @@ namespace TaskList.ViewModels
         private readonly IWindowManager _windowManager;
 
         [ImportingConstructor]
-        public UserInfoWindowViewModel(IWindowManager windowManager, UserModel user, List<TeamModel> teams)
+        public UserInfoWindowViewModel(IWindowManager windowManager, UserModel user, List<ProjectModel> teams)
         {
             _windowManager = windowManager;
 
             Currentuser = user;
-            Teams = new ObservableCollection<TeamModel>(teams);
+            Teams = new ObservableCollection<ProjectModel>(teams);
         }
 
         public UserModel Currentuser { get; }
 
-        public ObservableCollection<TeamModel> Teams { get; }
+        public ObservableCollection<ProjectModel> Teams { get; }
 
         public void CloseCurrentWindow()
         {

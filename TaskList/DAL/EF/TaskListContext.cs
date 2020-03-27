@@ -13,8 +13,8 @@ namespace TaskList.DAL
 
         public DbSet<PriorityType> PriorityTypes { get; set; }
         public DbSet<RolesType> RolesTypes { get; set; }
-        public DbSet<ProjectInfo> TeamsInfo { get; set; }
-        public DbSet<Projects> Teams { get; set; }
+        public DbSet<ProjectInfo> ProjectInfo { get; set; }
+        public DbSet<Projects> Projects { get; set; }
         public DbSet<Todo> Todos { get; set; }
         public DbSet<TodoAndUsers> TodoAndUsers { get; set; }
         public DbSet<TodoAndProjects> TodoAndProjects { get; set; }

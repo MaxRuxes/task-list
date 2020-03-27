@@ -23,19 +23,19 @@ namespace TaskList.BLL.Services
             }).CreateMapper();
         }
 
-        public IEnumerable<ProjectInfoDTO> GetAllTeamInfo()
+        public IEnumerable<ProjectInfoDTO> GetAllProjects()
         {
-            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.TeamInfos.GetAll());
+            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.ProjectInfo.GetAll());
         }
 
         public ProjectInfoDTO GetTeamInfo(int? id)
         {
-            return mapper.Map<ProjectInfo, ProjectInfoDTO>(Database.TeamInfos.Get(id ?? 1));
+            return mapper.Map<ProjectInfo, ProjectInfoDTO>(Database.ProjectInfo.Get(id ?? 1));
         }
 
-        public IEnumerable<ProjectInfoDTO> GetTeamsForUser(int userId)
+        public IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId)
         {
-            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.Teams.Find(o => o.IdUser == userId).Select(o => o.ProjectInfo)); 
+            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.Projects.Find(o => o.IdUser == userId).Select(o => o.ProjectInfo)); 
         }
     }
 }
