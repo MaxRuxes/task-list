@@ -3,11 +3,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
+using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
-using TaskList.Models;
 
 namespace TaskList.ViewModels
 {
@@ -30,16 +29,43 @@ namespace TaskList.ViewModels
 
             var projectsNames = projectService.GetAllProjects().ToList();
 
-            Projects = new ObservableCollection<string>(projectsNames.Select(x => x.NameProject));
+            Projects = new ObservableCollection<ProjectInfoDTO>(projectsNames);
+            CurrentProject = Projects.FirstOrDefault();
         }
 
-        public ObservableCollection<string> Projects { get; set; }
+        public ObservableCollection<ProjectInfoDTO> Projects { get; set; }
+
+        public ProjectInfoDTO CurrentProject { get; set; }
 
         public void SelectProject(string project)
         {
             _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
-
+            (GetView() as Window)?.Close();
         }
+
+        public void CreateProjectCommand(string project)
+        {
+            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
+            (GetView() as Window)?.Close();
+        }
+
+        public void RemoveProjectCommand(ProjectInfoDTO project)
+        {
+            projectService.DeleteProject(project.ProjectInfoId);
+
+            Projects.Remove(CurrentProject);
+            CurrentProject = Projects.FirstOrDefault();
+        }
+
+        public void RenameProjectCommand(string project)
+        {
+            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
+            (GetView() as Window)?.Close();
+        }
+
+
+
+
 
     }
 }

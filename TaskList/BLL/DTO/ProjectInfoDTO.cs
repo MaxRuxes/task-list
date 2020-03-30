@@ -2,7 +2,7 @@
 {
     public class ProjectInfoDTO
     {
-        public int TeamInfoId { get; set; }
+        public int ProjectInfoId { get; set; }
         public string NameProject { get; set; }
         public string StackTecnology { get; set; }
     }

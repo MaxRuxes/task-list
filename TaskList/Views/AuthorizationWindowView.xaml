@@ -31,7 +31,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Todo list"
+        <TextBlock Grid.Row="0" Text="ToDo"
                    Margin="20,40"
                    VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontFamily="Segoue" FontSize="32"
@@ -48,7 +48,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="Login"
+                       Text="Логин"
                        VerticalAlignment="Center"
                        Margin="5"/>
             <TextBox x:Name="Login"
@@ -57,7 +57,7 @@
                      Margin="2,4"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0"
-                       Text="Pass"
+                       Text="Пароль"
                        VerticalAlignment="Center"
                        Margin="5"/>
             <PasswordBox Name="passwordBox" Grid.Row="1" Grid.Column="1"
@@ -68,7 +68,7 @@
             <Button VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="5"
-                    Content="Sign in"
+                    Content="Войти"
                    
                     IsEnabled="{Binding EnabledButton, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -84,7 +84,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="5"
-                    Content="Cancel"/>
+                    Content="Выйти"/>
         </StackPanel>
     </Grid>
 </Window>

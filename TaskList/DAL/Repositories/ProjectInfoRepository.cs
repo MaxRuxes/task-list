@@ -16,9 +16,9 @@ namespace TaskList.DAL.Repositories
             db = taskListContext;
         }
 
-        public void Create(ProjectInfo item)
+        public ProjectInfo Create(ProjectInfo item)
         {
-            db.ProjectInfo.Add(item);
+            return db.ProjectInfo.Add(item);
         }
 
         public void Delete(int id)

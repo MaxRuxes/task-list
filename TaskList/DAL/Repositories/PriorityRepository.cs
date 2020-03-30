@@ -16,9 +16,9 @@ namespace TaskList.DAL.Repositories
             db = taskListContext;
         }
 
-        public void Create(PriorityType item)
+        public PriorityType Create(PriorityType item)
         {
-            db.PriorityTypes.Add(item);
+            return db.PriorityTypes.Add(item);
         }
 
         public void Delete(int id)

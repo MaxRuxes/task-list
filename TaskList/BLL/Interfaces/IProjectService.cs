@@ -7,6 +7,10 @@ namespace TaskList.BLL.Interfaces
     {
         IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId);
         IEnumerable<ProjectInfoDTO> GetAllProjects();
-        ProjectInfoDTO GetTeamInfo(int? id);
+
+        ProjectInfoDTO CreateProject(ProjectInfoDTO project);
+        void UpdateProject(ProjectInfoDTO projectInfo);
+        void DeleteProject(int idProject);
+
     }
 }

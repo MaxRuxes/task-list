@@ -16,9 +16,9 @@ namespace TaskList.DAL.Repositories
             _databaseContext = taskListContext;
         }
 
-        public void Create(TodoAndUsers item)
+        public TodoAndUsers Create(TodoAndUsers item)
         {
-            _databaseContext.TodoAndUsers.Add(item);
+            return _databaseContext.TodoAndUsers.Add(item);
         }
 
         public void Delete(int id)

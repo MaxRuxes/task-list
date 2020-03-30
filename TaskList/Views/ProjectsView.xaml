@@ -3,6 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:cal="http://www.caliburnproject.org"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
+        xmlns:dto="clr-namespace:TaskList.BLL.DTO"
+        xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers"
         mc:Ignorable="d"
         Title="ProjectsView"
         Height="350" Width="500"
@@ -11,7 +14,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
-        d:DataContext="{d:DesignInstance d:Type={x:Type ViewModels:ProjectsViewModel}}">
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectsViewModel}}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,6 +24,7 @@
                 <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="FontSize" Value="14"/>
             </Style>
+            <helpers:IsNotNullToBoolConverter x:Key="IsNotNullToBoolConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -38,20 +42,59 @@
             <TextBlock Grid.Row="0" 
                        Margin="10,0"
                        Text="Проекты:"/>
-            <ListBox x:Name="projects" 
-                     ItemsSource="{Binding Projects}"
-                     Grid.Row="1"
-                     BorderThickness="0"/>
+            <ListView x:Name="projects" 
+                        ItemsSource="{Binding Projects}"
+                        SelectedItem="{Binding CurrentProject}"
+                        Grid.Row="1"
+                        BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type dto:ProjectInfoDTO}">
+                        <TextBlock Text="{Binding Path=NameProject, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
         
-        <StackPanel HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Grid.Row="1">
+        <Grid Grid.Row="1"
+              Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <Button Content="Создать"
-                    Margin="15">
+                    Margin="0,0,5,0"
+                    Grid.Column="0">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="SelectProject">
+                        <cal:ActionMessage MethodName="CreateProjectCommand">
+                            <cal:Parameter Value="{Binding ElementName=projects, Path=SelectedItem}"/>
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <Button Content="Удалить"
+                    Margin="5,0"
+                    Grid.Column="1"
+                    IsEnabled="{Binding CurrentProject, Converter={StaticResource IsNotNullToBoolConverter}}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="RemoveProjectCommand">
+                            <cal:Parameter Value="{Binding ElementName=projects, Path=SelectedItem}"/>
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <Button Content="Переименовать"
+                    Margin="5,0"
+                    Grid.Column="2"
+                    IsEnabled="{Binding CurrentProject, Converter={StaticResource IsNotNullToBoolConverter}}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="RenameProjectCommand">
                             <cal:Parameter Value="{Binding ElementName=projects, Path=SelectedItem}"/>
                         </cal:ActionMessage>
                     </i:EventTrigger>
@@ -59,7 +102,10 @@
             </Button>
             
             <Button Content="Выбрать"
-                    Margin="15">
+                    Margin="5,0,0,0"
+                    Grid.Column="3"
+                    HorizontalAlignment="Right"
+                    IsEnabled="{Binding CurrentProject, Converter={StaticResource IsNotNullToBoolConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="SelectProject">
@@ -68,6 +114,6 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

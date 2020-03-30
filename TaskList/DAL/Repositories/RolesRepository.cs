@@ -16,9 +16,9 @@ namespace TaskList.DAL.Repositories
             db = taskListContext;
         }
 
-        public void Create(RolesType item)
+        public RolesType Create(RolesType item)
         {
-            db.RolesTypes.Add(item);
+            return db.RolesTypes.Add(item);
         }
 
         public void Delete(int id)

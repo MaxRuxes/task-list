@@ -94,7 +94,6 @@
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Shared.WPF, Version=17.4460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -185,6 +184,8 @@
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
     <Compile Include="ViewModels\Helpers\AccessToDatabaseHelpers.cs" />
+    <Compile Include="ViewModels\Helpers\IsEqualConverter.cs" />
+    <Compile Include="ViewModels\Helpers\IsNotNullToBoolConverter.cs" />
     <Compile Include="ViewModels\Helpers\MapperHelpers.cs" />
     <Compile Include="ViewModels\ProjectsViewModel.cs" />
     <Compile Include="ViewModels\UserInfoWindowViewModel.cs" />

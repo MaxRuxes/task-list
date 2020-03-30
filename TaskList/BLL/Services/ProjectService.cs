@@ -28,10 +28,24 @@ namespace TaskList.BLL.Services
             return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.ProjectInfo.GetAll());
         }
 
-        public ProjectInfoDTO GetTeamInfo(int? id)
+        public ProjectInfoDTO CreateProject(ProjectInfoDTO project)
         {
-            return mapper.Map<ProjectInfo, ProjectInfoDTO>(Database.ProjectInfo.Get(id ?? 1));
+            var input = mapper.Map<ProjectInfoDTO, ProjectInfo>(project);
+            var output = Database.ProjectInfo.Create(input);
+            return mapper.Map<ProjectInfo, ProjectInfoDTO>(output);
         }
+
+        public void UpdateProject(ProjectInfoDTO projectInfo)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DeleteProject(int idProject)
+        {
+            Database.ProjectInfo.Delete(idProject);
+            Database.Save();
+        }
+
 
         public IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId)
         {

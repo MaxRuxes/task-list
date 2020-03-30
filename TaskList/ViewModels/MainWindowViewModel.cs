@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using System.Dynamic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
@@ -17,21 +18,32 @@ using TaskList.ViewModels.Helpers;
 namespace TaskList.ViewModels
 {
     [Export(typeof(MainWindowViewModel))]
-    public class MainWindowViewModel : PropertyChangedBase, IDisposable
+    public class MainWindowViewModel : Screen, IDisposable
     {
         private readonly IWindowManager _windowManager;
-        private readonly IUnitOfWork uow;
-        private readonly IMapper mapper;
+        private readonly string _connectionString;
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        private readonly ITodoService todoService;
-        private readonly IUserService userService;
-        private readonly IProjectService projectService;
+        private readonly ITodoService _todoService;
+        private readonly IUserService _userService;
+        private readonly IProjectService _projectService;
 
         private TodoModel _selectedItem;
 
         private readonly string _signInTime;
         private string _login;
-        private int idPriorityType;
+
+        public int IdPriorityType
+        {
+            get => _idPriorityType;
+            set
+            {
+                _idPriorityType = value;
+                NotifyOfPropertyChange(() => this.IdPriorityType);
+            }
+        }
+
         private Visibility _isEditModeVisibility;
 
         private UserModel _currentUser;
@@ -41,24 +53,26 @@ namespace TaskList.ViewModels
         public MainWindowViewModel(IWindowManager windowManager, string connectionString)
         {
             _windowManager = windowManager;
-
+            _connectionString = connectionString;
             IsEditModeVisibility = Visibility.Hidden;
 
-            mapper = MapperHelpers.CreateAutoMapper();
+            _mapper = MapperHelpers.CreateAutoMapper();
 
-            uow = new DAL.Repositories.EFUnitOfWork(connectionString);
+            _uow = new DAL.Repositories.EFUnitOfWork(connectionString);
 
-            todoService = new TodoService(uow);
-            userService = new UserService(uow);
-            projectService = new ProjectService(uow);
+            _todoService = new TodoService(_uow);
+            _userService = new UserService(_uow);
+            _projectService = new ProjectService(_uow);
 
-            Login = connectionString.Split(';').ToList().Where(n => n.IndexOf("uid=") != -1).ToList()[0].Substring(4);
+            Login = connectionString
+                .Split(';')
+                .FirstOrDefault(n => n.IndexOf("uid=", StringComparison.Ordinal) != -1)?
+                .Substring(4);
             _currentUser = ResolveCurrentUser(Login);
 
             _signInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
             NotifyOfPropertyChange(() => DateTimeSignIn);
-
-            ImportAndUrgentCommand();
+            CurrentPriorityType = "Не выбран";
             NotifyOfPropertyChange(() => CountAllTodos);
 
             HideShit = Visibility.Visible;
@@ -71,57 +85,64 @@ namespace TaskList.ViewModels
             switch (name)
             {
                 case "root":
-                    {
-                        id = 1;
-                        CanEditVisibility = Visibility.Visible;
-                        CanEdit = true;
-                        break;
-                    }
+                {
+                    id = 1;
+                    CanEditVisibility = Visibility.Visible;
+                    CanEdit = true;
+                    break;
+                }
                 case "manager":
-                    {
-                        id = 2;
-                        CanEditVisibility = Visibility.Visible;
-                        CanEdit = false;
-                        break;
-                    }
+                {
+                    id = 2;
+                    CanEditVisibility = Visibility.Visible;
+                    CanEdit = false;
+                    break;
+                }
                 case "employee":
-                    {
-                        id = 3;
-                        CanEditVisibility = Visibility.Collapsed;
-                        CanEdit = false;
-                        break;
-                    }
+                {
+                    id = 3;
+                    CanEditVisibility = Visibility.Collapsed;
+                    CanEdit = false;
+                    break;
+                }
             }
 
             NotifyOfPropertyChange(() => CanEdit);
             NotifyOfPropertyChange(() => CanEditVisibility);
 
-            return mapper.Map<UserDTO, UserModel>(userService.GetUser(id));
+            return _mapper.Map<UserDTO, UserModel>(_userService.GetUser(id));
         }
 
         #region Clicks Left panel
+
         public void ImportAndUrgentCommand()
         {
-            idPriorityType = 1;
-            UpdateItemCollection(idPriorityType);
+            IdPriorityType = 1;
+            UpdateItemCollection(IdPriorityType);
         }
 
         public void ImportAndNonUrgentCommand()
         {
-            idPriorityType = 2;
-            UpdateItemCollection(idPriorityType);
+            IdPriorityType = 2;
+            UpdateItemCollection(IdPriorityType);
         }
 
         public void UnImportAndUrgentCommand()
         {
-            idPriorityType = 3;
-            UpdateItemCollection(idPriorityType);
+            IdPriorityType = 3;
+            UpdateItemCollection(IdPriorityType);
         }
 
         public void UnImportAndNonUrgentCommand()
         {
-            idPriorityType = 4;
-            UpdateItemCollection(idPriorityType);
+            IdPriorityType = 4;
+            UpdateItemCollection(IdPriorityType);
+        }
+
+        public void BackToProjectsCommand()
+        {
+            _windowManager.ShowWindow(new ProjectsViewModel(_windowManager, _connectionString));
+            (GetView() as Window).Close();
         }
 
         public void OpenUserInfoWindow()
@@ -129,7 +150,8 @@ namespace TaskList.ViewModels
             dynamic settings = new ExpandoObject();
             settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
 
-            var teams = mapper.Map<IEnumerable<ProjectInfoDTO>, List<ProjectModel>>(projectService.GetProjectsForUser(_currentUser.UserId));
+            var teams = _mapper.Map<IEnumerable<ProjectInfoDTO>, List<ProjectModel>>(
+                _projectService.GetProjectsForUser(_currentUser.UserId));
 
             _windowManager.ShowWindow(new UserInfoWindowViewModel(_windowManager, _currentUser, teams), null, settings);
         }
@@ -137,7 +159,10 @@ namespace TaskList.ViewModels
         private void UpdateItemCollection(int id)
         {
             CarouselItems.Clear();
-            todoService.GetAllTodos(id).ToList().ForEach(o => CarouselItems.Add(mapper.Map<TodoDTO, TodoModel>(o)));
+            _todoService.GetAllTodos(id)
+                .ToList()
+                .ForEach(o => CarouselItems.Add(_mapper.Map<TodoDTO, TodoModel>(o)));
+
             NotifyOfPropertyChange(() => CarouselItems);
 
             SelectedItem = CarouselItems?.FirstOrDefault();
@@ -151,38 +176,40 @@ namespace TaskList.ViewModels
             switch (idType)
             {
                 case 1:
-                    {
-                        return "Важные и срочные";
-                    }
+                {
+                    return "Важные и срочные";
+                }
                 case 2:
-                    {
-                        return "Важные и несрочные";
-                    }
+                {
+                    return "Важные и несрочные";
+                }
                 case 3:
-                    {
-                        return "Неважные и срочные";
-                    }
+                {
+                    return "Неважные и срочные";
+                }
                 case 4:
-                    {
-                        return "Неважные и несрочные";
-                    }
+                {
+                    return "Неважные и несрочные";
+                }
                 default:
-                    {
-                        return "Важные и срочные";
-                    }
+                {
+                    return "Важные и срочные";
+                }
 
             }
         }
+
         #endregion
 
         #region Manage buttons crud
 
-        private bool isEditExistRecord;
+        private bool _isEditExistRecord;
         private Visibility _hideShit;
+        private int _idPriorityType;
 
         public void AddTodo()
         {
-            SelectedItem = new TodoModel() { StartDate = DateTime.UtcNow, IdPriority = idPriorityType };
+            SelectedItem = new TodoModel() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
 
             IsEditModeVisibility = Visibility.Visible;
             NotifyOfPropertyChange(() => IsEditModeVisibility);
@@ -193,7 +220,7 @@ namespace TaskList.ViewModels
 
         public void EditTodo()
         {
-            isEditExistRecord = true;
+            _isEditExistRecord = true;
 
             NotifyOfPropertyChange(() => SelectedItem);
 
@@ -211,9 +238,9 @@ namespace TaskList.ViewModels
                 return;
             }
 
-            todoService.DeleteTodo(SelectedItem.TodoId);
+            _todoService.DeleteTodo(SelectedItem.TodoId);
             System.Windows.Forms.MessageBox.Show("Успешно удалено!");
-            UpdateItemCollection(idPriorityType);
+            UpdateItemCollection(IdPriorityType);
 
             IsEditModeVisibility = Visibility.Collapsed;
             NotifyOfPropertyChange(() => IsEditModeVisibility);
@@ -227,24 +254,24 @@ namespace TaskList.ViewModels
             NotifyOfPropertyChange(() => IsEditModeVisibility);
             NotifyOfPropertyChange(() => HideShit);
 
-            if (isEditExistRecord)
+            if (_isEditExistRecord)
             {
-                todoService.UpdateTodo(mapper.Map<TodoModel, TodoDTO>(SelectedItem));
-                isEditExistRecord = false;
+                _todoService.UpdateTodo(_mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                _isEditExistRecord = false;
             }
             else
             {
-                todoService.CreateTodo(_currentUser.UserId, mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                _todoService.CreateTodo(_currentUser.UserId, _mapper.Map<TodoModel, TodoDTO>(SelectedItem));
             }
 
-            UpdateItemCollection(idPriorityType);
+            UpdateItemCollection(IdPriorityType);
             NotifyOfPropertyChange(() => CountAllTodos);
 
         }
 
         public void CancelTodo()
         {
-            isEditExistRecord = false;
+            _isEditExistRecord = false;
             IsEditModeVisibility = Visibility.Collapsed;
             HideShit = Visibility.Visible;
 
@@ -255,6 +282,7 @@ namespace TaskList.ViewModels
         #endregion
 
         public Visibility CanEditVisibility { get; set; }
+
         public Visibility IsEditModeVisibility
         {
             get => _isEditModeVisibility;
@@ -305,18 +333,21 @@ namespace TaskList.ViewModels
         public string DateTimeSignIn => _signInTime;
 
         public ObservableCollection<TodoModel> CarouselItems { get; set; } = new ObservableCollection<TodoModel>();
-
+        public string CurrentProject { get; internal set; }
 
         private int GetAllTodosCount()
         {
-            if (Login != "root")
-                return 0;
-            return ((DAL.Repositories.EFUnitOfWork)uow).Database.SqlQuery<int>("select CountAllTodoForAllUsers();").FirstOrDefault();
+            return Login != "root"
+                ? 0
+                : ((DAL.Repositories.EFUnitOfWork) _uow)
+                .Database
+                .SqlQuery<int>("select CountAllTodoForAllUsers();")
+                .FirstOrDefault();
         }
 
         public void Dispose()
         {
-            uow.Dispose();
+            _uow.Dispose();
         }
     }
 }

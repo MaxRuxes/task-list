@@ -10,13 +10,13 @@ namespace TaskList.BLL.Services
 {
     public class TodoService : ITodoService
     {
-        private IUnitOfWork Database { get; set; }
-        private readonly IMapper mapper;
+        private readonly IUnitOfWork _database;
+        private readonly IMapper _mapper;
 
         public TodoService(IUnitOfWork uow)
         {
-            Database = uow;
-            mapper = new MapperConfiguration(cfg =>
+            _database = uow;
+            _mapper = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TodoDTO, Todo>();
                 cfg.CreateMap<Todo, TodoDTO>();
@@ -25,66 +25,63 @@ namespace TaskList.BLL.Services
 
         public void CreateTodo(int userId,TodoDTO todo)
         {
-            var todoItem = Database.Todos.Get(todo.TodoId);
+            var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
             {
                 throw new ValidationException("Current todo already exists", "");
             }
 
-            if (todoItem == null)
-            {
-                Database.Todos.Create(mapper.Map<TodoDTO, Todo>(todo));
-            }
+            _database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
 
-            Database.TodoAndUsers.Create(new TodoAndUsers() { Iduser = userId, IdTodo = todo.TodoId });
+            _database.TodoAndUsers.Create(new TodoAndUsers() { Iduser = userId, IdTodo = todo.TodoId });
 
-            Database.Save();
+            _database.Save();
         }
 
         public void DeleteTodo(int idTodo)
         {
             // чистим запись в главной таблице
-            var todoItem = Database.Todos.Get(idTodo);
+            var todoItem = _database.Todos.Get(idTodo);
             if (todoItem != null)
             {
-                Database.Todos.Delete(idTodo);
+                _database.Todos.Delete(idTodo);
             }
 
             // удаляем из связанных таблиц
-            var todosInUserList = Database.TodoAndUsers.Find(o => o.IdTodo == idTodo);
+            var todosInUserList = _database.TodoAndUsers.Find(o => o.IdTodo == idTodo);
             if (todosInUserList != null)
             {
                 foreach (var item in todosInUserList)
                 {
-                    Database.TodoAndUsers.Delete(item.TodoAndUsersId);
+                    _database.TodoAndUsers.Delete(item.TodoAndUsersId);
                 }
             }
 
-            Database.Save();
+            _database.Save();
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            _database.Dispose();
         }
 
         public IEnumerable<TodoDTO> GetAllTodos(int idPrior)
         {
-            return mapper
-                .Map<IEnumerable<Todo>, List<TodoDTO>>(Database
+            return _mapper
+                .Map<IEnumerable<Todo>, List<TodoDTO>>(_database
                 .Todos
                 .Find(o => o.IdPriority == idPrior));
         }
 
         public TodoDTO GetTodo(int idTodo)
         {
-            return mapper.Map<Todo, TodoDTO>(Database.Todos.Get(idTodo) ?? default);
+            return _mapper.Map<Todo, TodoDTO>(_database.Todos.Get(idTodo));
         }
 
         public void UpdateTodo(TodoDTO todo)
         {
-            Database.Todos.Update(mapper.Map<TodoDTO, Todo>(todo));
-            Database.Save();
+            _database.Todos.Update(_mapper.Map<TodoDTO, Todo>(todo));
+            _database.Save();
         }
     }
 }

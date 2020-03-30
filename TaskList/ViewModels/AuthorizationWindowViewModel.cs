@@ -4,7 +4,6 @@ using Caliburn.Micro;
 using System.Windows;
 using System.Windows.Controls;
 using System.ComponentModel.Composition;
-using System.Dynamic;
 
 namespace TaskList.ViewModels
 {

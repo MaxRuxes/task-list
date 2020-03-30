@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaskList.DAL.Entities;
 using TaskList.DAL.Interfaces;
 
@@ -18,9 +16,9 @@ namespace TaskList.DAL.Repositories
             _databaseContext = taskListContext;
         }
 
-        public void Create(TodoAndProjects item)
+        public TodoAndProjects Create(TodoAndProjects item)
         {
-            _databaseContext.TodoAndProjects.Add(item);
+            return _databaseContext.TodoAndProjects.Add(item);
         }
 
         public void Delete(int id)
