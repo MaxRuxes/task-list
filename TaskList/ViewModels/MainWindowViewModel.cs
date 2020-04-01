@@ -12,6 +12,7 @@ using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
+using TaskList.DAL.Repositories;
 using TaskList.Models;
 using TaskList.ViewModels.Helpers;
 
@@ -58,7 +59,7 @@ namespace TaskList.ViewModels
 
             _mapper = MapperHelpers.CreateAutoMapper();
 
-            _uow = new DAL.Repositories.EFUnitOfWork(connectionString);
+            _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
 
             _todoService = new TodoService(_uow);
             _userService = new UserService(_uow);
@@ -159,7 +160,7 @@ namespace TaskList.ViewModels
         private void UpdateItemCollection(int id)
         {
             CarouselItems.Clear();
-            _todoService.GetAllTodos(id)
+            _todoService.GetAllTodosForProject(id)
                 .ToList()
                 .ForEach(o => CarouselItems.Add(_mapper.Map<TodoDTO, TodoModel>(o)));
 
@@ -261,7 +262,7 @@ namespace TaskList.ViewModels
             }
             else
             {
-                _todoService.CreateTodo(_currentUser.UserId, _mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                _todoService.CreateTodo(_currentUser.UserId, CurrentProject.ProjectInfoId, _mapper.Map<TodoModel, TodoDTO>(SelectedItem));
             }
 
             UpdateItemCollection(IdPriorityType);
@@ -316,7 +317,7 @@ namespace TaskList.ViewModels
             }
         }
 
-        public string CountAllTodos => GetAllTodosCount().ToString();
+        public string CountAllTodos => GetAllTodosForProjectCount().ToString();
 
         public string CurrentPriorityType { get; set; }
 
@@ -333,16 +334,11 @@ namespace TaskList.ViewModels
         public string DateTimeSignIn => _signInTime;
 
         public ObservableCollection<TodoModel> CarouselItems { get; set; } = new ObservableCollection<TodoModel>();
-        public string CurrentProject { get; internal set; }
+        public ProjectInfoDTO CurrentProject { get; internal set; }
 
-        private int GetAllTodosCount()
+        private int GetAllTodosForProjectCount()
         {
-            return Login != "root"
-                ? 0
-                : ((DAL.Repositories.EFUnitOfWork) _uow)
-                .Database
-                .SqlQuery<int>("select CountAllTodoForAllUsers();")
-                .FirstOrDefault();
+            return ((TodoAndProjectsRepository) _uow.TodoAndProjects).GetCountForProject(CurrentProject.ProjectInfoId);
         }
 
         public void Dispose()

@@ -32,12 +32,16 @@ namespace TaskList.BLL.Services
         {
             var input = mapper.Map<ProjectInfoDTO, ProjectInfo>(project);
             var output = Database.ProjectInfo.Create(input);
+            Database.Save();
+
             return mapper.Map<ProjectInfo, ProjectInfoDTO>(output);
         }
 
         public void UpdateProject(ProjectInfoDTO projectInfo)
         {
-            throw new System.NotImplementedException();
+            var input = mapper.Map<ProjectInfoDTO, ProjectInfo>(projectInfo);
+            Database.ProjectInfo.Update(input);
+            Database.Save();
         }
 
         public void DeleteProject(int idProject)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskList.DAL.Entities
 {
@@ -13,5 +14,9 @@ namespace TaskList.DAL.Entities
 
         [Column("stackTechnology")]
         public string StackTecnology { get; set; }
+
+        [Column("isAgile", TypeName = "bit")]
+        [DefaultValue(true)]
+        public bool IsAgile { get; set; }
     }
 }

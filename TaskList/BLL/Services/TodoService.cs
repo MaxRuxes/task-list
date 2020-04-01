@@ -23,7 +23,7 @@ namespace TaskList.BLL.Services
             }).CreateMapper();
         }
 
-        public void CreateTodo(int userId,TodoDTO todo)
+        public void CreateTodo(int userId, int IdProject, TodoDTO todo)
         {
             var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
@@ -31,9 +31,10 @@ namespace TaskList.BLL.Services
                 throw new ValidationException("Current todo already exists", "");
             }
 
-            _database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
+            var item =_database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
 
             _database.TodoAndUsers.Create(new TodoAndUsers() { Iduser = userId, IdTodo = todo.TodoId });
+            _database.TodoAndProjects.Create(new TodoAndProjects() {IdProject = IdProject, IdTodo = item.TodoId});
 
             _database.Save();
         }
@@ -65,7 +66,7 @@ namespace TaskList.BLL.Services
             _database.Dispose();
         }
 
-        public IEnumerable<TodoDTO> GetAllTodos(int idPrior)
+        public IEnumerable<TodoDTO> GetAllTodosForProject(int idPrior, int idProject)
         {
             return _mapper
                 .Map<IEnumerable<Todo>, List<TodoDTO>>(_database

@@ -7,6 +7,7 @@ using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
+using TaskList.ViewModels.Dialogs;
 
 namespace TaskList.ViewModels
 {
@@ -14,20 +15,19 @@ namespace TaskList.ViewModels
     public class ProjectsViewModel : Screen
     {
         private readonly IWindowManager _windowManager;
-        private readonly string _connectionString; 
+        private readonly string _connectionString;
 
-        private readonly IUnitOfWork uow;
-        private readonly IProjectService projectService;
+        private readonly IProjectService _projectService;
 
         public ProjectsViewModel(IWindowManager windowManager, string connectionString)
         {
             _windowManager = windowManager;
             _connectionString = connectionString;
 
-            uow = new DAL.Repositories.EFUnitOfWork(connectionString);
-            projectService = new ProjectService(uow);
+            IUnitOfWork uow = new DAL.Repositories.EfUnitOfWork(connectionString);
+            _projectService = new ProjectService(uow);
 
-            var projectsNames = projectService.GetAllProjects().ToList();
+            var projectsNames = _projectService.GetAllProjects().ToList();
 
             Projects = new ObservableCollection<ProjectInfoDTO>(projectsNames);
             CurrentProject = Projects.FirstOrDefault();
@@ -37,35 +37,62 @@ namespace TaskList.ViewModels
 
         public ProjectInfoDTO CurrentProject { get; set; }
 
-        public void SelectProject(string project)
+        public void SelectProject(ProjectInfoDTO project)
         {
-            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
+            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString)
+            {
+                CurrentProject = project
+            });
             (GetView() as Window)?.Close();
         }
 
-        public void CreateProjectCommand(string project)
+        public void CreateProjectCommand()
         {
-            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
-            (GetView() as Window)?.Close();
+            var vm = new ProjectInfoViewModel();
+            if (_windowManager.ShowDialog(vm) != true)
+            {
+                return;
+            }
+
+            var newProject = _projectService.CreateProject(new ProjectInfoDTO()
+            {
+                NameProject = vm.ProjectName,
+                StackTecnology = vm.Description,
+                IsAgile = vm.IsAgile
+            });
+
+            Projects.Add(newProject);
         }
 
         public void RemoveProjectCommand(ProjectInfoDTO project)
         {
-            projectService.DeleteProject(project.ProjectInfoId);
+            _projectService.DeleteProject(project.ProjectInfoId);
 
             Projects.Remove(CurrentProject);
             CurrentProject = Projects.FirstOrDefault();
         }
 
-        public void RenameProjectCommand(string project)
+        public void RenameProjectCommand(ProjectInfoDTO project)
         {
-            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString) { CurrentProject = project});
-            (GetView() as Window)?.Close();
+            var vm = new ProjectInfoViewModel(false);
+            vm.Description = project.StackTecnology;
+            vm.ProjectName = project.NameProject;
+            vm.IsAgile = project.IsAgile;
+
+            if (_windowManager.ShowDialog(vm) != true)
+            {
+                return;
+            }
+
+            project.StackTecnology = vm.Description;
+            project.NameProject = vm.ProjectName;
+            project.IsAgile = vm.IsAgile;
+            _projectService.UpdateProject(project);
+
+            Projects.Clear();
+            var projectsNames = _projectService.GetAllProjects().ToList();
+            projectsNames.ForEach((x)=> Projects.Add(x));
+            CurrentProject = Projects.First(x=> x.ProjectInfoId == project.ProjectInfoId);
         }
-
-
-
-
-
     }
 }

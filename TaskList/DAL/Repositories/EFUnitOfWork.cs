@@ -5,136 +5,49 @@ using TaskList.DAL.Entities;
 
 namespace TaskList.DAL.Repositories
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class EfUnitOfWork : IUnitOfWork
     {
         private readonly TaskListContext _databaseContext;
 
-        private PriorityRepository priorityRepository;
-        private RolesRepository rolesRepository;
-        private ProjectInfoRepository teamInfoRepository;
-        private ProjectsRepository teamsRepository;
-        private TodosRepository todosRepository;
-        private TodoAndProjectsRepository todoAndProjectsRepository;
-        private TodoAndUsersRepository todoAndUsersRepository;
-        private UsersRepository usersRepository;
+        private PriorityRepository _priorityRepository;
+        private RolesRepository _rolesRepository;
+        private ProjectInfoRepository _teamInfoRepository;
+        private ProjectsRepository _teamsRepository;
+        private TodosRepository _todosRepository;
+        private TodoAndProjectsRepository _todoAndProjectsRepository;
+        private TodoAndUsersRepository _todoAndUsersRepository;
+        private UsersRepository _usersRepository;
 
-        private bool disposed = false;
+        private bool _disposed;
 
-        public EFUnitOfWork(string connectionString)
+        public EfUnitOfWork(string connectionString)
         {
             _databaseContext = new TaskListContext(connectionString);
         }
 
         public Database Database => _databaseContext.Database;
 
-        public IRepository<PriorityType> PriorityTypes
-        {
-            get
-            {
-                if (priorityRepository == null)
-                {
-                    priorityRepository = new PriorityRepository(_databaseContext);
-                }
-
-                return priorityRepository;
-            }
-        }
-
-        public IRepository<RolesType> RolesTypes
-        {
-            get
-            {
-                if (rolesRepository == null)
-                {
-                    rolesRepository = new RolesRepository(_databaseContext);
-                }
-
-                return rolesRepository;
-            }
-        }
-
-        public IRepository<ProjectInfo> ProjectInfo
-        {
-            get
-            {
-                if (teamInfoRepository == null)
-                {
-                    teamInfoRepository = new ProjectInfoRepository(_databaseContext);
-                }
-                return teamInfoRepository;
-            }
-        }
-
-        public IRepository<Projects> Projects
-        {
-            get
-            {
-                if (teamsRepository == null)
-                {
-                    teamsRepository = new ProjectsRepository(_databaseContext);
-                }
-                return teamsRepository;
-            }
-        }
-
-        public IRepository<Todo> Todos
-        {
-            get
-            {
-                if (todosRepository == null)
-                {
-                    todosRepository = new TodosRepository(_databaseContext);
-                }
-                return todosRepository;
-            }
-        }
-
-        public IRepository<TodoAndProjects> TodoAndProjects
-        {
-            get
-            {
-                if (todoAndProjectsRepository == null)
-                {
-                    todoAndProjectsRepository = new TodoAndProjectsRepository(_databaseContext);
-                }
-                return todoAndProjectsRepository;
-            }
-        }
-
-        public IRepository<TodoAndUsers> TodoAndUsers
-        {
-            get
-            {
-                if (todoAndUsersRepository == null)
-                {
-                    todoAndUsersRepository = new TodoAndUsersRepository(_databaseContext);
-                }
-                return todoAndUsersRepository;
-            }
-        }
-
-        public IRepository<User> Users
-        {
-            get
-            {
-                if (usersRepository == null)
-                {
-                    usersRepository = new UsersRepository(_databaseContext);
-                }
-                return usersRepository;
-            }
-        }
+        public IRepository<PriorityType> PriorityTypes => _priorityRepository ?? (_priorityRepository = new PriorityRepository(_databaseContext));
+        public IRepository<RolesType> RolesTypes => _rolesRepository ?? (_rolesRepository = new RolesRepository(_databaseContext));
+        public IRepository<ProjectInfo> ProjectInfo => _teamInfoRepository ?? (_teamInfoRepository = new ProjectInfoRepository(_databaseContext));
+        public IRepository<Projects> Projects => _teamsRepository ?? (_teamsRepository = new ProjectsRepository(_databaseContext));
+        public IRepository<Todo> Todos => _todosRepository ?? (_todosRepository = new TodosRepository(_databaseContext));
+        public IRepository<TodoAndProjects> TodoAndProjects => _todoAndProjectsRepository ?? (_todoAndProjectsRepository = new TodoAndProjectsRepository(_databaseContext));
+        public IRepository<TodoAndUsers> TodoAndUsers => _todoAndUsersRepository ?? (_todoAndUsersRepository = new TodoAndUsersRepository(_databaseContext));
+        public IRepository<User> Users => _usersRepository ?? (_usersRepository = new UsersRepository(_databaseContext));
 
         public virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (_disposed)
             {
-                if (disposing)
-                {
-                    _databaseContext.Dispose();
-                }
-                disposed = true;
+                return;
             }
+
+            if (disposing)
+            {
+                _databaseContext.Dispose();
+            }
+            _disposed = true;
         }
 
         public void Dispose()

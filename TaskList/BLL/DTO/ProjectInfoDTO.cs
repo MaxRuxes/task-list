@@ -5,5 +5,6 @@
         public int ProjectInfoId { get; set; }
         public string NameProject { get; set; }
         public string StackTecnology { get; set; }
+        public bool IsAgile { get; set; }
     }
 }

@@ -183,12 +183,17 @@
     <Compile Include="Models\TodoModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
+    <Compile Include="ViewModels\Dialogs\ProjectInfoViewModel.cs" />
     <Compile Include="ViewModels\Helpers\AccessToDatabaseHelpers.cs" />
+    <Compile Include="ViewModels\Helpers\InverseBooleanConverter.cs" />
     <Compile Include="ViewModels\Helpers\IsEqualConverter.cs" />
     <Compile Include="ViewModels\Helpers\IsNotNullToBoolConverter.cs" />
     <Compile Include="ViewModels\Helpers\MapperHelpers.cs" />
     <Compile Include="ViewModels\ProjectsViewModel.cs" />
     <Compile Include="ViewModels\UserInfoWindowViewModel.cs" />
+    <Compile Include="Views\Dialogs\ProjectInfoView.xaml.cs">
+      <DependentUpon>ProjectInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProjectsView.xaml.cs">
       <DependentUpon>ProjectsView.xaml</DependentUpon>
     </Compile>
@@ -196,6 +201,10 @@
       <DependentUpon>UserInfoWindowView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AuthorizationWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ProjectInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

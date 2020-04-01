@@ -1,0 +1,85 @@
+﻿<Window x:Class="TaskList.Views.Dialogs.ProjectInfoView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels.Dialogs"
+        mc:Ignorable="d"
+        Title="Настройки информации о проекте" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectInfoViewModel}}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Views/GlobalResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid IsSharedSizeScope="True"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="Textik"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Margin="0,0,5,10"
+                       Text="Название: "/>
+
+            <TextBox x:Name="ProjectName"
+                     Grid.Row="0" Grid.Column="1"
+                     Margin="0,0,0,10"
+                     MaxLength="200"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       VerticalAlignment="Top"
+                       Margin="0,10,5,0"
+                       Text="Описание: "/>
+
+            <TextBox x:Name="Description" 
+                     Grid.Row="1" Grid.Column="1"
+                     Margin="0,0,0,5"
+                     VerticalContentAlignment="Top"
+                     MaxLength="1000"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       VerticalAlignment="Top"
+                       Margin="0,10,5,0"
+                       Text="Методология: "/>
+            <StackPanel Grid.Row="2" Grid.Column="1"
+                        Margin="0,10,0,0"
+                        Orientation="Vertical">
+                <RadioButton Content="Agile"
+                             IsChecked="{Binding Path=IsAgile,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"
+                             GroupName="metod"/>
+                <RadioButton Content="Scrum"
+                             GroupName="metod"
+                             IsChecked="{Binding Path=IsScrum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button x:Name="SaveCommand"
+                    Content="Сохранить"/>
+            <Button x:Name="CancelCommand"
+                    Content="Отмена"/>
+        </StackPanel>
+    </Grid>
+</Window>

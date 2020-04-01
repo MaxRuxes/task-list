@@ -33,26 +33,52 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <Grid Margin="5">
+        <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" 
-                       Margin="10,0"
+                       Margin="3,5"
                        Text="Проекты:"/>
+            <Border Grid.Row="1" 
+                    BorderBrush="Aqua"
+                    BorderThickness="0.4"
+                    Padding="3"
+                    CornerRadius="5">
             <ListView x:Name="projects" 
-                        ItemsSource="{Binding Projects}"
+                        ItemsSource="{Binding Projects, UpdateSourceTrigger=PropertyChanged}"
                         SelectedItem="{Binding CurrentProject}"
-                        Grid.Row="1"
-                        BorderThickness="0">
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type dto:ProjectInfoDTO}">
-                        <TextBlock Text="{Binding Path=NameProject, UpdateSourceTrigger=PropertyChanged}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        BorderThickness="0"
+                        BorderBrush="Transparent">
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Название" DisplayMemberBinding="{Binding NameProject}"/>
+                            <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding StackTecnology}"/>
+                            <GridViewColumn Header="Методология" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type dto:ProjectInfoDTO}">
+                                        <TextBlock>
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                    <Setter Property="Text" Value="Agile"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsAgile}" Value="False">
+                                                            <Setter Property="Text" Value="Scrum"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
         </Grid>
         
         <Grid Grid.Row="1"
@@ -63,17 +89,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Content="Создать"
+            <Button x:Name="CreateProjectCommand"
+                    Content="Создать"
                     Margin="0,0,5,0"
-                    Grid.Column="0">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="CreateProjectCommand">
-                            <cal:Parameter Value="{Binding ElementName=projects, Path=SelectedItem}"/>
-                        </cal:ActionMessage>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
+                    Grid.Column="0" />
 
             <Button Content="Удалить"
                     Margin="5,0"
@@ -88,7 +107,7 @@
                 </i:Interaction.Triggers>
             </Button>
 
-            <Button Content="Переименовать"
+            <Button Content="Редактировать"
                     Margin="5,0"
                     Grid.Column="2"
                     IsEnabled="{Binding CurrentProject, Converter={StaticResource IsNotNullToBoolConverter}}">

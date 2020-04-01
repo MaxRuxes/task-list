@@ -53,6 +53,11 @@ namespace TaskList.DAL.Repositories
                 .Include(o => o.Todo);
         }
 
+        public int GetCountForProject(int id)
+        {
+            return _databaseContext.TodoAndProjects.Count(x => x.IdProject == id);
+        }
+
         public void Update(TodoAndProjects item)
         {
             _databaseContext.Entry(item).State = EntityState.Modified;
