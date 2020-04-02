@@ -160,7 +160,7 @@ namespace TaskList.ViewModels
         private void UpdateItemCollection(int id)
         {
             CarouselItems.Clear();
-            _todoService.GetAllTodosForProject(id)
+            _todoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
                 .ToList()
                 .ForEach(o => CarouselItems.Add(_mapper.Map<TodoDTO, TodoModel>(o)));
 

@@ -64,6 +64,7 @@
             </DataTemplate>
 
             <helpers:IsEqualConverter x:Key="IsEqualConverter"/>
+            <helpers:NullVisibilityConverter x:Key="NullToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -118,25 +119,44 @@
             <Border Grid.Column="2" 
                     BorderBrush="Aquamarine"
                     Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}">
-                <StackPanel VerticalAlignment="Center" >
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            Margin="15,0">
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                        <TextBlock Text="Текущий проект: " Margin="0"/>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Left"
+                                    Margin="0">
+                            <TextBlock Margin="3,0"
+                                       FontWeight="SemiBold"
+                                       FontSize="13"
+                                       Text="{Binding CurrentProject.NameProject}"/>
+                            <TextBlock Margin="0"
+                                       FontStyle="Italic">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Setter Property="Text" Value="(Agile)"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentProject.IsAgile}" Value="False">
+                                                <Setter Property="Text" Value="(Scrum)"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                <StackPanel VerticalAlignment="Center"
+                            Orientation="Horizontal">
                     <TextBlock Text="Общее число задач: " 
-                               Margin="5"/>
+                               Margin="0"/>
                     <TextBlock x:Name="CountAllTodos"
-                               Margin="5"
+                               Margin="0"
                                FontWeight="SemiBold"
                                FontSize="13"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Текущий проект -->
-            <Border Grid.Column="3"
-                    BorderBrush="Aquamarine">
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Текущий проект: " />
-                    <TextBlock Margin="5"
-                               FontWeight="SemiBold"
-                               FontSize="13"
-                               Text="{Binding CurrentProject.NameProject}"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
@@ -289,83 +309,79 @@
 
         <!--Рабочая часть-->
         <Border Grid.Row="1" Grid.Column="1"
-                BorderThickness="1,1,0,0"
+                BorderThickness="0"
                 BorderBrush="Bisque">
             <Grid>
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="4.5*"/>
-                        <RowDefinition Height="2*"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition MinWidth="400"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Список задач: "
-                               Margin="5,5,5,0" />
-                    <ListView x:Name="carousel" 
-                                         Grid.Row="1" Grid.RowSpan="2"
+                    <TextBlock Grid.Row="0"
+                               FontSize="12"
+                               FontFamily="Segoe UI SemiBold"
+                               Margin="5" >
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Задачи ({0} шт.): ">
+                                <Binding Path="CarouselItems.Count"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <syncfusion:CardView x:Name="carousel" 
+                                         Grid.Row="1"
                                          Margin="0"
                                          BorderThickness="0"
-                                         Grid.Column="0" Grid.ColumnSpan="5"
+                                         Grid.Column="0"
                                          ItemsSource="{Binding Path=CarouselItems, UpdateSourceTrigger=PropertyChanged}"
-                                         SelectedItem="{Binding SelectedItem}"
-                                         VerticalAlignment="Stretch" >
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="4"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
+                                         SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         CanGroup="False"
+                                         syncfusion:SkinStorage.VisualStyle="Metro"
+                                         ShowHeader="False">
+
+                        <syncfusion:CardView.HeaderTemplate>
                             <DataTemplate DataType="{x:Type VModels:TodoModel}">
-                                <Border CornerRadius="20" 
-                                        BorderThickness="2"
-                                        BorderBrush="RosyBrown">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal"
-                                                                Margin="10"
-                                                                Background="Transparent">
-                                            <TextBlock Text="Описание:"/>
-                                            <TextBlock Text="{Binding Path=ContentTodo}"/>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Row="1" Orientation="Horizontal"
-                                                                Margin="10,0">
-                                            <TextBlock Text="Оцененное время:"/>
-                                            <TextBlock Text="{Binding Path=EstimatedHours}"/>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Row="2" Orientation="Horizontal"
-                                                                Margin="10">
-                                            <TextBlock Text="Приоритет: "/>
-                                            <TextBlock Text="{Binding Path=Priority.PriorityContent}"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
+                                        <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </syncfusion:CardView.HeaderTemplate>
+                        <syncfusion:CardView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type VModels:TodoModel}">
+                                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Описание:"/>
+                                            <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </ListBoxItem>
 
-                    <Border Grid.Row="3" 
-                            BorderBrush="Aqua" BorderThickness="0,0,0,2"
-                            Grid.Column="0" Grid.ColumnSpan="5"
+                                    <ListBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Оцененное время:"/>
+                                            <TextBlock Text="{Binding Path=EstimatedHours}"
+                                                       Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </ListBoxItem>
+                                    <ListBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Приоритет: "/>
+                                            <TextBlock Text="{Binding Path=Priority.PriorityContent}"
+                                                       Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </ListBoxItem>
+                               </ListBox>
+                            </DataTemplate>
+                        </syncfusion:CardView.ItemTemplate>
+                    </syncfusion:CardView>
+
+                    <Border Grid.Row="2"
+                            Grid.Column="0"
                             Margin="5"
                             Visibility="{Binding }">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -384,10 +400,33 @@
 
                     </Border>
 
-                    <Border Grid.Row="4" Grid.RowSpan="4"
-                            Grid.Column="0" Grid.ColumnSpan="5"
-                            Margin="5,0,5,5">
-                        <StackPanel>
+                    <GridSplitter Grid.Column="1"
+                                  Focusable="False"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Background="MediumAquamarine" 
+                                  ShowsPreview="true"
+                                  Width="5"
+                                  Grid.Row="0"
+                                  Grid.RowSpan="3"
+                                  Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+
+                    <Border Grid.Row="0" Grid.RowSpan="3"
+                            Grid.Column="2"
+                            Margin="5,0"
+                            Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
+                            Background="Azure">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Text="Подробная информация задачи:"
+                                       FontSize="18"
+                                       FontFamily="Segoe UI SemiBold"
+                                       Margin="5"/>
+                            <StackPanel Grid.Row="1">
                             <!-- содержание-->
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Описание: " Margin="5"/>
@@ -423,6 +462,7 @@
                             <Button x:Name="CancelTodo"
                                      Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">Отмена</Button>
                         </StackPanel>
+                        </Grid>
                     </Border>
                 </Grid>
             </Grid>
