@@ -39,10 +39,21 @@ namespace TaskList.ViewModels
 
         public void SelectProject(ProjectInfoDTO project)
         {
-            _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString)
+            if (CurrentProject.IsAgile)
             {
-                CurrentProject = project
-            });
+                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString)
+                {
+                    CurrentProject = project
+                });
+            }
+            else
+            {
+                _windowManager.ShowDialog(new ScrumViewModel(_windowManager, _connectionString)
+                {
+                    CurrentProject = project
+                });
+            }
+
             (GetView() as Window)?.Close();
         }
 

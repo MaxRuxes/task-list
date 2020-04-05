@@ -7,6 +7,7 @@ namespace TaskList.BLL.DTO
         public int TodoId { get; set; }
         public int IdPriority { get; set; }
         public string Content { get; set; }
+        public string Caption { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndRealDate { get; set; }
         public int EstimatedHours { get; set; }

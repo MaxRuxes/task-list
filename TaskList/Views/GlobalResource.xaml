@@ -1,6 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:TaskList.Views">
+                    xmlns:local="clr-namespace:TaskList.Views"
+                    xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers">
+
+    <helpers:IsEqualConverter x:Key="IsEqualConverter"/>
+    <helpers:NullVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
     <Color x:Key="borderColor">#FFE6DDDD</Color>
 
@@ -112,7 +116,22 @@
         <Setter Property="Padding" Value="5,0,5,3"/>
     </Style>
 
+    <Style TargetType="{x:Type Grid}">
+        <Setter Property="ShowGridLines" Value="False"/>
+    </Style>
+
     <Style TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0"/>
     </Style>
+
+    <Style TargetType="Border" x:Key="BorderClassic">
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="CornerRadius" Value="15" />
+    </Style>
+
 </ResourceDictionary>

@@ -1,37 +1,18 @@
-﻿using AutoMapper;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-using System.Dynamic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Threading;
 using TaskList.BLL.DTO;
-using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
-using TaskList.DAL.Interfaces;
-using TaskList.DAL.Repositories;
 using TaskList.Models;
 using TaskList.ViewModels.Helpers;
 
 namespace TaskList.ViewModels
 {
     [Export(typeof(MainWindowViewModel))]
-    public class MainWindowViewModel : Screen, IDisposable
+    public class MainWindowViewModel : BaseProjectViewModel
     {
-        private readonly IWindowManager _windowManager;
-        private readonly string _connectionString;
-        private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
-
-        private readonly ITodoService _todoService;
-        private readonly IUserService _userService;
-        private readonly IProjectService _projectService;
-
-        private TodoModel _selectedItem;
-
         private readonly string _signInTime;
         private string _login;
 
@@ -41,40 +22,38 @@ namespace TaskList.ViewModels
             set
             {
                 _idPriorityType = value;
-                NotifyOfPropertyChange(() => this.IdPriorityType);
+                NotifyOfPropertyChange(() => IdPriorityType);
             }
         }
 
         private Visibility _isEditModeVisibility;
 
-        private UserModel _currentUser;
-
 
         [ImportingConstructor]
         public MainWindowViewModel(IWindowManager windowManager, string connectionString)
         {
-            _windowManager = windowManager;
-            _connectionString = connectionString;
+            WindowManager = windowManager;
+            ConnectionString = connectionString;
             IsEditModeVisibility = Visibility.Hidden;
 
-            _mapper = MapperHelpers.CreateAutoMapper();
+            Mapper = MapperHelpers.CreateAutoMapper();
 
-            _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
+            Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
 
-            _todoService = new TodoService(_uow);
-            _userService = new UserService(_uow);
-            _projectService = new ProjectService(_uow);
+            TodoService = new TodoService(Uow);
+            UserService = new UserService(Uow);
+            ProjectService = new ProjectService(Uow);
 
             Login = connectionString
                 .Split(';')
                 .FirstOrDefault(n => n.IndexOf("uid=", StringComparison.Ordinal) != -1)?
                 .Substring(4);
-            _currentUser = ResolveCurrentUser(Login);
+            CurrentUser = ResolveCurrentUser(Login);
 
             _signInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
             NotifyOfPropertyChange(() => DateTimeSignIn);
             CurrentPriorityType = "Не выбран";
-            NotifyOfPropertyChange(() => CountAllTodos);
+            NotifyOfPropertyChange(() => CountAllTodo);
 
             HideShit = Visibility.Visible;
             NotifyOfPropertyChange(() => HideShit);
@@ -111,7 +90,7 @@ namespace TaskList.ViewModels
             NotifyOfPropertyChange(() => CanEdit);
             NotifyOfPropertyChange(() => CanEditVisibility);
 
-            return _mapper.Map<UserDTO, UserModel>(_userService.GetUser(id));
+            return Mapper.Map<UserDTO, UserModel>(UserService.GetUser(id));
         }
 
         #region Clicks Left panel
@@ -139,34 +118,17 @@ namespace TaskList.ViewModels
             IdPriorityType = 4;
             UpdateItemCollection(IdPriorityType);
         }
-
-        public void BackToProjectsCommand()
-        {
-            _windowManager.ShowWindow(new ProjectsViewModel(_windowManager, _connectionString));
-            (GetView() as Window).Close();
-        }
-
-        public void OpenUserInfoWindow()
-        {
-            dynamic settings = new ExpandoObject();
-            settings.WinowStartUpLocation = WindowStartupLocation.CenterScreen;
-
-            var teams = _mapper.Map<IEnumerable<ProjectInfoDTO>, List<ProjectModel>>(
-                _projectService.GetProjectsForUser(_currentUser.UserId));
-
-            _windowManager.ShowWindow(new UserInfoWindowViewModel(_windowManager, _currentUser, teams), null, settings);
-        }
-
+        
         private void UpdateItemCollection(int id)
         {
-            CarouselItems.Clear();
-            _todoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
+            TodoItems.Clear();
+            TodoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
                 .ToList()
-                .ForEach(o => CarouselItems.Add(_mapper.Map<TodoDTO, TodoModel>(o)));
+                .ForEach(o => TodoItems.Add(Mapper.Map<TodoDTO, TodoModel>(o)));
 
-            NotifyOfPropertyChange(() => CarouselItems);
+            NotifyOfPropertyChange(() => TodoItems);
 
-            SelectedItem = CarouselItems?.FirstOrDefault();
+            SelectedItem = TodoItems?.FirstOrDefault();
 
             CurrentPriorityType = ResolveTypeName(id);
             NotifyOfPropertyChange(() => CurrentPriorityType);
@@ -239,8 +201,8 @@ namespace TaskList.ViewModels
                 return;
             }
 
-            _todoService.DeleteTodo(SelectedItem.TodoId);
-            System.Windows.Forms.MessageBox.Show("Успешно удалено!");
+            TodoService.DeleteTodo(SelectedItem.TodoId, CurrentProject.ProjectInfoId);
+            System.Windows.Forms.MessageBox.Show(@"Успешно удалено!");
             UpdateItemCollection(IdPriorityType);
 
             IsEditModeVisibility = Visibility.Collapsed;
@@ -257,16 +219,16 @@ namespace TaskList.ViewModels
 
             if (_isEditExistRecord)
             {
-                _todoService.UpdateTodo(_mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
                 _isEditExistRecord = false;
             }
             else
             {
-                _todoService.CreateTodo(_currentUser.UserId, CurrentProject.ProjectInfoId, _mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                TodoService.CreateTodo(CurrentUser.UserId, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
             }
 
             UpdateItemCollection(IdPriorityType);
-            NotifyOfPropertyChange(() => CountAllTodos);
+            NotifyOfPropertyChange(() => CountAllTodo);
 
         }
 
@@ -307,18 +269,6 @@ namespace TaskList.ViewModels
 
         public bool CanEdit { get; set; }
 
-        public TodoModel SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                _selectedItem = value;
-                NotifyOfPropertyChange(() => SelectedItem);
-            }
-        }
-
-        public string CountAllTodos => GetAllTodosForProjectCount().ToString();
-
         public string CurrentPriorityType { get; set; }
 
         public string Login
@@ -333,17 +283,9 @@ namespace TaskList.ViewModels
 
         public string DateTimeSignIn => _signInTime;
 
-        public ObservableCollection<TodoModel> CarouselItems { get; set; } = new ObservableCollection<TodoModel>();
-        public ProjectInfoDTO CurrentProject { get; internal set; }
-
-        private int GetAllTodosForProjectCount()
+        public override void Dispose()
         {
-            return ((TodoAndProjectsRepository) _uow.TodoAndProjects).GetCountForProject(CurrentProject.ProjectInfoId);
-        }
-
-        public void Dispose()
-        {
-            _uow.Dispose();
+            Uow.Dispose();
         }
     }
 }

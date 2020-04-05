@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
+using System.Linq;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Infrastructure;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Entities;
+using TaskList.DAL.Repositories;
 
 namespace TaskList.BLL.Services
 {
@@ -23,7 +25,7 @@ namespace TaskList.BLL.Services
             }).CreateMapper();
         }
 
-        public void CreateTodo(int userId, int IdProject, TodoDTO todo)
+        public void CreateTodo(int userId, int idProject, TodoDTO todo)
         {
             var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
@@ -34,12 +36,12 @@ namespace TaskList.BLL.Services
             var item =_database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
 
             _database.TodoAndUsers.Create(new TodoAndUsers() { Iduser = userId, IdTodo = todo.TodoId });
-            _database.TodoAndProjects.Create(new TodoAndProjects() {IdProject = IdProject, IdTodo = item.TodoId});
+            _database.TodoAndProjects.Create(new TodoAndProjects() {IdProject = idProject, IdTodo = item.TodoId});
 
             _database.Save();
         }
 
-        public void DeleteTodo(int idTodo)
+        public void DeleteTodo(int idTodo, int idProject)
         {
             // чистим запись в главной таблице
             var todoItem = _database.Todos.Get(idTodo);
@@ -58,6 +60,17 @@ namespace TaskList.BLL.Services
                 }
             }
 
+            // удаляем из связанных таблиц
+            var todosInProjectsList = _database.TodoAndProjects
+                .Find(o => o.IdTodo == idTodo && idProject == o.IdProject);
+            if (todosInProjectsList != null)
+            {
+                foreach (var item in todosInProjectsList)
+                {
+                    _database.TodoAndProjects.Delete(item.TodoAndProjectsId);
+                }
+            }
+
             _database.Save();
         }
 
@@ -66,12 +79,23 @@ namespace TaskList.BLL.Services
             _database.Dispose();
         }
 
+        public int GetCountForProject(int currentProjectProjectInfoId)
+        {
+            return ((TodoAndProjectsRepository) _database.TodoAndProjects).GetCountForProject(
+                currentProjectProjectInfoId);
+        }
+
         public IEnumerable<TodoDTO> GetAllTodosForProject(int idPrior, int idProject)
         {
+            var items = _database.TodoAndProjects
+                .Find(o => o.IdProject == idProject)
+                .Select(x=> x.IdTodo);
+
+
+            var todos = _database.Todos
+                .Find(x => items.Contains(x.TodoId) && x.IdPriority == idPrior);
             return _mapper
-                .Map<IEnumerable<Todo>, List<TodoDTO>>(_database
-                .Todos
-                .Find(o => o.IdPriority == idPrior));
+                .Map<IEnumerable<Todo>, List<TodoDTO>>(todos);
         }
 
         public TodoDTO GetTodo(int idTodo)

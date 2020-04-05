@@ -94,8 +94,14 @@
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.Data.WPF, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Data.WPF.18.1.0.42\lib\net46\Syncfusion.Data.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.Licensing, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Licensing.18.1.0.42\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfGrid.WPF, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfGrid.WPF.18.1.0.42\lib\net46\Syncfusion.SfGrid.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Shared.WPF, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Shared.WPF.18.1.0.42\lib\net46\Syncfusion.Shared.WPF.dll</HintPath>
@@ -194,18 +200,23 @@
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
     <Compile Include="ViewModels\Dialogs\ProjectInfoViewModel.cs" />
     <Compile Include="ViewModels\Helpers\AccessToDatabaseHelpers.cs" />
+    <Compile Include="ViewModels\Helpers\BaseProjectViewModel.cs" />
     <Compile Include="ViewModels\Helpers\InverseBooleanConverter.cs" />
     <Compile Include="ViewModels\Helpers\IsEqualConverter.cs" />
     <Compile Include="ViewModels\Helpers\IsNotNullToBoolConverter.cs" />
     <Compile Include="ViewModels\Helpers\MapperHelpers.cs" />
     <Compile Include="ViewModels\Helpers\NullVisibilityConverter.cs" />
     <Compile Include="ViewModels\ProjectsViewModel.cs" />
+    <Compile Include="ViewModels\ScrumViewModel.cs" />
     <Compile Include="ViewModels\UserInfoWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\ProjectInfoView.xaml.cs">
       <DependentUpon>ProjectInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectsView.xaml.cs">
       <DependentUpon>ProjectsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScrumView.xaml.cs">
+      <DependentUpon>ScrumView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserInfoWindowView.xaml.cs">
       <DependentUpon>UserInfoWindowView.xaml</DependentUpon>
@@ -240,6 +251,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ProjectsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ScrumView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

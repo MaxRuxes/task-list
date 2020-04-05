@@ -3,68 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ViewModels="clr-namespace:TaskList.ViewModels"
-        xmlns:VModels="clr-namespace:TaskList.Models"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
+        xmlns:vModels="clr-namespace:TaskList.Models"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
         MinWidth="1280" MinHeight="590"
-        d:DataContext="{d:DesignInstance d:Type={x:Type ViewModels:MainWindowViewModel}}">
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:MainWindowViewModel}}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="GlobalResource.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <Style TargetType="{x:Type Grid}">
-                <Setter Property="ShowGridLines" Value="False"/>
-            </Style>
-
-            <Style TargetType="Border" x:Key="borderClassic">
-                <Setter Property="Margin" Value="10"/>
-                <Setter Property="BorderThickness" Value="2"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="CornerRadius" Value="15" />
-            </Style>
-
-            <DataTemplate x:Key="todoItemTemplate" DataType="{x:Type VModels:TodoModel}">
-                <Border Width="150" Background="LightBlue"
-                                        CornerRadius="20" BorderThickness="2"
-                                        BorderBrush="RosyBrown">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center"
-                          Focusable="False">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <StackPanel Grid.Row="0" Orientation="Horizontal"
-                                    Margin="10">
-                            <TextBlock Text="Описание:"/>
-                            <TextBlock Text="{Binding Path=ContentTodo}"/>
-                        </StackPanel>
-                        
-                        <StackPanel Grid.Row="1" Orientation="Horizontal"
-                                    Margin="10,0">
-                            <TextBlock Text="Оцененное время:"/>
-                            <TextBlock Text="{Binding Path=EstimatedHours}"/>
-                        </StackPanel>
-                        
-                        <StackPanel Grid.Row="2" Orientation="Horizontal"
-                                    Margin="10">
-                            <TextBlock Text="Приоритет: "/>
-                            <TextBlock Text="{Binding Path=Priority.PriorityContent}"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-
-            <helpers:IsEqualConverter x:Key="IsEqualConverter"/>
-            <helpers:NullVisibilityConverter x:Key="NullToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -90,7 +41,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid.Resources>
-                <Style TargetType="Border" BasedOn="{StaticResource borderClassic}" >
+                <Style TargetType="Border" BasedOn="{StaticResource BorderClassic}" >
                     <Setter Property="VerticalAlignment" Value="Stretch"/>
                 </Style>
 
@@ -148,11 +99,11 @@
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
-                <StackPanel VerticalAlignment="Center"
+                    <StackPanel VerticalAlignment="Center"
                             Orientation="Horizontal">
-                    <TextBlock Text="Общее число задач: " 
+                        <TextBlock Text="Общее число задач: " 
                                Margin="0"/>
-                    <TextBlock x:Name="CountAllTodos"
+                        <TextBlock Text="{Binding CountAllTodo}"
                                Margin="0"
                                FontWeight="SemiBold"
                                FontSize="13"/>
@@ -165,54 +116,54 @@
                     Background="WhiteSmoke" BorderThickness="0">
                 <Grid VerticalAlignment="Center"
                       >
-                <Grid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Margin" Value="10,5"/>
-                    </Style>
-                </Grid.Resources>
-                    
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                    
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin" Value="10,5"/>
+                        </Style>
+                    </Grid.Resources>
 
-                <TextBlock Text="Пользователь: " 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Пользователь: " 
                            Grid.Row="0" Grid.Column="0" 
                            VerticalAlignment="Center"/>
 
-                <StackPanel Grid.Row="0" Grid.Column="1"
+                    <StackPanel Grid.Row="0" Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock x:Name="Login"
+                        <TextBlock x:Name="Login"
                                VerticalAlignment="Center" />
-                    <Button x:Name="OpenUserInfoWindow" Style="{x:Null}"
+                        <Button x:Name="OpenUserInfoWindow" Style="{x:Null}"
                             Focusable="False" Margin="10,0">
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Border>
-                                    <Image Source="/TaskList;component/ToolKit/iconsInfo.png" 
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border>
+                                        <Image Source="/TaskList;component/ToolKit/iconsInfo.png" 
                                            VerticalAlignment="Center"
                                            Width="16" Height="16"
                                            Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"
                                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                </StackPanel>
-                <TextBlock Text="Время входа: " 
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="Время входа: " 
                            Grid.Row="1" Grid.Column="0"/>
 
-                <TextBlock x:Name="DateTimeSignIn" 
+                    <TextBlock x:Name="DateTimeSignIn" 
                            Grid.Row="1" Grid.Column="1"
                            HorizontalAlignment="Center"/>
-            </Grid>
+                </Grid>
             </Border>
         </Grid>
 
@@ -221,14 +172,11 @@
               Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid.Resources>
-                <Style TargetType="Border" BasedOn="{StaticResource borderClassic}" >
+                <Style TargetType="Border" BasedOn="{StaticResource BorderClassic}" >
                     <Setter Property="VerticalAlignment" Value="Stretch"/>
                 </Style>
 
@@ -237,82 +185,80 @@
                 </Style>
             </Grid.Resources>
 
-            <Button x:Name="ImportAndUrgentCommand" 
-                    Grid.Row="0"
-                    Content="Важные и срочные">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IdPriorityType, 
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="0">
+                <Button x:Name="ImportAndUrgentCommand" 
+                        Content="Важные и срочные">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=1}" Value="True">
-                                <Setter Property="BorderThickness" Value="1"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
-            <Button x:Name="ImportAndNonUrgentCommand"
-                    Grid.Row="1" 
+                <Button x:Name="ImportAndNonUrgentCommand"
                     Content="Важные и несрочные" >
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IdPriorityType, 
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=2}" Value="True">
-                                <Setter Property="BorderThickness" Value="1"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
-            <Button x:Name="UnImportAndUrgentCommand" 
-                    Grid.Row="2"
+                <Button x:Name="UnImportAndUrgentCommand" 
                     Content="Неважные и срочные">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IdPriorityType, 
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=3}" Value="True">
-                                <Setter Property="BorderThickness" Value="1"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
-            <Button x:Name="UnImportAndNonUrgentCommand" 
-                    Grid.Row="3" 
+                <Button x:Name="UnImportAndNonUrgentCommand" 
                     Content="Неважные и несрочные" >
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IdPriorityType, 
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=4}" Value="True">
-                                <Setter Property="BorderThickness" Value="1"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
 
             <Button x:Name="BackToProjectsCommand"
-                    Grid.Row="4"
+                    Grid.Row="1"
                     Content="Вернуться к проектам"
                     VerticalAlignment="Bottom"/>
         </Grid>
-
         <!--Рабочая часть-->
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="0"
                 BorderBrush="Bisque">
             <Grid>
-                <Grid ShowGridLines="False">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="4.5*"/>
@@ -327,32 +273,32 @@
 
                     <TextBlock Grid.Row="0"
                                FontSize="12"
+                               HorizontalAlignment="Left"
                                FontFamily="Segoe UI SemiBold"
                                Margin="5" >
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}Задачи ({0} шт.): ">
-                                <Binding Path="CarouselItems.Count"/>
+                                <Binding Path="TodoItems.Count"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <syncfusion:CardView x:Name="carousel" 
-                                         Grid.Row="1"
+                    <syncfusion:CardView Grid.Row="1"
                                          Margin="0"
                                          BorderThickness="0"
                                          Grid.Column="0"
-                                         ItemsSource="{Binding Path=CarouselItems, UpdateSourceTrigger=PropertyChanged}"
+                                         ItemsSource="{Binding Path=TodoItems, UpdateSourceTrigger=PropertyChanged}"
                                          SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          CanGroup="False"
                                          syncfusion:SkinStorage.VisualStyle="Metro"
                                          ShowHeader="False">
 
                         <syncfusion:CardView.HeaderTemplate>
-                            <DataTemplate DataType="{x:Type VModels:TodoModel}">
-                                        <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
+                            <DataTemplate DataType="{x:Type vModels:TodoModel}">
+                                <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
                             </DataTemplate>
                         </syncfusion:CardView.HeaderTemplate>
                         <syncfusion:CardView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type VModels:TodoModel}">
+                            <DataTemplate DataType="{x:Type vModels:TodoModel}">
                                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBoxItem>
                                         <StackPanel Orientation="Horizontal">
@@ -375,7 +321,7 @@
                                                        Margin="5,0,0,0"/>
                                         </StackPanel>
                                     </ListBoxItem>
-                               </ListBox>
+                                </ListBox>
                             </DataTemplate>
                         </syncfusion:CardView.ItemTemplate>
                     </syncfusion:CardView>
@@ -422,46 +368,63 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0"
-                                       Text="Подробная информация задачи:"
+                                       
                                        FontSize="18"
                                        FontFamily="Segoe UI SemiBold"
-                                       Margin="5"/>
+                                       Margin="5">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat='{}Подробная информация задачи "{0}"'>
+                                        <Binding Path="SelectedItem.Caption"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                             <StackPanel Grid.Row="1">
-                            <!-- содержание-->
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Описание: " Margin="5"/>
-                                <TextBlock Text="{Binding SelectedItem.ContentTodo}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                                
-                            </StackPanel>
-                            
-                            <!--Оценненное время-->
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Приблизительное время выполнения: " Margin="5"/>
-                                <TextBlock Text="{Binding SelectedItem.EstimatedHours}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Text="{Binding SelectedItem.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
 
-                            <!--Дата начала выполнения-->
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Дата начала: " Margin="5" />
-                                <TextBlock Name="xx" Text="{Binding SelectedItem.StartDate}"
+                                <!-- Название-->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Название: " Margin="5"/>
+                                    <TextBlock Text="{Binding SelectedItem.Caption}"
                                            Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
                                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                <DatePicker Text="{Binding SelectedItem.StartDate}"
+                                    <TextBox Text="{Binding SelectedItem.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                </StackPanel>
+                                <!-- содержание-->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Описание: " Margin="5"/>
+                                    <TextBlock Text="{Binding SelectedItem.ContentTodo}"
+                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
+                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                </StackPanel>
+
+                                <!--Оценненное время-->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Приблизительное время выполнения: " Margin="5"/>
+                                    <TextBlock Text="{Binding SelectedItem.EstimatedHours}"
+                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
+                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Text="{Binding SelectedItem.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+
+                                <!--Дата начала выполнения-->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Дата начала: " Margin="5" />
+                                    <TextBlock Text="{Binding SelectedItem.StartDate}"
+                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
+                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <DatePicker Text="{Binding SelectedItem.StartDate}"
                                             Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <Button x:Name="SaveTodo"
+                                </StackPanel>
+                                <Button x:Name="SaveTodo"
                                      Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">Сохранить</Button>
-                            <Button x:Name="CancelTodo"
+                                <Button x:Name="CancelTodo"
                                      Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">Отмена</Button>
-                        </StackPanel>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>

@@ -25,6 +25,9 @@ namespace TaskList.DAL.Entities
         [Column("estimatedHours")]
         public int? EstimatedHours { get; set; }
 
+        [Column("caption")]
+        public string Caption { get; set; }
+
         public virtual PriorityType Priority { get; set; }
     }
 }
