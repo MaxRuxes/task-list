@@ -253,14 +253,25 @@
                     Content="Вернуться к проектам"
                     VerticalAlignment="Bottom"/>
         </Grid>
+
         <!--Рабочая часть-->
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="0"
                 BorderBrush="Bisque">
+            <Border.Style>
+                <Style TargetType="Border" >
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=NotSelectType, Path=IsVisible, 
+                            UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="4.5*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -272,20 +283,49 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0"
-                               FontSize="12"
-                               HorizontalAlignment="Left"
-                               FontFamily="Segoe UI SemiBold"
-                               Margin="5" >
+                               Grid.Column="0"
+                               Text="Список пуст"
+                               FontSize="36"
+                               FontFamily="Segoe UI Italic">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=WorkArea, Path=IsVisible, UpdateSourceTrigger=PropertyChanged}"
+                                                 Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <StackPanel Grid.Row="0" Name="WorkArea"
+                                Grid.Column="0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CardView, Path=Items.Count, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock FontSize="12"
+                                   HorizontalAlignment="Left"
+                                   FontFamily="Segoe UI SemiBold"
+                                   Margin="5" >
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}Задачи ({0} шт.): ">
                                 <Binding Path="TodoItems.Count"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <syncfusion:CardView Grid.Row="1"
-                                         Margin="0"
+
+                    <syncfusion:CardView x:Name="CardView" Margin="0"
                                          BorderThickness="0"
-                                         Grid.Column="0"
                                          ItemsSource="{Binding Path=TodoItems, UpdateSourceTrigger=PropertyChanged}"
                                          SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          CanGroup="False"
@@ -297,6 +337,7 @@
                                 <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
                             </DataTemplate>
                         </syncfusion:CardView.HeaderTemplate>
+
                         <syncfusion:CardView.ItemTemplate>
                             <DataTemplate DataType="{x:Type vModels:TodoModel}">
                                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -325,8 +366,11 @@
                             </DataTemplate>
                         </syncfusion:CardView.ItemTemplate>
                     </syncfusion:CardView>
+                    </StackPanel>
 
-                    <Border Grid.Row="2"
+
+
+                    <Border Grid.Row="1"
                             Grid.Column="0"
                             Margin="5"
                             Visibility="{Binding }">
@@ -343,7 +387,6 @@
                                     IsEnabled="{Binding CanEdit}"
                                     Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
-
                     </Border>
 
                     <GridSplitter Grid.Column="1"
@@ -354,10 +397,10 @@
                                   ShowsPreview="true"
                                   Width="5"
                                   Grid.Row="0"
-                                  Grid.RowSpan="3"
+                                  Grid.RowSpan="2"
                                   Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
 
-                    <Border Grid.Row="0" Grid.RowSpan="3"
+                    <Border Grid.Row="0" Grid.RowSpan="2"
                             Grid.Column="2"
                             Margin="5,0"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
@@ -367,6 +410,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
+
                             <TextBlock Grid.Row="0"
                                        
                                        FontSize="18"
@@ -378,8 +422,8 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <StackPanel Grid.Row="1">
 
+                            <StackPanel Grid.Row="1">
                                 <!-- Название-->
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Название: " Margin="5"/>
@@ -388,8 +432,8 @@
                                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBox Text="{Binding SelectedItem.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-
                                 </StackPanel>
+
                                 <!-- содержание-->
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Описание: " Margin="5"/>
@@ -398,7 +442,6 @@
                                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBox Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-
                                 </StackPanel>
 
                                 <!--Оценненное время-->
@@ -420,15 +463,37 @@
                                     <DatePicker Text="{Binding SelectedItem.StartDate}"
                                             Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
+
                                 <Button x:Name="SaveTodo"
-                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">Сохранить</Button>
+                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">
+                                    Сохранить
+                                </Button>
                                 <Button x:Name="CancelTodo"
-                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">Отмена</Button>
+                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">
+                                    Отмена
+                                </Button>
                             </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>
             </Grid>
         </Border>
+
+        <TextBlock Name="NotSelectType" 
+                   Grid.Row="1" Grid.Column="1"
+                   Text="Выберите тип задач из меню слева"
+                   FontSize="36"
+                   FontFamily="Segoe UI Italic">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IdPriorityType}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style> 
+        </TextBlock>
     </Grid>
 </Window>

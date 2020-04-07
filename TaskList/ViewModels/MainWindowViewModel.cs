@@ -13,8 +13,6 @@ namespace TaskList.ViewModels
     [Export(typeof(MainWindowViewModel))]
     public class MainWindowViewModel : BaseProjectViewModel
     {
-        private readonly string _signInTime;
-        private string _login;
 
         public int IdPriorityType
         {
@@ -27,7 +25,6 @@ namespace TaskList.ViewModels
         }
 
         private Visibility _isEditModeVisibility;
-
 
         [ImportingConstructor]
         public MainWindowViewModel(IWindowManager windowManager, string connectionString)
@@ -50,7 +47,7 @@ namespace TaskList.ViewModels
                 .Substring(4);
             CurrentUser = ResolveCurrentUser(Login);
 
-            _signInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
+            SignInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
             NotifyOfPropertyChange(() => DateTimeSignIn);
             CurrentPriorityType = "Не выбран";
             NotifyOfPropertyChange(() => CountAllTodo);
@@ -266,23 +263,10 @@ namespace TaskList.ViewModels
             }
         }
 
-
         public bool CanEdit { get; set; }
 
         public string CurrentPriorityType { get; set; }
-
-        public string Login
-        {
-            get => _login;
-            set
-            {
-                _login = value;
-                NotifyOfPropertyChange(() => Login);
-            }
-        }
-
-        public string DateTimeSignIn => _signInTime;
-
+        
         public override void Dispose()
         {
             Uow.Dispose();

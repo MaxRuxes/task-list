@@ -9,10 +9,12 @@ using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
 using TaskList.Models;
 
-namespace TaskList.ViewModels.Helpers
+namespace TaskList.ViewModels
 {
     public abstract class BaseProjectViewModel : Screen, IDisposable
     {
+        protected string SignInTime;
+
         protected IWindowManager WindowManager;
         protected string ConnectionString;
         protected IUnitOfWork Uow;
@@ -22,7 +24,17 @@ namespace TaskList.ViewModels.Helpers
         protected IProjectService ProjectService;
         protected UserModel CurrentUser;
         private TodoModel _selectedItem;
+        private string _login;
 
+        public string Login
+        {
+            get => _login;
+            set
+            {
+                _login = value;
+                NotifyOfPropertyChange(() => Login);
+            }
+        }
         public ObservableCollection<TodoModel> TodoItems { get; set; } = new ObservableCollection<TodoModel>();
 
         public ProjectInfoDTO CurrentProject { get; internal set; }
@@ -38,7 +50,8 @@ namespace TaskList.ViewModels.Helpers
             }
         }
 
-
+        public string DateTimeSignIn => SignInTime;
+        
         public abstract void Dispose();
 
         protected int GetAllTodoForProjectCount()

@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TaskList.Views"
-        mc:Ignorable="d" Height="450" Width="800"
+        xmlns:kanban="clr-namespace:Syncfusion.UI.Xaml.Kanban;assembly=Syncfusion.SfKanban.WPF"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
+        mc:Ignorable="d" 
+        Height="600" Width="925"
+        MinWidth="1280" MinHeight="590"
+        WindowStartupLocation="CenterScreen"
         Title="Список дел"
-        d:DataContext="{d:DesignInstance d:Type={x:Type local:ScrumView}}">
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ScrumViewModel}}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -53,8 +57,7 @@
 
             <!--Временные данные мб какие-то-->
             <Border Grid.Column="2" 
-                    BorderBrush="Aquamarine"
-                    Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}">
+                    BorderBrush="Aquamarine">
                 <StackPanel Orientation="Vertical"
                             VerticalAlignment="Center"
                             Margin="15,0">
@@ -88,10 +91,10 @@
                             Orientation="Horizontal">
                         <TextBlock Text="Общее число задач: " 
                                Margin="0"/>
-                        <TextBlock x:Name="CountAllTodos"
-                               Margin="0"
-                               FontWeight="SemiBold"
-                               FontSize="13"/>
+                        <TextBlock Margin="0"
+                                   Text="{Binding CountAllTodo}"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -150,11 +153,9 @@
                            HorizontalAlignment="Center"/>
                 </Grid>
             </Border>
-
-
         </Grid>
 
-<!--Боковая часть-->
+        <!--Боковая часть-->
         <Grid Grid.Row="1" Grid.Column="0"
               Margin="10">
             <Grid.RowDefinitions>
@@ -177,6 +178,20 @@
                     Grid.Row="1"
                     Content="Вернуться к проектам"
                     VerticalAlignment="Bottom"/>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.Column="1"
+              Background="Aquamarine">
+            <kanban:SfKanban MinColumnWidth="150" 
+
+                             ColumnMappingPath="Category" 
+                             ItemsSource="{Binding TodoItems}"
+                             AutoGenerateColumns="False">
+                <kanban:KanbanColumn Categories="Open" Title="To Do"></kanban:KanbanColumn>
+                <kanban:KanbanColumn Categories="In Progress" Title="Progress"></kanban:KanbanColumn>
+                <kanban:KanbanColumn Categories="Review,Done" Title="Done"></kanban:KanbanColumn>
+            </kanban:SfKanban>
         </Grid>
 
     </Grid>
