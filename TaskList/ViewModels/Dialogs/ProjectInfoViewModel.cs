@@ -78,5 +78,10 @@ namespace TaskList.ViewModels.Dialogs
         {
             TryClose(false);
         }
+
+        public void WorkersForProject()
+        {
+
+        }
     }
 }

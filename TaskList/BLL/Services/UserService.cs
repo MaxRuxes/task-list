@@ -10,26 +10,25 @@ namespace TaskList.BLL.Services
     public class UserService : IUserService
     {
         private IUnitOfWork DataBase { get; set; }
-        private IMapper mapper;
+        private readonly IMapper _mapper;
 
         public UserService(IUnitOfWork uow)
         {
             DataBase = uow;
-            mapper = new MapperConfiguration(cfg=>
+            _mapper = new MapperConfiguration(cfg=>
             {
-                cfg.CreateMap<User, UserDTO>().ForMember(x=>x.Role, x=> x.MapFrom(m=>m.Role.NameRole));
-                cfg.CreateMap<RolesType, RolesTypeDTO>();
+                cfg.CreateMap<User, UserDTO>();
             }).CreateMapper();
         }
 
         public IEnumerable<UserDTO> GetAllUsers()
         {
-            return mapper.Map<IEnumerable<User>, List<UserDTO>>(DataBase.Users.GetAll());
+            return _mapper.Map<IEnumerable<User>, List<UserDTO>>(DataBase.Users.GetAll());
         }
 
         public UserDTO GetUser(int? id)
         {
-            return mapper.Map<User, UserDTO>(DataBase.Users.Get(id ?? 1));
+            return _mapper.Map<User, UserDTO>(DataBase.Users.Get(id ?? 1));
         }
     }
 }

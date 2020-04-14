@@ -69,7 +69,7 @@ namespace TaskList.ViewModels
 
         public void BackToProjectsCommand()
         {
-            WindowManager.ShowWindow(new ProjectsViewModel(WindowManager, ConnectionString));
+            WindowManager.ShowWindow(new ProjectsViewModel(WindowManager));
             (GetView() as Window)?.Close();
         }
     }

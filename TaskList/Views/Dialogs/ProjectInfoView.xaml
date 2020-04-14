@@ -28,6 +28,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -59,9 +60,14 @@
                        VerticalAlignment="Top"
                        Margin="0,10,5,0"
                        Text="Методология: "/>
-            <StackPanel Grid.Row="2" Grid.Column="1"
-                        Margin="0,10,0,0"
-                        Orientation="Vertical">
+
+            <Grid Grid.Row="2" Grid.Column="1"
+                  Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical">
                 <RadioButton Content="Agile"
                              IsChecked="{Binding Path=IsAgile,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"
@@ -71,6 +77,15 @@
                              IsChecked="{Binding Path=IsScrum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
+            </Grid>
+
+            <Button x:Name="WorkersForProject" 
+                    Grid.Column="1" Grid.Row="3"
+                    Content="Сотрудники"
+                    HorizontalAlignment="Left"
+                    MaxWidth="300"
+                    Margin="0,10,0,0"
+                    />
         </Grid>
 
         <StackPanel Grid.Row="1"

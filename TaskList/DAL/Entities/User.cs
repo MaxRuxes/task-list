@@ -8,16 +8,13 @@ namespace TaskList.DAL.Entities
         [Column("idUser")]
         public int UserId { get; set; }
 
-        [ForeignKey("Role")]
         [Column("role")]
-        public int IdRole { get; set; }
+        public string Role { get; set; }
 
         [Column("fullName")]
         public string FullName { get; set; }
 
         [Column("telegramContact")]
         public string TelegramContact { get; set; }
-
-        public virtual RolesType Role { get; set; }
     }
 }

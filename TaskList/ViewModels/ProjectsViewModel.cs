@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
+using MySql.Data.MySqlClient;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
@@ -19,8 +20,13 @@ namespace TaskList.ViewModels
 
         private readonly IProjectService _projectService;
 
-        public ProjectsViewModel(IWindowManager windowManager, string connectionString)
+        public ProjectsViewModel(IWindowManager windowManager)
         {
+
+            var connectionString = $"Server=127.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
+            var connection = new MySqlConnection(connectionString);
+
+
             _windowManager = windowManager;
             _connectionString = connectionString;
 

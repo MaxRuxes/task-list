@@ -12,7 +12,6 @@ namespace TaskList.DAL
         }
 
         public DbSet<PriorityType> PriorityTypes { get; set; }
-        public DbSet<RolesType> RolesTypes { get; set; }
         public DbSet<ProjectInfo> ProjectInfo { get; set; }
         public DbSet<Projects> Projects { get; set; }
         public DbSet<Todo> Todos { get; set; }
@@ -23,7 +22,6 @@ namespace TaskList.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PriorityType>();
-            modelBuilder.Entity<RolesType>();
             modelBuilder.Entity<ProjectInfo>();
             modelBuilder.Entity<Projects>();
             modelBuilder.Entity<Todo>();

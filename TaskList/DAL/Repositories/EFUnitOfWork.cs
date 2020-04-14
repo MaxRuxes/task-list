@@ -10,7 +10,6 @@ namespace TaskList.DAL.Repositories
         private readonly TaskListContext _databaseContext;
 
         private PriorityRepository _priorityRepository;
-        private RolesRepository _rolesRepository;
         private ProjectInfoRepository _teamInfoRepository;
         private ProjectsRepository _teamsRepository;
         private TodosRepository _todosRepository;
@@ -28,7 +27,6 @@ namespace TaskList.DAL.Repositories
         public Database Database => _databaseContext.Database;
 
         public IRepository<PriorityType> PriorityTypes => _priorityRepository ?? (_priorityRepository = new PriorityRepository(_databaseContext));
-        public IRepository<RolesType> RolesTypes => _rolesRepository ?? (_rolesRepository = new RolesRepository(_databaseContext));
         public IRepository<ProjectInfo> ProjectInfo => _teamInfoRepository ?? (_teamInfoRepository = new ProjectInfoRepository(_databaseContext));
         public IRepository<Projects> Projects => _teamsRepository ?? (_teamsRepository = new ProjectsRepository(_databaseContext));
         public IRepository<Todo> Todos => _todosRepository ?? (_todosRepository = new TodosRepository(_databaseContext));

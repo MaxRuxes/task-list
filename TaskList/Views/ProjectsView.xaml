@@ -11,7 +11,7 @@
         Height="350" Width="500"
         MinHeight="350" MinWidth="480"
         MaxHeight="400" MaxWidth="500"
-        WindowStyle="None"
+        WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectsViewModel}}">

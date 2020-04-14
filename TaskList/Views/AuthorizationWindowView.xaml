@@ -3,8 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Height="350" Width="500"
         MinHeight="350" MinWidth="480"
@@ -12,79 +10,29 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
-        AllowsTransparency="True"
-        Title="Авторизация">
+        AllowsTransparency="True">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="GlobalResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontFamily" Value="Segoue"/>
                 <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontStyle" Value="Italic"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Background="#7C4DFF" Grid.IsSharedSizeScope="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+    <Grid Background="#7C4DFF">
         <TextBlock Grid.Row="0" Text="ToDo"
                    Margin="20,40"
-                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                   FontFamily="Segoue" FontSize="32"
-                   FontWeight="DemiBold" FontStyle="Italic" />
-        <Grid Grid.Row="1" 
-              HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="qq"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="qq"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="Логин"
-                       VerticalAlignment="Center"
-                       Margin="5"/>
-            <TextBox x:Name="Login"
-                     Grid.Row="0" Grid.Column="1"
-                     MinHeight="30" MinWidth="200"
-                     Margin="2,4"/>
-
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                       Text="Пароль"
-                       VerticalAlignment="Center"
-                       Margin="5"/>
-            <PasswordBox Name="passwordBox" Grid.Row="1" Grid.Column="1"
-                         MinHeight="30" MinWidth="200"
-                         Margin="2,4"/>
-        </Grid>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Margin="5"
-                    Content="Войти"
-                   
-                    IsEnabled="{Binding EnabledButton, UpdateSourceTrigger=PropertyChanged}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="SignIn">
-                            <cal:Parameter Value="{Binding ElementName=passwordBox}" />
-                        </cal:ActionMessage>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-
-            <Button x:Name="CancelCommand"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Margin="5"
-                    Content="Выйти"/>
-        </StackPanel>
+                   VerticalAlignment="Center" 
+                   FontSize="64"
+                   FontWeight="DemiBold"/>
+        <TextBlock Text="(c) All rights reserved"
+                   VerticalAlignment="Bottom" />
     </Grid>
 </Window>

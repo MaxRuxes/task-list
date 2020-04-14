@@ -161,7 +161,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\DTO\PriorityTypeDTO.cs" />
-    <Compile Include="BLL\DTO\RolesTypeDTO.cs" />
     <Compile Include="BLL\DTO\ProjectsDTO.cs" />
     <Compile Include="BLL\DTO\TodoAndProjectsDTO.cs" />
     <Compile Include="BLL\DTO\TodoAndUsersDTO.cs" />
@@ -173,11 +172,12 @@
     <Compile Include="BLL\Interfaces\ITodoService.cs" />
     <Compile Include="BLL\Interfaces\IUserService.cs" />
     <Compile Include="BLL\Services\FunctionManagerService.cs" />
+    <Compile Include="BLL\Interfaces\IProjectsService.cs" />
     <Compile Include="BLL\Services\ProjectService.cs" />
+    <Compile Include="BLL\Services\ProjectsService.cs" />
     <Compile Include="BLL\Services\TodoService.cs" />
     <Compile Include="BLL\Services\UserService.cs" />
     <Compile Include="DAL\Entities\PriorityType.cs" />
-    <Compile Include="DAL\Entities\RolesType.cs" />
     <Compile Include="DAL\Entities\ProjectInfo.cs" />
     <Compile Include="DAL\Entities\Projects.cs" />
     <Compile Include="DAL\Entities\Todo.cs" />
@@ -189,7 +189,6 @@
     <Compile Include="DAL\Interfaces\IUnitOfWork.cs" />
     <Compile Include="DAL\Repositories\EFUnitOfWork.cs" />
     <Compile Include="DAL\Repositories\PriorityRepository.cs" />
-    <Compile Include="DAL\Repositories\RolesRepository.cs" />
     <Compile Include="DAL\Repositories\ProjectInfoRepository.cs" />
     <Compile Include="DAL\Repositories\ProjectsRepository.cs" />
     <Compile Include="DAL\Repositories\TodoAndProjectsRepository.cs" />
@@ -202,6 +201,7 @@
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
     <Compile Include="ViewModels\Dialogs\ProjectInfoViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\WorkersForProjectViewModel.cs" />
     <Compile Include="ViewModels\Helpers\AccessToDatabaseHelpers.cs" />
     <Compile Include="ViewModels\BaseProjectViewModel.cs" />
     <Compile Include="ViewModels\Helpers\InverseBooleanConverter.cs" />
@@ -214,6 +214,9 @@
     <Compile Include="ViewModels\UserInfoWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\ProjectInfoView.xaml.cs">
       <DependentUpon>ProjectInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\WorkersForProjectView.xaml.cs">
+      <DependentUpon>WorkersForProjectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectsView.xaml.cs">
       <DependentUpon>ProjectsView.xaml</DependentUpon>
@@ -229,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ProjectInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\WorkersForProjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -306,9 +313,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BLL\BusinessModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="ToolKit\todolist_logo.jpg" />
   </ItemGroup>
