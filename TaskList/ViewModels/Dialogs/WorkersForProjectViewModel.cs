@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.Composition;
 using Caliburn.Micro;
-using TaskList.DAL.Entities;
+using TaskList.DAL.Interfaces;
 
-namespace TaskList.ViewModels.Dialogs
+namespace TaskList.ViewModels
 {
     [Export(typeof(WorkersForProjectViewModel))]
     public class WorkersForProjectViewModel : Screen
     {
-        public WorkersForProjectViewModel(IEnumerable<User> workers)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public WorkersForProjectViewModel(IUnitOfWork unitOfWork)
         {
-            
+            _unitOfWork = unitOfWork;
         }
     }
 }

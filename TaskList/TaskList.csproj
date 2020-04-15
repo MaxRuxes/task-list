@@ -313,7 +313,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="ToolKit\icon_toolbar.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="ToolKit\todolist_logo.jpg" />
   </ItemGroup>

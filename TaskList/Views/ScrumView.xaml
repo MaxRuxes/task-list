@@ -10,6 +10,7 @@
         MinWidth="1280" MinHeight="590"
         WindowStartupLocation="CenterScreen"
         Title="Список дел"
+        Icon="../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ScrumViewModel}}">
     <Window.Resources>
         <ResourceDictionary>

@@ -1,10 +1,10 @@
-﻿<Window x:Class="TaskList.Views.Dialogs.ProjectInfoView"
+﻿<Window x:Class="TaskList.Views.ProjectInfoView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers"
-        xmlns:viewModels="clr-namespace:TaskList.ViewModels.Dialogs"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
         Title="Настройки информации о проекте" Height="450" Width="800"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectInfoViewModel}}">

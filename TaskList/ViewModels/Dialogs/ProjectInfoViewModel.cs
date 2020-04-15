@@ -1,19 +1,24 @@
 ﻿using System.ComponentModel.Composition;
 using Caliburn.Micro;
+using TaskList.DAL.Interfaces;
 
-namespace TaskList.ViewModels.Dialogs
+namespace TaskList.ViewModels
 {
     [Export(typeof(ProjectInfoViewModel))]
     public class ProjectInfoViewModel : Screen
     {
+        private readonly IWindowManager _windowManager;
+        private readonly IUnitOfWork _uow;
         private string _description;
         private string _projectName;
         private bool _isAgile;
         private bool _isAddMode;
         private bool _isScrum;
 
-        public ProjectInfoViewModel(bool isAdd = true)
+        public ProjectInfoViewModel(IWindowManager windowManager, IUnitOfWork uow, bool isAdd = true)
         {
+            _windowManager = windowManager;
+            _uow = uow;
             IsAddMode = isAdd;
             IsAgile = true;
             IsScrum = !IsAgile;
@@ -81,7 +86,12 @@ namespace TaskList.ViewModels.Dialogs
 
         public void WorkersForProject()
         {
+            var workers = new WorkersForProjectViewModel(_uow);
 
+            if (_windowManager.ShowDialog(workers) != true)
+            {
+                return;
+            }
         }
     }
 }

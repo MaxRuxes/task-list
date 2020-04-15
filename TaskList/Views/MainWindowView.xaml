@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
         MinWidth="1280" MinHeight="590"
+        Icon="../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:MainWindowViewModel}}">
     <Window.Resources>
         <ResourceDictionary>
@@ -68,8 +69,7 @@
 
             <!--Временные данные мб какие-то-->
             <Border Grid.Column="2" 
-                    BorderBrush="Aquamarine"
-                    Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}">
+                    BorderBrush="Aquamarine">
                 <StackPanel Orientation="Vertical"
                             VerticalAlignment="Center"
                             Margin="15,0">
@@ -99,71 +99,15 @@
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                        <TextBlock Text="Общее число задач: " 
-                               Margin="0"/>
-                        <TextBlock Text="{Binding CountAllTodo}"
-                               Margin="0"
-                               FontWeight="SemiBold"
-                               FontSize="13"/>
+                    <StackPanel VerticalAlignment="Center" 
+                                Orientation="Horizontal">
+                        <TextBlock Text="Общее число задач: " Margin="0"/>
+                        <TextBlock Text="{Binding CountAllTodo}" 
+                                   Margin="0"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"/>
                     </StackPanel>
                 </StackPanel>
-            </Border>
-
-            <!--Инфо о входе-->
-            <Border Grid.Column="4" 
-                    Background="WhiteSmoke" BorderThickness="0">
-                <Grid VerticalAlignment="Center"
-                      >
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Margin" Value="10,5"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Пользователь: " 
-                           Grid.Row="0" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
-
-                    <StackPanel Grid.Row="0" Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBlock x:Name="Login"
-                               VerticalAlignment="Center" />
-                        <Button x:Name="OpenUserInfoWindow" Style="{x:Null}"
-                            Focusable="False" Margin="10,0">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Border>
-                                        <Image Source="/TaskList;component/ToolKit/iconsInfo.png" 
-                                           VerticalAlignment="Center"
-                                           Width="16" Height="16"
-                                           Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </StackPanel>
-                    <TextBlock Text="Время входа: " 
-                           Grid.Row="1" Grid.Column="0"/>
-
-                    <TextBlock x:Name="DateTimeSignIn" 
-                           Grid.Row="1" Grid.Column="1"
-                           HorizontalAlignment="Center"/>
-                </Grid>
             </Border>
         </Grid>
 
@@ -195,7 +139,7 @@
                                 <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=1}" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -210,7 +154,7 @@
                                 <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=2}" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -225,7 +169,7 @@
                                 <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=3}" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -240,7 +184,7 @@
                                 <DataTrigger Binding="{Binding IdPriorityType, 
                                 Converter={StaticResource IsEqualConverter},
                                 ConverterParameter=4}" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -269,6 +213,7 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
+
             <Grid>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -313,79 +258,70 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
+
                         <TextBlock FontSize="12"
                                    HorizontalAlignment="Left"
                                    FontFamily="Segoe UI SemiBold"
                                    Margin="5" >
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}Задачи ({0} шт.): ">
-                                <Binding Path="TodoItems.Count"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Задачи ({0} шт.): ">
+                                    <Binding Path="TodoItems.Count"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
 
-                    <syncfusion:CardView x:Name="CardView" Margin="0"
-                                         BorderThickness="0"
-                                         ItemsSource="{Binding Path=TodoItems, UpdateSourceTrigger=PropertyChanged}"
-                                         SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         CanGroup="False"
-                                         syncfusion:SkinStorage.VisualStyle="Metro"
-                                         ShowHeader="False">
+                        <syncfusion:CardView x:Name="CardView" Margin="0"
+                                             BorderThickness="0"
+                                             ItemsSource="{Binding Path=TodoItems, UpdateSourceTrigger=PropertyChanged}"
+                                             SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             CanGroup="False"
+                                             syncfusion:SkinStorage.VisualStyle="Metro"
+                                             ShowHeader="False">
 
-                        <syncfusion:CardView.HeaderTemplate>
-                            <DataTemplate DataType="{x:Type vModels:TodoModel}">
-                                <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
-                            </DataTemplate>
-                        </syncfusion:CardView.HeaderTemplate>
+                            <syncfusion:CardView.HeaderTemplate>
+                                <DataTemplate DataType="{x:Type vModels:TodoModel}">
+                                    <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
+                                </DataTemplate>
+                            </syncfusion:CardView.HeaderTemplate>
 
-                        <syncfusion:CardView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vModels:TodoModel}">
-                                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                    <ListBoxItem>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Описание:"/>
-                                            <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
-                                        </StackPanel>
-                                    </ListBoxItem>
+                            <syncfusion:CardView.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vModels:TodoModel}">
+                                    <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBoxItem>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Описание:"/>
+                                                <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </ListBoxItem>
 
-                                    <ListBoxItem>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Оцененное время:"/>
-                                            <TextBlock Text="{Binding Path=EstimatedHours}"
+                                        <ListBoxItem>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Оцененное время:"/>
+                                                <TextBlock Text="{Binding Path=EstimatedHours}"
                                                        Margin="5,0,0,0"/>
-                                        </StackPanel>
-                                    </ListBoxItem>
-                                    <ListBoxItem>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Приоритет: "/>
-                                            <TextBlock Text="{Binding Path=Priority.PriorityContent}"
+                                            </StackPanel>
+                                        </ListBoxItem>
+                                        <ListBoxItem>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Приоритет: "/>
+                                                <TextBlock Text="{Binding Path=Priority.PriorityContent}"
                                                        Margin="5,0,0,0"/>
-                                        </StackPanel>
-                                    </ListBoxItem>
-                                </ListBox>
-                            </DataTemplate>
-                        </syncfusion:CardView.ItemTemplate>
-                    </syncfusion:CardView>
+                                            </StackPanel>
+                                        </ListBoxItem>
+                                    </ListBox>
+                                </DataTemplate>
+                            </syncfusion:CardView.ItemTemplate>
+                        </syncfusion:CardView>
                     </StackPanel>
-
-
 
                     <Border Grid.Row="1"
                             Grid.Column="0"
                             Margin="5"
                             Visibility="{Binding }">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button x:Name="AddTodo"
-                                    Content="Добавить"
-                                    IsEnabled="{Binding CanEdit}"
-                                    Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button x:Name="EditTodo"
-                                    Content="Редактировать" 
-                                    IsEnabled="{Binding CanEdit}"
-                                    Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button x:Name="DeleteTodo" Content="Удалить"
-                                    IsEnabled="{Binding CanEdit}"
-                                    Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button x:Name="AddTodo" Content="Добавить"/>
+                            <Button x:Name="EditTodo" Content="Редактировать" />
+                            <Button x:Name="DeleteTodo" Content="Удалить" />
                         </StackPanel>
                     </Border>
 
@@ -405,17 +341,16 @@
                             Margin="5,0"
                             Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
                             Background="Azure">
-                        <Grid>
+                        <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0"
-                                       
                                        FontSize="18"
                                        FontFamily="Segoe UI SemiBold"
-                                       Margin="5">
+                                       TextTrimming="CharacterEllipsis">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat='{}Подробная информация задачи "{0}"'>
                                         <Binding Path="SelectedItem.Caption"/>
@@ -423,56 +358,81 @@
                                 </TextBlock.Text>
                             </TextBlock>
 
-                            <StackPanel Grid.Row="1">
-                                <!-- Название-->
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Название: " Margin="5"/>
-                                    <TextBlock Text="{Binding SelectedItem.Caption}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Text="{Binding SelectedItem.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
+                            <Grid Grid.Row="1" Grid.IsSharedSizeScope="True"
+                                  Margin="0,15">
+                                <Grid.Resources>
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                                        <Setter Property="Margin" Value="0,0,0,5"/>
+                                        <Setter Property="MinHeight" Value="32"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    </Style>
 
-                                <!-- содержание-->
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Описание: " Margin="5"/>
-                                    <TextBlock Text="{Binding SelectedItem.ContentTodo}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Setter Property="Margin" Value="0,0,5,5"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <!--Оценненное время-->
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Приблизительное время выполнения: " Margin="5"/>
-                                    <TextBlock Text="{Binding SelectedItem.EstimatedHours}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Text="{Binding SelectedItem.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                         Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="caption"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                                <!--Дата начала выполнения-->
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Дата начала: " Margin="5" />
-                                    <TextBlock Text="{Binding SelectedItem.StartDate}"
-                                           Visibility="{Binding HideShit, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <DatePicker Text="{Binding SelectedItem.StartDate}"
-                                            Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="Название: "/>
+                                <TextBox Grid.Row="0" Grid.Column="1"
+                                         Text="{Binding SelectedItem.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                <Button x:Name="SaveTodo"
-                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">
-                                    Сохранить
-                                </Button>
-                                <Button x:Name="CancelTodo"
-                                     Visibility="{Binding IsEditModeVisibility, UpdateSourceTrigger=PropertyChanged}">
-                                    Отмена
-                                </Button>
-                            </StackPanel>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0"
+                                           Text="Описание: " />
+                                <TextBox Grid.Row="1" Grid.Column="1"
+                                         Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" 
+                                           Text="Приблизительное время выполнения: " />
+                                <TextBox Grid.Row="2" Grid.Column="1" 
+                                         Text="{Binding SelectedItem.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                                <TextBlock Grid.Row="3" Grid.Column="0"
+                                           Text="Дата начала: " />
+                                <DatePicker Grid.Row="3" Grid.Column="1"
+                                            Margin="3,0,3,5"
+                                            Text="{Binding SelectedItem.StartDate}" 
+                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                                <StackPanel Grid.Row="4"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" 
+                                                             Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <Button x:Name="SaveTodo" Content="Сохранить" />
+                                    <Button x:Name="CancelTodo" Content="Отмена"/>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </Border>
                 </Grid>
@@ -493,7 +453,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </TextBlock.Style> 
+            </TextBlock.Style>
         </TextBlock>
     </Grid>
 </Window>

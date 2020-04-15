@@ -8,7 +8,6 @@ using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
-using TaskList.ViewModels.Dialogs;
 
 namespace TaskList.ViewModels
 {
@@ -19,6 +18,7 @@ namespace TaskList.ViewModels
         private readonly string _connectionString;
 
         private readonly IProjectService _projectService;
+        private readonly IUnitOfWork _uow;
 
         public ProjectsViewModel(IWindowManager windowManager)
         {
@@ -30,8 +30,9 @@ namespace TaskList.ViewModels
             _windowManager = windowManager;
             _connectionString = connectionString;
 
-            IUnitOfWork uow = new DAL.Repositories.EfUnitOfWork(connectionString);
-            _projectService = new ProjectService(uow);
+            
+            _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
+            _projectService = new ProjectService(_uow);
 
             var projectsNames = _projectService.GetAllProjects().ToList();
 
@@ -65,7 +66,7 @@ namespace TaskList.ViewModels
 
         public void CreateProjectCommand()
         {
-            var vm = new ProjectInfoViewModel();
+            var vm = new ProjectInfoViewModel(_windowManager, _uow);
             if (_windowManager.ShowDialog(vm) != true)
             {
                 return;
@@ -91,10 +92,12 @@ namespace TaskList.ViewModels
 
         public void RenameProjectCommand(ProjectInfoDTO project)
         {
-            var vm = new ProjectInfoViewModel(false);
-            vm.Description = project.StackTecnology;
-            vm.ProjectName = project.NameProject;
-            vm.IsAgile = project.IsAgile;
+            var vm = new ProjectInfoViewModel(_windowManager, _uow, false)
+            {
+                Description = project.StackTecnology, 
+                ProjectName = project.NameProject, 
+                IsAgile = project.IsAgile
+            };
 
             if (_windowManager.ShowDialog(vm) != true)
             {
@@ -110,6 +113,16 @@ namespace TaskList.ViewModels
             var projectsNames = _projectService.GetAllProjects().ToList();
             projectsNames.ForEach((x)=> Projects.Add(x));
             CurrentProject = Projects.First(x=> x.ProjectInfoId == project.ProjectInfoId);
+        }
+
+        public void OpenWorkersCommand()
+        {
+            var workers = new WorkersForProjectViewModel(_uow);
+
+            if (_windowManager.ShowDialog(workers) != true)
+            {
+                return;
+            }
         }
     }
 }

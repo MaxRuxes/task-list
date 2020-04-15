@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
@@ -29,25 +26,40 @@ namespace TaskList.BLL.Services
         public IEnumerable<UserDTO> GetAllUsers()
         {
             var list = _database.Users.GetAll();
-            return _mapper.Map<IEnumerable<User>, List<UserDTO>>(list);
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(list);
         }
 
         public IEnumerable<UserDTO> GetAllUserForCurrentProject(int idProject)
         {
-            var usersID = _database.Projects.Find(x => x.IdProjectInfo == idProject)
+            var usersId = _database.Projects.Find(x => x.IdProjectInfo == idProject)
                 .Select(x => x.IdUser);
-            return null;
 
+            var list = _database.Users.Find(x => usersId.Contains(x.UserId));
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(list);
         }
 
         public void RemoveUserForProject(int idProject, int idUser)
         {
-            throw new NotImplementedException();
+            var tempRecords = _database.Projects
+                .Find(x => x.IdProjectInfo == idProject && x.IdUser == idUser);
+
+            foreach (var record in tempRecords)
+            {
+                _database.Projects.Delete(record.ProjectsId);
+            }
+
+            _database.Save();
         }
 
         public void AddUserForProject(int idProject, int idUser)
         {
-            throw new NotImplementedException();
+            _database.Projects.Create(new Projects()
+            {
+                IdProjectInfo = idProject,
+                IdUser = idUser
+            });
+
+            _database.Save();
         }
     }
 }

@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Windows;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
 using TaskList.Models;
@@ -13,6 +12,32 @@ namespace TaskList.ViewModels
     [Export(typeof(MainWindowViewModel))]
     public class MainWindowViewModel : BaseProjectViewModel
     {
+        private int _idPriorityType;
+        private bool _isEditExistRecord;
+        private bool _isEditNow;
+
+
+        [ImportingConstructor]
+        public MainWindowViewModel(IWindowManager windowManager, string connectionString)
+        {
+            WindowManager = windowManager;
+            ConnectionString = connectionString;
+
+            Mapper = MapperHelpers.CreateAutoMapper();
+
+            Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
+
+            TodoService = new TodoService(Uow);
+            UserService = new UserService(Uow);
+            ProjectService = new ProjectService(Uow);
+
+            CurrentPriorityType = "Не выбран";
+            NotifyOfPropertyChange(() => CountAllTodo);
+        }
+
+        #region Properties
+
+        public string CurrentPriorityType { get; set; }
 
         public int IdPriorityType
         {
@@ -24,71 +49,19 @@ namespace TaskList.ViewModels
             }
         }
 
-        private Visibility _isEditModeVisibility;
-
-        [ImportingConstructor]
-        public MainWindowViewModel(IWindowManager windowManager, string connectionString)
+        public bool IsEditNow
         {
-            WindowManager = windowManager;
-            ConnectionString = connectionString;
-            IsEditModeVisibility = Visibility.Hidden;
-
-            Mapper = MapperHelpers.CreateAutoMapper();
-
-            Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
-
-            TodoService = new TodoService(Uow);
-            UserService = new UserService(Uow);
-            ProjectService = new ProjectService(Uow);
-
-            Login = connectionString
-                .Split(';')
-                .FirstOrDefault(n => n.IndexOf("uid=", StringComparison.Ordinal) != -1)?
-                .Substring(4);
-            CurrentUser = ResolveCurrentUser(Login);
-
-            SignInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
-            NotifyOfPropertyChange(() => DateTimeSignIn);
-            CurrentPriorityType = "Не выбран";
-            NotifyOfPropertyChange(() => CountAllTodo);
-
-            HideShit = Visibility.Visible;
-            NotifyOfPropertyChange(() => HideShit);
-        }
-
-        private UserModel ResolveCurrentUser(string name)
-        {
-            var id = default(int);
-            switch (name)
+            get => _isEditNow;
+            set
             {
-                case "root":
-                {
-                    id = 1;
-                    CanEditVisibility = Visibility.Visible;
-                    CanEdit = true;
-                    break;
-                }
-                case "manager":
-                {
-                    id = 2;
-                    CanEditVisibility = Visibility.Visible;
-                    CanEdit = false;
-                    break;
-                }
-                case "employee":
-                {
-                    id = 3;
-                    CanEditVisibility = Visibility.Collapsed;
-                    CanEdit = false;
-                    break;
-                }
+                _isEditNow = value;
+                NotifyOfPropertyChange(() => IsEditNow);
             }
-
-            NotifyOfPropertyChange(() => CanEdit);
-            NotifyOfPropertyChange(() => CanEditVisibility);
-
-            return Mapper.Map<UserDTO, UserModel>(UserService.GetUser(id));
         }
+
+
+
+        #endregion
 
         #region Clicks Left panel
 
@@ -115,7 +88,61 @@ namespace TaskList.ViewModels
             IdPriorityType = 4;
             UpdateItemCollection(IdPriorityType);
         }
-        
+
+        #endregion
+
+        #region Manage buttons crud
+
+        public void AddTodo()
+        {
+            SelectedItem = new TodoModel() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
+        }
+
+        public void EditTodo()
+        {
+            _isEditExistRecord = true;
+
+            NotifyOfPropertyChange(() => SelectedItem);
+        }
+
+        public void DeleteTodo()
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            TodoService.DeleteTodo(SelectedItem.TodoId, CurrentProject.ProjectInfoId);
+            System.Windows.Forms.MessageBox.Show(@"Успешно удалено!");
+            UpdateItemCollection(IdPriorityType);
+        }
+
+        public void SaveTodo()
+        {
+            if (_isEditExistRecord)
+            {
+                TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                _isEditExistRecord = false;
+            }
+            else
+            {
+                TodoService.CreateTodo(CurrentUser.UserId, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+            }
+
+            UpdateItemCollection(IdPriorityType);
+            NotifyOfPropertyChange(() => CountAllTodo);
+
+        }
+
+        public void CancelTodo()
+        {
+            _isEditExistRecord = false;
+        }
+
+        #endregion
+
+        #region Helpers methods
+
         private void UpdateItemCollection(int id)
         {
             TodoItems.Clear();
@@ -161,112 +188,6 @@ namespace TaskList.ViewModels
 
         #endregion
 
-        #region Manage buttons crud
-
-        private bool _isEditExistRecord;
-        private Visibility _hideShit;
-        private int _idPriorityType;
-
-        public void AddTodo()
-        {
-            SelectedItem = new TodoModel() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
-
-            IsEditModeVisibility = Visibility.Visible;
-            NotifyOfPropertyChange(() => IsEditModeVisibility);
-
-            HideShit = Visibility.Collapsed;
-            NotifyOfPropertyChange(() => HideShit);
-        }
-
-        public void EditTodo()
-        {
-            _isEditExistRecord = true;
-
-            NotifyOfPropertyChange(() => SelectedItem);
-
-            IsEditModeVisibility = Visibility.Visible;
-            NotifyOfPropertyChange(() => IsEditModeVisibility);
-
-            HideShit = Visibility.Collapsed;
-            NotifyOfPropertyChange(() => HideShit);
-        }
-
-        public void DeleteTodo()
-        {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
-            TodoService.DeleteTodo(SelectedItem.TodoId, CurrentProject.ProjectInfoId);
-            System.Windows.Forms.MessageBox.Show(@"Успешно удалено!");
-            UpdateItemCollection(IdPriorityType);
-
-            IsEditModeVisibility = Visibility.Collapsed;
-            NotifyOfPropertyChange(() => IsEditModeVisibility);
-        }
-
-        public void SaveTodo()
-        {
-            IsEditModeVisibility = Visibility.Collapsed;
-            HideShit = Visibility.Visible;
-
-            NotifyOfPropertyChange(() => IsEditModeVisibility);
-            NotifyOfPropertyChange(() => HideShit);
-
-            if (_isEditExistRecord)
-            {
-                TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
-                _isEditExistRecord = false;
-            }
-            else
-            {
-                TodoService.CreateTodo(CurrentUser.UserId, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
-            }
-
-            UpdateItemCollection(IdPriorityType);
-            NotifyOfPropertyChange(() => CountAllTodo);
-
-        }
-
-        public void CancelTodo()
-        {
-            _isEditExistRecord = false;
-            IsEditModeVisibility = Visibility.Collapsed;
-            HideShit = Visibility.Visible;
-
-            NotifyOfPropertyChange(() => IsEditModeVisibility);
-            NotifyOfPropertyChange(() => HideShit);
-        }
-
-        #endregion
-
-        public Visibility CanEditVisibility { get; set; }
-
-        public Visibility IsEditModeVisibility
-        {
-            get => _isEditModeVisibility;
-            set
-            {
-                _isEditModeVisibility = value;
-                NotifyOfPropertyChange(() => _isEditModeVisibility);
-            }
-        }
-
-        public Visibility HideShit
-        {
-            get => _hideShit;
-            set
-            {
-                _hideShit = value;
-                NotifyOfPropertyChange(() => HideShit);
-            }
-        }
-
-        public bool CanEdit { get; set; }
-
-        public string CurrentPriorityType { get; set; }
-        
         public override void Dispose()
         {
             Uow.Dispose();
