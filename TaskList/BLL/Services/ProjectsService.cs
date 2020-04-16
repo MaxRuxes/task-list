@@ -53,6 +53,11 @@ namespace TaskList.BLL.Services
 
         public void AddUserForProject(int idProject, int idUser)
         {
+            if (_database.Projects.Find(x => x.IdProjectInfo == idProject && idUser == x.IdUser).Count() != 0)
+            {
+                return;
+            }
+
             _database.Projects.Create(new Projects()
             {
                 IdProjectInfo = idProject,

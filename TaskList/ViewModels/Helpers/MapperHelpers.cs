@@ -22,9 +22,6 @@ namespace TaskList.ViewModels.Helpers
                 cfg.CreateMap<PriorityModel, PriorityTypeDTO>()
                     .ForMember(x => x.NamePriority, x => x.MapFrom(m => m.PriorityContent))
                     .ForMember(x => x.PriorityTypeId, x => x.MapFrom(m => m.PriorityId));
-
-                cfg.CreateMap<UserDTO, UserModel>().ForMember(x => x.Role, x => x.MapFrom(m => m.Role));
-                cfg.CreateMap<UserModel, UserDTO>();
             }).CreateMapper();
         }
     }

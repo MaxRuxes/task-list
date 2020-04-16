@@ -13,8 +13,7 @@ namespace TaskList.ViewModels
 {
     public abstract class BaseProjectViewModel : Screen, IDisposable
     {
-        protected string SignInTime;
-
+        private TodoModel _editTodoModel;
         protected IWindowManager WindowManager;
         protected string ConnectionString;
         protected IUnitOfWork Uow;
@@ -22,19 +21,8 @@ namespace TaskList.ViewModels
         protected ITodoService TodoService;
         protected IUserService UserService;
         protected IProjectService ProjectService;
-        protected UserModel CurrentUser;
         private TodoModel _selectedItem;
-        private string _login;
 
-        public string Login
-        {
-            get => _login;
-            set
-            {
-                _login = value;
-                NotifyOfPropertyChange(() => Login);
-            }
-        }
         public ObservableCollection<TodoModel> TodoItems { get; set; } = new ObservableCollection<TodoModel>();
 
         public ProjectInfoDTO CurrentProject { get; internal set; }
@@ -46,25 +34,26 @@ namespace TaskList.ViewModels
             set
             {
                 _selectedItem = value;
+                EditTodoModel = value.Copy();
                 NotifyOfPropertyChange(() => SelectedItem);
             }
         }
 
-        public string DateTimeSignIn => SignInTime;
+        public TodoModel EditTodoModel
+        {
+            get => _editTodoModel;
+            set
+            {
+                _editTodoModel = value;
+                NotifyOfPropertyChange(() => EditTodoModel);
+            }
+        }
         
         public abstract void Dispose();
 
         protected int GetAllTodoForProjectCount()
         {
             return TodoService.GetCountForProject(CurrentProject.ProjectInfoId);
-        }
-
-        public void OpenUserInfoWindow()
-        {
-            var projects = Mapper.Map<IEnumerable<ProjectInfoDTO>, List<ProjectModel>>(
-                ProjectService.GetProjectsForUser(CurrentUser.UserId));
-
-            WindowManager.ShowWindow(new UserInfoWindowViewModel(WindowManager, CurrentUser, projects));
         }
 
         public void BackToProjectsCommand()

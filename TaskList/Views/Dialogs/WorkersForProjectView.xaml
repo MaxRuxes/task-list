@@ -3,21 +3,155 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
-        Title="Сотрудники" Height="450" Width="800">
+        Title="Сотрудники" Height="450" Width="800"
+        Icon="../../ToolKit/icon_toolbar.png"
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:WorkersForProjectViewModel}}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../GlobalResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ListView ItemsSource="{Binding Workers, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedWorker, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="3">
+
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                            <Setter Property="Background" Value="DarkGray" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding NameProject}"/>
-                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding StackTecnology}"/>
+                    <GridViewColumn Header="Имя"
+                                    Width="150"
+                                    DisplayMemberBinding="{Binding Path=FullName}"/>
+                    <GridViewColumn Header="Должность"
+                                    Width="150"
+                                    DisplayMemberBinding="{Binding Path=Role}"/>
+                    <GridViewColumn Header="Телеграм-контакт" 
+                                    Width="200"
+                                    DisplayMemberBinding="{Binding Path=TelegramContact}"/>
                 </GridView>
             </ListView.View>
-
         </ListView>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    Margin="5">
+
+            <Button x:Name="CreateUserCommand"
+                    Content="Добавить"
+                    Margin="0,0,5,0" />
+
+            <Button x:Name="RemoveUserCommand"
+                    Margin="0,0,5,0" 
+                    IsEnabled="{Binding IsSelectedUserExist, UpdateSourceTrigger=PropertyChanged}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Content" Value="Уволить"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedWorker.IsActive}" Value="False">
+                                <Setter Property="Content" Value="Вернуть"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button x:Name="RenameUserCommand" 
+                    Content="Редактировать"
+                    Margin="0,0,5,0"
+                    IsEnabled="{Binding IsSelectedUserExist, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" 
+                Grid.ColumnSpan="2" Grid.Column="0"
+                BorderBrush="Cyan"
+                BorderThickness="0,1,1,0">
+            <Grid Margin="10" Grid.IsSharedSizeScope="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="caption"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Имя: "
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,10"/>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                     Margin="0,0,0,5"
+                     Text="{Binding Path=EditWorker.FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Должность: "
+                       Margin="0,0,0,10"
+                       HorizontalAlignment="Left"/>
+                <TextBox Grid.Row="1" Grid.Column="1"
+                         Margin="0,0,0,5"
+                         Text="{Binding Path=EditWorker.Role,UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Телеграм-контакт: "
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,10"/>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                         Margin="0,0,0,5"
+                         Text="{Binding Path=EditWorker.TelegramContact, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <StackPanel Grid.Row="3" 
+                            Grid.Column="0" Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" 
+                                         Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <Button x:Name="SaveUser" Content="Сохранить" />
+                    <Button x:Name="CancelUser" Content="Отмена"/>
+                </StackPanel>
+            </Grid>
+
+        </Border>
     </Grid>
 </Window>

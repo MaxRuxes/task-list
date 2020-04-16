@@ -1,5 +1,9 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
+using System.Linq;
 using Caliburn.Micro;
+using TaskList.BLL.DTO;
+using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
 
 namespace TaskList.ViewModels
@@ -14,15 +18,22 @@ namespace TaskList.ViewModels
         private bool _isAgile;
         private bool _isAddMode;
         private bool _isScrum;
+        private UserDTO _selectedWorker;
 
-        public ProjectInfoViewModel(IWindowManager windowManager, IUnitOfWork uow, bool isAdd = true)
+        public ProjectInfoViewModel(IWindowManager windowManager, IUnitOfWork uow, int idProject, bool isAdd = true)
         {
             _windowManager = windowManager;
             _uow = uow;
             IsAddMode = isAdd;
             IsAgile = true;
             IsScrum = !IsAgile;
+
+            var projectsServie = new ProjectsService(uow);
+            var list = projectsServie.GetAllUserForCurrentProject(idProject);
+            Workers = new ObservableCollection<UserDTO>(list);
         }
+
+        public int IdProject { get; set; }
 
         public bool IsAddMode
         {
@@ -30,7 +41,7 @@ namespace TaskList.ViewModels
             set
             {
                 _isAddMode = value;
-                NotifyOfPropertyChange(()=>_isAddMode);
+                NotifyOfPropertyChange(() => _isAddMode);
             }
         }
 
@@ -40,7 +51,7 @@ namespace TaskList.ViewModels
             set
             {
                 _description = value;
-                NotifyOfPropertyChange(()=> _description);
+                NotifyOfPropertyChange(() => _description);
             }
         }
 
@@ -49,8 +60,8 @@ namespace TaskList.ViewModels
             get => _projectName;
             set
             {
-                _projectName = value; 
-                NotifyOfPropertyChange(()=>_projectName);
+                _projectName = value;
+                NotifyOfPropertyChange(() => _projectName);
             }
         }
 
@@ -60,7 +71,7 @@ namespace TaskList.ViewModels
             set
             {
                 _isAgile = value;
-                NotifyOfPropertyChange(()=>_isAgile);
+                NotifyOfPropertyChange(() => _isAgile);
             }
         }
 
@@ -70,9 +81,24 @@ namespace TaskList.ViewModels
             set
             {
                 _isScrum = value;
-                NotifyOfPropertyChange(()=>_isScrum);
+                NotifyOfPropertyChange(() => _isScrum);
             }
         }
+
+        public ObservableCollection<UserDTO> Workers { get; set; }
+
+        public UserDTO SelectedWorker
+        {
+            get => _selectedWorker;
+            set
+            {
+                _selectedWorker = value; 
+                NotifyOfPropertyChange(()=>SelectedWorker);
+                NotifyOfPropertyChange(()=>IsSelectedUser);
+            }
+        }
+
+        public bool IsSelectedUser => SelectedWorker != null;
 
         public void SaveCommand()
         {
@@ -84,14 +110,28 @@ namespace TaskList.ViewModels
             TryClose(false);
         }
 
-        public void WorkersForProject()
+        public void AddWorkerCommand()
         {
-            var workers = new WorkersForProjectViewModel(_uow);
+            var workers = new WorkersSelectorViewModel(_uow, Workers);
 
             if (_windowManager.ShowDialog(workers) != true)
             {
                 return;
             }
+
+            if (Workers.Any(x => x.UserId == workers.SelectedWorker.UserId))
+            {
+                return;
+            }
+
+            Workers.Add(workers.SelectedWorker);
         }
+
+        public void RemoveWorker()
+        {
+            Workers.Remove(SelectedWorker);
+        }
+
     }
 }
+

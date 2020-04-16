@@ -7,6 +7,7 @@
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
         Title="Настройки информации о проекте" Height="450" Width="800"
+        Icon="../../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectInfoViewModel}}">
     <Window.Resources>
         <ResourceDictionary>
@@ -26,9 +27,10 @@
               Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" MaxHeight="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -68,24 +70,68 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Vertical">
-                <RadioButton Content="Agile"
+                    <RadioButton Content="Agile"
                              IsChecked="{Binding Path=IsAgile,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"
                              GroupName="metod"/>
-                <RadioButton Content="Scrum"
+                    <RadioButton Content="Scrum"
                              GroupName="metod"
                              IsChecked="{Binding Path=IsScrum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
+                </StackPanel>
             </Grid>
 
-            <Button x:Name="WorkersForProject" 
-                    Grid.Column="1" Grid.Row="3"
-                    Content="Сотрудники"
-                    HorizontalAlignment="Left"
-                    MaxWidth="300"
-                    Margin="0,10,0,0"
-                    />
+            <Border Grid.Column="0" Grid.ColumnSpan="2" 
+                    Grid.Row="3"
+                    BorderBrush="Aqua"
+                    BorderThickness="1"
+                    Margin="0,5,0,10"/>
+
+            <Grid Grid.Column="1" Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Сотрудники на проекте:"
+                           HorizontalAlignment="Left"/>
+
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding Workers, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedWorker,UpdateSourceTrigger=PropertyChanged}">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                    <Setter Property="Background" Value="DarkGray" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Имя"
+                                            Width="150"
+                                            DisplayMemberBinding="{Binding Path=FullName}"/>
+                            <GridViewColumn Header="Должность"
+                                            Width="150"
+                                            DisplayMemberBinding="{Binding Path=Role}"/>
+                            <GridViewColumn Header="Телеграм-контакт" 
+                                            Width="200"
+                                            DisplayMemberBinding="{Binding Path=TelegramContact}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <Button x:Name="AddWorkerCommand" Content="Добавить"/>
+                    <Button x:Name="RemoveWorker" 
+                            Content="Удалить"
+                            IsEnabled="{Binding IsSelectedUser, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+            </Grid>
+
         </Grid>
 
         <StackPanel Grid.Row="1"

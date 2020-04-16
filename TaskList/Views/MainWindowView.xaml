@@ -6,6 +6,8 @@
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         xmlns:vModels="clr-namespace:TaskList.Models"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
@@ -371,6 +373,7 @@
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                         <Setter Property="Margin" Value="0,0,5,5"/>
                                         <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
                                     </Style>
                                 </Grid.Resources>
                                 <Grid.RowDefinitions>
@@ -389,21 +392,21 @@
                                 <TextBlock Grid.Row="0" Grid.Column="0"
                                            Text="Название: "/>
                                 <TextBox Grid.Row="0" Grid.Column="1"
-                                         Text="{Binding SelectedItem.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Text="{Binding EditTodoModel.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 
                                 <TextBlock Grid.Row="1" Grid.Column="0"
                                            Text="Описание: " />
                                 <TextBox Grid.Row="1" Grid.Column="1"
-                                         Text="{Binding SelectedItem.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Text="{Binding EditTodoModel.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" 
-                                           Text="Приблизительное время выполнения: " />
+                                           Text="Время выполнения: " />
                                 <TextBox Grid.Row="2" Grid.Column="1" 
-                                         Text="{Binding SelectedItem.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Text="{Binding EditTodoModel.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 
@@ -411,7 +414,7 @@
                                            Text="Дата начала: " />
                                 <DatePicker Grid.Row="3" Grid.Column="1"
                                             Margin="3,0,3,5"
-                                            Text="{Binding SelectedItem.StartDate}" 
+                                            Text="{Binding EditTodoModel.StartDate}" 
                                             IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 

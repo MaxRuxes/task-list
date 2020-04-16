@@ -12,5 +12,21 @@ namespace TaskList.Models
         public int EstimatedHours { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndRealDate { get; set; }
+
+
+        public TodoModel Copy()
+        {
+            return new TodoModel()
+            {
+                TodoId = TodoId,
+                IdPriority = IdPriority,
+                Priority = Priority,
+                ContentTodo = ContentTodo,
+                Caption = Caption,
+                EstimatedHours = EstimatedHours,
+                StartDate = StartDate,
+                EndRealDate = EndRealDate
+            };  
+        }
     }
 }

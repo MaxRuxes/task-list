@@ -4,6 +4,7 @@ using System.Linq;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Entities;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 
 namespace TaskList.DAL.Repositories
 {
@@ -42,12 +43,12 @@ namespace TaskList.DAL.Repositories
 
         public IEnumerable<User> GetAll()
         {
-            return _databaseContext.Users.Include(o => o.Role);
+            return _databaseContext.Users;
         }
 
         public void Update(User item)
         {
-            _databaseContext.Entry(item).State = EntityState.Modified;
+            _databaseContext.Users.AddOrUpdate(item);
         }
     }
 }

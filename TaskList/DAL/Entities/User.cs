@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskList.DAL.Entities
 {
@@ -16,5 +17,9 @@ namespace TaskList.DAL.Entities
 
         [Column("telegramContact")]
         public string TelegramContact { get; set; }
+
+        [Column("isActive", TypeName = "bit")]
+        [DefaultValue(true)]
+        public bool IsActive { get; set; }
     }
 }

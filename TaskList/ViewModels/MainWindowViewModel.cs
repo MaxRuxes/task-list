@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Windows.Input;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
 using TaskList.Models;
@@ -35,6 +36,7 @@ namespace TaskList.ViewModels
             NotifyOfPropertyChange(() => CountAllTodo);
         }
 
+
         #region Properties
 
         public string CurrentPriorityType { get; set; }
@@ -59,7 +61,7 @@ namespace TaskList.ViewModels
             }
         }
 
-
+        public ICommand SelectedItemChangedCommand { get; set; }
 
         #endregion
 
@@ -95,11 +97,13 @@ namespace TaskList.ViewModels
 
         public void AddTodo()
         {
+            IsEditNow = true;
             SelectedItem = new TodoModel() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
         }
 
         public void EditTodo()
         {
+            IsEditNow = true;
             _isEditExistRecord = true;
 
             NotifyOfPropertyChange(() => SelectedItem);
@@ -126,17 +130,21 @@ namespace TaskList.ViewModels
             }
             else
             {
-                TodoService.CreateTodo(CurrentUser.UserId, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
             }
 
             UpdateItemCollection(IdPriorityType);
             NotifyOfPropertyChange(() => CountAllTodo);
 
+            IsEditNow = false;
+            EditTodoModel = SelectedItem;
         }
 
         public void CancelTodo()
         {
             _isEditExistRecord = false;
+            IsEditNow = false;
+            EditTodoModel = SelectedItem;
         }
 
         #endregion

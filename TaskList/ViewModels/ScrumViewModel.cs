@@ -25,13 +25,6 @@ namespace TaskList.ViewModels
             TodoService = new TodoService(Uow);
             UserService = new UserService(Uow);
             ProjectService = new ProjectService(Uow);
-
-            Login = connectionString
-                .Split(';')
-                .FirstOrDefault(n => n.IndexOf("uid=", StringComparison.Ordinal) != -1)?
-                .Substring(4);
-            CurrentUser = Mapper.Map<UserDTO, UserModel>(UserService.GetUser(1));
-            SignInTime = DateTime.Now.ToUniversalTime().ToLongDateString() + DateTime.Now.ToShortTimeString();
         }
 
         public override void Dispose()

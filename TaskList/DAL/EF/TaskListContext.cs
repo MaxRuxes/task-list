@@ -6,10 +6,8 @@ namespace TaskList.DAL
     [DbConfigurationType(typeof(MySql.Data.EntityFramework.MySqlEFConfiguration))]
     public class TaskListContext : DbContext
     {
-        public TaskListContext(string connectionString) : base(connectionString)
-        {
-
-        }
+        public TaskListContext(string connectionString) 
+            : base(connectionString) { }
 
         public DbSet<PriorityType> PriorityTypes { get; set; }
         public DbSet<ProjectInfo> ProjectInfo { get; set; }

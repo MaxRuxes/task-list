@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using TaskList.BLL.DTO;
-using TaskList.BLL.Infrastructure;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Entities;
@@ -30,13 +30,13 @@ namespace TaskList.BLL.Services
             var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
             {
-                throw new ValidationException("Current todo already exists", "");
+                throw new ArgumentException(@"Current todo already exists", nameof(todo));
             }
 
             var item =_database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
 
-            _database.TodoAndUsers.Create(new TodoAndUsers() { Iduser = userId, IdTodo = todo.TodoId });
-            _database.TodoAndProjects.Create(new TodoAndProjects() {IdProject = idProject, IdTodo = item.TodoId});
+            _database.TodoAndUsers.Create(new TodoAndUsers { Iduser = userId, IdTodo = todo.TodoId });
+            _database.TodoAndProjects.Create(new TodoAndProjects {IdProject = idProject, IdTodo = item.TodoId});
 
             _database.Save();
         }

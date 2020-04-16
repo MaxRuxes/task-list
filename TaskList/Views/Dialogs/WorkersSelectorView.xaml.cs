@@ -3,11 +3,11 @@
 namespace TaskList.Views
 {
     /// <summary>
-    /// Interaction logic for UserInfoWindowView.xaml
+    /// Interaction logic for WorkersSelectorView.xaml
     /// </summary>
-    public partial class UserInfoWindowView : Window
+    public partial class WorkersSelectorView : Window
     {
-        public UserInfoWindowView()
+        public WorkersSelectorView()
         {
             InitializeComponent();
         }

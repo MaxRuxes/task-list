@@ -19,6 +19,7 @@ namespace TaskList.ViewModels
 
         private readonly IProjectService _projectService;
         private readonly IUnitOfWork _uow;
+        private readonly IProjectsService _projectsService;
 
         public ProjectsViewModel(IWindowManager windowManager)
         {
@@ -33,6 +34,7 @@ namespace TaskList.ViewModels
             
             _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
             _projectService = new ProjectService(_uow);
+            _projectsService = new ProjectsService(_uow);
 
             var projectsNames = _projectService.GetAllProjects().ToList();
 
@@ -66,7 +68,7 @@ namespace TaskList.ViewModels
 
         public void CreateProjectCommand()
         {
-            var vm = new ProjectInfoViewModel(_windowManager, _uow);
+            var vm = new ProjectInfoViewModel(_windowManager, _uow, 0);
             if (_windowManager.ShowDialog(vm) != true)
             {
                 return;
@@ -92,11 +94,12 @@ namespace TaskList.ViewModels
 
         public void RenameProjectCommand(ProjectInfoDTO project)
         {
-            var vm = new ProjectInfoViewModel(_windowManager, _uow, false)
+            var vm = new ProjectInfoViewModel(_windowManager, _uow, project.ProjectInfoId, false)
             {
                 Description = project.StackTecnology, 
                 ProjectName = project.NameProject, 
-                IsAgile = project.IsAgile
+                IsAgile = project.IsAgile,
+                IdProject = project.ProjectInfoId
             };
 
             if (_windowManager.ShowDialog(vm) != true)
@@ -108,6 +111,11 @@ namespace TaskList.ViewModels
             project.NameProject = vm.ProjectName;
             project.IsAgile = vm.IsAgile;
             _projectService.UpdateProject(project);
+
+            foreach (var item in vm.Workers)
+            {
+                _projectsService.AddUserForProject(project.ProjectInfoId, item.UserId);
+            }
 
             Projects.Clear();
             var projectsNames = _projectService.GetAllProjects().ToList();
