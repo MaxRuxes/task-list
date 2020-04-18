@@ -20,6 +20,7 @@ namespace TaskList.ViewModels
         private readonly IProjectService _projectService;
         private readonly IUnitOfWork _uow;
         private readonly IProjectsService _projectsService;
+        private ProjectInfoDTO _currentProject;
 
         public ProjectsViewModel(IWindowManager windowManager)
         {
@@ -44,7 +45,19 @@ namespace TaskList.ViewModels
 
         public ObservableCollection<ProjectInfoDTO> Projects { get; set; }
 
-        public ProjectInfoDTO CurrentProject { get; set; }
+        public bool IsCurrentProjectNull => CurrentProject != null;
+
+        public ProjectInfoDTO CurrentProject
+        {
+            get => _currentProject;
+            set
+            {
+                _currentProject = value;
+                NotifyOfPropertyChange(() => CurrentProject);
+                NotifyOfPropertyChange(()=> IsCurrentProjectNull);
+            }
+        }
+
 
         public void SelectProject(ProjectInfoDTO project)
         {
@@ -69,6 +82,8 @@ namespace TaskList.ViewModels
         public void CreateProjectCommand()
         {
             var vm = new ProjectInfoViewModel(_windowManager, _uow, 0);
+            vm.IsAgile = true;
+            vm.IsScrum = !vm.IsAgile;
             if (_windowManager.ShowDialog(vm) != true)
             {
                 return;
@@ -99,7 +114,8 @@ namespace TaskList.ViewModels
                 Description = project.StackTecnology, 
                 ProjectName = project.NameProject, 
                 IsAgile = project.IsAgile,
-                IdProject = project.ProjectInfoId
+                IdProject = project.ProjectInfoId,
+                IsScrum = !project.IsAgile
             };
 
             if (_windowManager.ShowDialog(vm) != true)

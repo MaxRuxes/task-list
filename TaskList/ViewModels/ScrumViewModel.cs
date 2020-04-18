@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Caliburn.Micro;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
-using TaskList.Models;
 using TaskList.ViewModels.Helpers;
 
 namespace TaskList.ViewModels
@@ -18,7 +18,7 @@ namespace TaskList.ViewModels
             WindowManager = windowManager;
             ConnectionString = connectionString;
 
-            Mapper = MapperHelpers.CreateAutoMapper();
+            Mapper = new MapperConfiguration((cfg) => { }).CreateMapper();
 
             Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
 

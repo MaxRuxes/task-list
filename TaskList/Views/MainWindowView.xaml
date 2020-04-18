@@ -4,10 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
-        xmlns:vModels="clr-namespace:TaskList.Models"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:vModels="clr-namespace:TaskList.BLL.DTO"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
@@ -281,18 +279,18 @@
                                              ShowHeader="False">
 
                             <syncfusion:CardView.HeaderTemplate>
-                                <DataTemplate DataType="{x:Type vModels:TodoModel}">
+                                <DataTemplate DataType="{x:Type vModels:TodoDTO}">
                                     <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
                                 </DataTemplate>
                             </syncfusion:CardView.HeaderTemplate>
 
                             <syncfusion:CardView.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vModels:TodoModel}">
+                                <DataTemplate DataType="{x:Type vModels:TodoDTO}">
                                     <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBoxItem>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Описание:"/>
-                                                <TextBlock Text="{Binding Path=ContentTodo}" Margin="5,0,0,0"/>
+                                                <TextBlock Text="{Binding Path=Content}" Margin="5,0,0,0"/>
                                             </StackPanel>
                                         </ListBoxItem>
 
@@ -306,7 +304,7 @@
                                         <ListBoxItem>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Приоритет: "/>
-                                                <TextBlock Text="{Binding Path=Priority.PriorityContent}"
+                                                <TextBlock Text="{Binding Path=Priority.NamePriority}"
                                                        Margin="5,0,0,0"/>
                                             </StackPanel>
                                         </ListBoxItem>
@@ -399,7 +397,7 @@
                                 <TextBlock Grid.Row="1" Grid.Column="0"
                                            Text="Описание: " />
                                 <TextBox Grid.Row="1" Grid.Column="1"
-                                         Text="{Binding EditTodoModel.ContentTodo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         Text="{Binding EditTodoModel.Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 

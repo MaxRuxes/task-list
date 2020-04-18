@@ -12,6 +12,7 @@
         public string TelegramContact { get; set; }
         public string Role { get; set; }
         public bool IsActive { get; set; }
+        public int RatePerHour { get; set; }
 
         public UserDTO Copy()
         {
@@ -21,7 +22,8 @@
                 FullName = FullName,
                 TelegramContact = TelegramContact,
                 Role = Role,
-                IsActive = IsActive
+                IsActive = IsActive,
+                RatePerHour = RatePerHour
             };
         }
     }

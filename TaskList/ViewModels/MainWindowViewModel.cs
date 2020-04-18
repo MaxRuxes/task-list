@@ -3,9 +3,9 @@ using System;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
+using AutoMapper;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
-using TaskList.Models;
 using TaskList.ViewModels.Helpers;
 
 namespace TaskList.ViewModels
@@ -24,7 +24,7 @@ namespace TaskList.ViewModels
             WindowManager = windowManager;
             ConnectionString = connectionString;
 
-            Mapper = MapperHelpers.CreateAutoMapper();
+            Mapper = new MapperConfiguration((cfg)=> { }).CreateMapper();
 
             Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
 
@@ -98,7 +98,7 @@ namespace TaskList.ViewModels
         public void AddTodo()
         {
             IsEditNow = true;
-            SelectedItem = new TodoModel() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
+            SelectedItem = new TodoDTO() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
         }
 
         public void EditTodo()
@@ -125,12 +125,12 @@ namespace TaskList.ViewModels
         {
             if (_isEditExistRecord)
             {
-                TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                TodoService.UpdateTodo(SelectedItem);
                 _isEditExistRecord = false;
             }
             else
             {
-                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(SelectedItem));
+                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoDTO, TodoDTO>(SelectedItem));
             }
 
             UpdateItemCollection(IdPriorityType);
@@ -156,7 +156,7 @@ namespace TaskList.ViewModels
             TodoItems.Clear();
             TodoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
                 .ToList()
-                .ForEach(o => TodoItems.Add(Mapper.Map<TodoDTO, TodoModel>(o)));
+                .ForEach(o => TodoItems.Add(o));
 
             NotifyOfPropertyChange(() => TodoItems);
 

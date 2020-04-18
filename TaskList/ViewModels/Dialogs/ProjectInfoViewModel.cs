@@ -25,11 +25,9 @@ namespace TaskList.ViewModels
             _windowManager = windowManager;
             _uow = uow;
             IsAddMode = isAdd;
-            IsAgile = true;
-            IsScrum = !IsAgile;
 
-            var projectsServie = new ProjectsService(uow);
-            var list = projectsServie.GetAllUserForCurrentProject(idProject);
+            var projectsService = new ProjectsService(uow);
+            var list = projectsService.GetAllUserForCurrentProject(idProject);
             Workers = new ObservableCollection<UserDTO>(list);
         }
 

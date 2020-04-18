@@ -21,5 +21,8 @@ namespace TaskList.DAL.Entities
         [Column("isActive", TypeName = "bit")]
         [DefaultValue(true)]
         public bool IsActive { get; set; }
+
+        [Column("ratePerHour")]
+        public int RatePerHour { get; set; }
     }
 }

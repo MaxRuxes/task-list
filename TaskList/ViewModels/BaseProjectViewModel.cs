@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using AutoMapper;
@@ -7,13 +6,12 @@ using Caliburn.Micro;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Interfaces;
-using TaskList.Models;
 
 namespace TaskList.ViewModels
 {
     public abstract class BaseProjectViewModel : Screen, IDisposable
     {
-        private TodoModel _editTodoModel;
+        private TodoDTO _editTodoModel;
         protected IWindowManager WindowManager;
         protected string ConnectionString;
         protected IUnitOfWork Uow;
@@ -21,25 +19,29 @@ namespace TaskList.ViewModels
         protected ITodoService TodoService;
         protected IUserService UserService;
         protected IProjectService ProjectService;
-        private TodoModel _selectedItem;
+        private TodoDTO _selectedItem;
 
-        public ObservableCollection<TodoModel> TodoItems { get; set; } = new ObservableCollection<TodoModel>();
+        public ObservableCollection<TodoDTO> TodoItems { get; set; } = new ObservableCollection<TodoDTO>();
 
         public ProjectInfoDTO CurrentProject { get; internal set; }
         public string CountAllTodo => GetAllTodoForProjectCount().ToString();
 
-        public TodoModel SelectedItem
+        public TodoDTO SelectedItem
         {
             get => _selectedItem;
             set
             {
                 _selectedItem = value;
-                EditTodoModel = value.Copy();
+                if (value != null)
+                {
+                    EditTodoModel = value.Copy();
+                }
+
                 NotifyOfPropertyChange(() => SelectedItem);
             }
         }
 
-        public TodoModel EditTodoModel
+        public TodoDTO EditTodoModel
         {
             get => _editTodoModel;
             set

@@ -99,61 +99,6 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-
-            <!--Инфо о входе-->
-            <Border Grid.Column="4" 
-                    Background="WhiteSmoke" BorderThickness="0">
-                <Grid VerticalAlignment="Center"
-                      >
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Margin" Value="10,5"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Пользователь: " 
-                           Grid.Row="0" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
-
-                    <StackPanel Grid.Row="0" Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBlock x:Name="Login"
-                               VerticalAlignment="Center" />
-                        <Button x:Name="OpenUserInfoWindow" Style="{x:Null}"
-                            Focusable="False" Margin="10,0">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Border>
-                                        <Image Source="/TaskList;component/ToolKit/iconsInfo.png" 
-                                           VerticalAlignment="Center"
-                                           Width="16" Height="16"
-                                           Visibility="{Binding CanEditVisibility, UpdateSourceTrigger=PropertyChanged}"
-                                           IsEnabled="{Binding CanEdit, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </StackPanel>
-                    <TextBlock Text="Время входа: " 
-                           Grid.Row="1" Grid.Column="0"/>
-
-                    <TextBlock x:Name="DateTimeSignIn" 
-                           Grid.Row="1" Grid.Column="1"
-                           HorizontalAlignment="Center"/>
-                </Grid>
-            </Border>
         </Grid>
 
         <!--Боковая часть-->
@@ -189,9 +134,9 @@
                              ColumnMappingPath="Category" 
                              ItemsSource="{Binding TodoItems}"
                              AutoGenerateColumns="False">
-                <kanban:KanbanColumn Categories="Open" Title="To Do"></kanban:KanbanColumn>
-                <kanban:KanbanColumn Categories="In Progress" Title="Progress"></kanban:KanbanColumn>
-                <kanban:KanbanColumn Categories="Review,Done" Title="Done"></kanban:KanbanColumn>
+                <kanban:KanbanColumn Categories="Open" Title="Сделать"></kanban:KanbanColumn>
+                <kanban:KanbanColumn Categories="In Progress" Title="В процессе"></kanban:KanbanColumn>
+                <kanban:KanbanColumn Categories="Review,Done" Title="Выполнено"></kanban:KanbanColumn>
             </kanban:SfKanban>
         </Grid>
 

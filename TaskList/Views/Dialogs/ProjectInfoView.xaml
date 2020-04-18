@@ -14,7 +14,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Views/GlobalResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid Margin="10">
