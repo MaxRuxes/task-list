@@ -55,7 +55,6 @@
 
             <Image Source="/TaskList;component/ToolKit/todolist_logo.jpg" />
 
-
             <!--Временные данные мб какие-то-->
             <Border Grid.Column="2" 
                     BorderBrush="Aquamarine">

@@ -10,45 +10,45 @@ namespace TaskList.DAL.Repositories
 {
     public class TodosRepository : IRepository<Todo>
     {
-        private readonly TaskListContext _databaseContext;
+        private readonly TaskListContext _context;
 
         public TodosRepository(TaskListContext taskListContext)
         {
-            _databaseContext = taskListContext;
+            _context = taskListContext;
         }
 
         public Todo Create(Todo item)
         {
-            return _databaseContext.Todos.Add(item);
+            return _context.Todos.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.Todos.Find(id);
+            var item = _context.Todos.Find(id);
             if (item != null)
             {
-                _databaseContext.Todos.Remove(item);
+                _context.Todos.Remove(item);
             }
         }
 
         public IEnumerable<Todo> Find(Func<Todo, bool> predicate)
         {
-            return _databaseContext.Todos.Where(predicate).ToList();
+            return _context.Todos.Where(predicate).ToList();
         }
 
         public Todo Get(int id)
         {
-            return _databaseContext.Todos.Find(id);
+            return _context.Todos.Find(id);
         }
 
         public IEnumerable<Todo> GetAll()
         {
-            return _databaseContext.Todos.Include(par => par.Priority);
+            return _context.Todos.Include(par => par.Priority);
         }
 
         public void Update(Todo item)
         {
-            _databaseContext.Todos.AddOrUpdate(item);
+            _context.Todos.AddOrUpdate(item);
         }
     }
 }

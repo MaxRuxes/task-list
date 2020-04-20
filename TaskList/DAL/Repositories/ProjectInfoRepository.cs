@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using TaskList.DAL.Interfaces;
@@ -10,45 +9,45 @@ namespace TaskList.DAL.Repositories
 {
     public class ProjectInfoRepository : IRepository<ProjectInfo>
     {
-        private TaskListContext _databaseContext;
+        private readonly TaskListContext _context;
 
         public ProjectInfoRepository(TaskListContext taskListContext)
         {
-            _databaseContext = taskListContext;
+            _context = taskListContext;
         }
 
         public ProjectInfo Create(ProjectInfo item)
         {
-            return _databaseContext.ProjectInfo.Add(item);
+            return _context.ProjectInfo.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.ProjectInfo.Find(id);
+            var item = _context.ProjectInfo.Find(id);
             if (item != null)
             {
-                _databaseContext.ProjectInfo.Remove(item);
+                _context.ProjectInfo.Remove(item);
             }
         }
 
         public IEnumerable<ProjectInfo> Find(Func<ProjectInfo, bool> predicate)
         {
-            return _databaseContext.ProjectInfo.Where(predicate).ToList();
+            return _context.ProjectInfo.Where(predicate).ToList();
         }
 
         public ProjectInfo Get(int id)
         {
-            return _databaseContext.ProjectInfo.Find(id);
+            return _context.ProjectInfo.Find(id);
         }
 
         public IEnumerable<ProjectInfo> GetAll()
         {
-            return _databaseContext.ProjectInfo;
+            return _context.ProjectInfo;
         }
 
         public void Update(ProjectInfo item)
         {
-            _databaseContext.ProjectInfo.AddOrUpdate(item);
+            _context.ProjectInfo.AddOrUpdate(item);
         }
     }
 }

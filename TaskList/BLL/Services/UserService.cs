@@ -10,12 +10,12 @@ namespace TaskList.BLL.Services
 {
     public class UserService : IUserService
     {
-        private IUnitOfWork DataBase { get; set; }
+        private readonly IUnitOfWork _dataBase;
         private readonly IMapper _mapper;
 
         public UserService(IUnitOfWork uow)
         {
-            DataBase = uow;
+            _dataBase = uow;
             _mapper = new MapperConfiguration(cfg=>
             {
                 cfg.CreateMap<User, UserDTO>();
@@ -25,37 +25,37 @@ namespace TaskList.BLL.Services
 
         public IEnumerable<UserDTO> GetAllUsers()
         {
-            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(DataBase.Users.GetAll());
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(_dataBase.Users.GetAll());
         }
 
-        public UserDTO GetUser(int? id)
+        public UserDTO GetUser(int id)
         {
-            return _mapper.Map<User, UserDTO>(DataBase.Users.Get(id ?? 1));
+            return _mapper.Map<User, UserDTO>(_dataBase.Users.Get(id));
         }
 
         public void ChangeActiveForUser(int id, bool active)
         {
-            var user = DataBase.Users.Find(x => x.UserId == id).FirstOrDefault();
+            var user = _dataBase.Users.Find(x => x.UserId == id).FirstOrDefault();
             if (user == null)
             {
                 return;
             }
 
             user.IsActive = active;
-            DataBase.Users.Update(user);
-            DataBase.Save();
+            _dataBase.Users.Update(user);
+            _dataBase.Save();
         }
 
         public void UpdateUser(UserDTO user)
         {
-            DataBase.Users.Update(_mapper.Map<UserDTO, User>(user));
-            DataBase.Save();
+            _dataBase.Users.Update(_mapper.Map<UserDTO, User>(user));
+            _dataBase.Save();
         }
 
         public void CreateUser(UserDTO user)
         {
-            DataBase.Users.Create(_mapper.Map<UserDTO, User>(user));
-            DataBase.Save();
+            _dataBase.Users.Create(_mapper.Map<UserDTO, User>(user));
+            _dataBase.Save();
         }
     }
 }

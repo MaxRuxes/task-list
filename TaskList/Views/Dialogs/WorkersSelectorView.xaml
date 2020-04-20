@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
-        Title="WorkersSelectorView" Height="450" Width="800"
+        Title="Выбор сотрудника"
+        Height="450" Width="800"
         Icon="../../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:WorkersSelectorViewModel}}">
     <Window.Resources>
@@ -15,6 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -48,8 +50,6 @@
             </ListView.View>
         </ListView>
 
-        <Button x:Name="SelectUsersCommand"
-                Grid.Row="1"
-                Content="Выбрать"/>
+        <Button x:Name="SelectUsersCommand" Grid.Row="1" Content="Выбрать"/>
     </Grid>
 </Window>

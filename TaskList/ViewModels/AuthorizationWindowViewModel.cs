@@ -2,7 +2,6 @@
 using Caliburn.Micro;
 using System.Windows;
 using System.ComponentModel.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using MySql.Data.MySqlClient;
@@ -18,7 +17,7 @@ namespace TaskList.ViewModels
         public AuthorizationWindowViewModel(IWindowManager windowManager)
         {
             _windowManager = windowManager;
-            Task.Run(Start);
+            Task.Run(() => Start());
         }
 
         private async void Start()
@@ -34,7 +33,7 @@ namespace TaskList.ViewModels
                 connection.Close();
                 connection.Dispose();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(
                     $"Не удалось подключиться к базе данных. Убедитесь в доступности и наличии базы данных. Подробности исключения:\n\n{ex.Message}",
@@ -42,6 +41,7 @@ namespace TaskList.ViewModels
                 Environment.Exit(1);
                 return;
             }
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 _windowManager.ShowWindow(new ProjectsViewModel(_windowManager));

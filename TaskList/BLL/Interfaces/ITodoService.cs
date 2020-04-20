@@ -11,7 +11,6 @@ namespace TaskList.BLL.Interfaces
         TodoDTO GetTodo(int idTodo);
         IEnumerable<TodoDTO> GetAllTodosForProject(int idPriority, int idProject);
 
-        void Dispose();
         int GetCountForProject(int currentProjectProjectInfoId);
         IEnumerable<TodoDTO> GetAllTodo(int idProject);
     }

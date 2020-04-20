@@ -14,7 +14,6 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:StatisticViewModel}}">
-
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,16 +28,11 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical">
-            <Button x:Name="ShowCostChart"
-                    Content="Ценовой график"/>
-            <Button x:Name="ShowEmployeeChart" 
-                    Content="График сотрудников"/>
-            <Button x:Name="ShowTodoChart"
-                    Content="График нагруженности"/>
-            <Button x:Name="ShowHoursChart"
-                    Content="Часовой график" />
+            <Button x:Name="ShowCostChart" Content="Ценовой график"/>
+            <Button x:Name="ShowEmployeeChart" Content="График сотрудников"/>
+            <Button x:Name="ShowTodoChart" Content="График нагруженности"/>
+            <Button x:Name="ShowHoursChart" Content="Часовой график" />
         </StackPanel>
-
 
         <Grid Grid.Column="1" Margin="5">
             <Grid.RowDefinitions>
@@ -46,26 +40,19 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <chart:SfChart 
-                       Margin="10"
-                       Header="{Binding CurrentNameChart, UpdateSourceTrigger=PropertyChanged}">
-            <chart:SfChart.PrimaryAxis>
-                <chart:CategoryAxis Header="{Binding CurrentNameForAxis, UpdateSourceTrigger=PropertyChanged}" />
-            </chart:SfChart.PrimaryAxis>
 
-            <chart:SfChart.SecondaryAxis>
-                <chart:NumericalAxis Header="{Binding CurrentValueForAxis, UpdateSourceTrigger=PropertyChanged}" />
-            </chart:SfChart.SecondaryAxis>
+            <chart:SfChart Margin="20"
+                           Header="{Binding CurrentNameChart, UpdateSourceTrigger=PropertyChanged}">
+                <chart:SfChart.PrimaryAxis>
+                    <chart:CategoryAxis Header="{Binding CurrentNameForAxis, UpdateSourceTrigger=PropertyChanged}" />
+                </chart:SfChart.PrimaryAxis>
 
-            <chart:ColumnSeries  ItemsSource="{Binding Data}" XBindingPath="Name" YBindingPath="Value" >
-            </chart:ColumnSeries>
-        </chart:SfChart>
+                <chart:SfChart.SecondaryAxis>
+                    <chart:NumericalAxis Header="{Binding CurrentValueForAxis, UpdateSourceTrigger=PropertyChanged}" />
+                </chart:SfChart.SecondaryAxis>
 
-            <TextBlock Grid.Row="1"
-                       Text="Что отображает график?"/>
-            <TextBlock Grid.Row="2"
-                       HorizontalAlignment="Left"
-                       Text="{Binding CurrentDescription, UpdateSourceTrigger=PropertyChanged}"/>
+                <chart:ColumnSeries  ItemsSource="{Binding ChartData}" XBindingPath="Name" YBindingPath="Value" />
+            </chart:SfChart>
         </Grid>
     </Grid>
 </Window>

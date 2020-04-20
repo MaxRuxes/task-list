@@ -1,14 +1,14 @@
 ﻿using Caliburn.Micro;
-using System;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using AutoMapper;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
 using TaskList.ToolKit.ViewModel;
-using TaskList.ViewModels.Helpers;
 using TaskList.ViewModels.Models;
+using Syncfusion.Windows.Shared;
 
 namespace TaskList.ViewModels
 {
@@ -29,8 +29,8 @@ namespace TaskList.ViewModels
             Mapper = new MapperConfiguration((cfg) =>
             {
                 cfg.CreateMap<TodoDTO, TodoModel>()
-                    .ForMember(x=>x.Owner, q=> q.Ignore())
-                    .ForMember(x=>x.StateString, q=> q.Ignore());
+                    .ForMember(x => x.Owner, q => q.Ignore())
+                    .ForMember(x => x.StateString, q => q.Ignore());
                 cfg.CreateMap<TodoModel, TodoDTO>();
 
                 cfg.CreateMap<PriorityTypeDTO, PriorityModel>()
@@ -49,7 +49,7 @@ namespace TaskList.ViewModels
             ProjectService = new ProjectService(Uow);
             TodoAndUsersService = new TodoAndUsersService(Uow);
 
-             CurrentPriorityType = "Не выбран";
+            CurrentPriorityType = "Не выбран";
             NotifyOfPropertyChange(() => CountAllTodo);
 
             StartExecuteCommand = new RelayCommand(StartExecuteCommandExecute);
@@ -109,7 +109,7 @@ namespace TaskList.ViewModels
         public void AddTodo()
         {
             IsEditNow = true;
-            EditTodoModel = new TodoModel {State = -1, IdPriority = IdPriorityType };
+            EditTodoModel = new TodoModel {State = -1, IdPriority = IdPriorityType};
         }
 
         public void EditTodo()
@@ -132,6 +132,25 @@ namespace TaskList.ViewModels
 
         public void SaveTodo()
         {
+            if (EditTodoModel.Caption == null || EditTodoModel.Caption.IsNullOrWhiteSpace() ||
+                EditTodoModel.Content == null || EditTodoModel.Content.IsNullOrWhiteSpace() ||
+                EditTodoModel.EstimatedHours <= 0)
+            {
+                MessageBox.Show(
+                    $"Проверьте правильность введенных данных.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+
+                return;
+            }
+
+            if (EditTodoModel.Owner == null)
+            {
+                MessageBox.Show(
+                    $"Необходимо назначить исполнителя для текущей задачи.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
             if (_isEditExistRecord)
             {
                 TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
@@ -139,7 +158,8 @@ namespace TaskList.ViewModels
             }
             else
             {
-                TodoService.CreateTodo(CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
+                TodoService.CreateTodo(CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel),
+                    EditTodoModel.Owner);
             }
 
             UpdateItemCollection(IdPriorityType);
@@ -158,7 +178,7 @@ namespace TaskList.ViewModels
 
         public void ChangeCurrentOwner()
         {
-            var viewModel = new WorkersSelectorViewModel(Uow, new []{EditTodoModel.Owner});
+            var viewModel = new WorkersSelectorViewModel(Uow, new[] {EditTodoModel.Owner});
             if (WindowManager.ShowDialog(viewModel) != true)
             {
                 return;
@@ -175,7 +195,7 @@ namespace TaskList.ViewModels
         private void UpdateItemCollection(int id)
         {
             TodoItems.Clear();
-            
+
             TodoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
                 .ToList()
                 .ForEach(o =>
@@ -233,14 +253,14 @@ namespace TaskList.ViewModels
                     return "В процессе";
                 default:
                     return "Выполнен";
-                
+
             }
-            
+
         }
 
         #endregion
 
-        
+
         public override void Dispose()
         {
             Uow.Dispose();

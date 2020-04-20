@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
-        Title="Сотрудники" Height="450" Width="800"
+        Title="Сотрудники" 
+        Height="450" Width="800"
         Icon="../../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:WorkersForProjectViewModel}}">
     <Window.Resources>
@@ -58,7 +59,6 @@
                     <GridViewColumn Header="Часовая ставка" 
                                     Width="200"
                                     DisplayMemberBinding="{Binding Path=RatePerHour}"/>
-
                 </GridView>
             </ListView.View>
         </ListView>

@@ -27,6 +27,7 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid Background="#7C4DFF">
         <TextBlock Grid.Row="0" Text="ToDo"
                    Margin="20,40"

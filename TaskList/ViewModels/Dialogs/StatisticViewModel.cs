@@ -11,50 +11,38 @@ namespace TaskList.ViewModels
     [Export(typeof(StatisticViewModel))]
     public class StatisticViewModel : Screen
     {
-        private readonly IUnitOfWork _database;
-        private ITodoAndUsersService _todoAndUsersService;
-        private IProjectsService _projectsService;
-        private IProjectService _projectService;
+        private readonly IProjectService _projectService;
 
         public StatisticViewModel(IUnitOfWork database)
         {
-            _database = database;
-
             _projectService = new ProjectService(database);
-            _projectsService = new ProjectsService(database);
-            _todoAndUsersService = new TodoAndUsersService(database);
         }
 
-        public ObservableCollection<ChartViewModel> Data { get; set; } = new ObservableCollection<ChartViewModel>();
+        public ObservableCollection<ChartViewModel> ChartData { get; set; } =
+            new ObservableCollection<ChartViewModel>();
 
         public string CurrentNameForAxis { get; set; }
         public string CurrentValueForAxis { get; set; }
-
         public string CurrentNameChart { get; set; }
-
-        public string CurrentDescription { get; set; }
-
-        public int CurrentChart { get; set; }
-
 
         public void ShowCostChart()
         {
-            Data.Clear();
+            ChartData.Clear();
+
             CurrentValueForAxis = "Цена/расходы ($)";
             CurrentNameForAxis = "Проекты";
-
             CurrentNameChart = "Ценовой график";
 
-            CurrentDescription = "";
-
             var projects = _projectService.GetAllProjects();
-
             foreach (var projectInfoDto in projects)
             {
-                var model = new ChartViewModel();
-                model.Name = projectInfoDto.NameProject;
-                model.Value = _projectService.GetCostForProject(projectInfoDto.ProjectInfoId);
-                Data.Add(model);
+                var model = new ChartViewModel
+                {
+                    Name = projectInfoDto.NameProject,
+                    Value = _projectService.GetCostForProject(projectInfoDto.ProjectInfoId)
+                };
+
+                ChartData.Add(model);
             }
 
             Refresh();
@@ -62,21 +50,22 @@ namespace TaskList.ViewModels
 
         public void ShowEmployeeChart()
         {
-            Data.Clear();
+            ChartData.Clear();
 
             CurrentValueForAxis = "Сотрудники";
             CurrentNameForAxis = "Проекты";
-
             CurrentNameChart = "График сотрудников";
-            CurrentDescription = "";
-            var projects = _projectService.GetAllProjects();
 
+            var projects = _projectService.GetAllProjects();
             foreach (var projectInfoDto in projects)
             {
-                var model = new ChartViewModel();
-                model.Name = projectInfoDto.NameProject;
-                model.Value = _projectService.GetCountWorkersForProject(projectInfoDto.ProjectInfoId);
-                Data.Add(model);
+                var model = new ChartViewModel
+                {
+                    Name = projectInfoDto.NameProject,
+                    Value = _projectService.GetCountWorkersForProject(projectInfoDto.ProjectInfoId)
+                };
+
+                ChartData.Add(model);
             }
 
             Refresh();
@@ -84,20 +73,22 @@ namespace TaskList.ViewModels
 
         public void ShowTodoChart()
         {
-            Data.Clear();
+            ChartData.Clear();
 
             CurrentValueForAxis = "Человечочасы";
             CurrentNameForAxis = "Проекты";
-            CurrentDescription = "";
             CurrentNameChart = "График нагруженности";
-            var projects = _projectService.GetAllProjects();
 
+            var projects = _projectService.GetAllProjects();
             foreach (var projectInfoDto in projects)
             {
-                var model = new ChartViewModel();
-                model.Name = projectInfoDto.NameProject;
-                model.Value = _projectService.GetCountTodoForProject(projectInfoDto.ProjectInfoId);
-                Data.Add(model);
+                var model = new ChartViewModel
+                {
+                    Name = projectInfoDto.NameProject,
+                    Value = _projectService.GetCountTodoForProject(projectInfoDto.ProjectInfoId)
+                };
+
+                ChartData.Add(model);
             }
 
             Refresh();
@@ -105,25 +96,25 @@ namespace TaskList.ViewModels
 
         public void ShowHoursChart()
         {
-            Data.Clear();
+            ChartData.Clear();
 
             CurrentValueForAxis = "Часы";
             CurrentNameForAxis = "Проекты";
-            CurrentDescription = "";
             CurrentNameChart = "Часовой график";
 
             var projects = _projectService.GetAllProjects();
-
             foreach (var projectInfoDto in projects)
             {
-                var model = new ChartViewModel();
-                model.Name = projectInfoDto.NameProject;
-                model.Value = _projectService.GetSpentTimeTodoForProject(projectInfoDto.ProjectInfoId);
-                Data.Add(model);
+                var model = new ChartViewModel
+                {
+                    Name = projectInfoDto.NameProject,
+                    Value = _projectService.GetSpentTimeTodoForProject(projectInfoDto.ProjectInfoId)
+                };
+
+                ChartData.Add(model);
             }
 
             Refresh();
         }
-
     }
 }

@@ -164,9 +164,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\DTO\PriorityTypeDTO.cs" />
-    <Compile Include="BLL\DTO\ProjectsDTO.cs" />
-    <Compile Include="BLL\DTO\TodoAndProjectsDTO.cs" />
-    <Compile Include="BLL\DTO\TodoAndUsersDTO.cs" />
     <Compile Include="BLL\DTO\TodoDTO.cs" />
     <Compile Include="BLL\DTO\UserDTO.cs" />
     <Compile Include="BLL\DTO\ProjectInfoDTO.cs" />

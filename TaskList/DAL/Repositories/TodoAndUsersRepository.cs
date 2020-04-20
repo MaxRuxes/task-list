@@ -10,30 +10,30 @@ namespace TaskList.DAL.Repositories
 {
     public class TodoAndUsersRepository : IRepository<TodoAndUsers>
     {
-        private readonly TaskListContext _databaseContext;
+        private readonly TaskListContext _context;
 
         public TodoAndUsersRepository(TaskListContext taskListContext)
         {
-            _databaseContext = taskListContext;
+            _context = taskListContext;
         }
 
         public TodoAndUsers Create(TodoAndUsers item)
         {
-            return _databaseContext.TodoAndUsers.Add(item);
+            return _context.TodoAndUsers.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.TodoAndUsers.Find(id);
+            var item = _context.TodoAndUsers.Find(id);
             if(item != null)
             {
-                _databaseContext.TodoAndUsers.Remove(item);
+                _context.TodoAndUsers.Remove(item);
             }
         }
 
         public IEnumerable<TodoAndUsers> Find(Func<TodoAndUsers, bool> predicate)
         {
-            return _databaseContext
+            return _context
                 .TodoAndUsers
                 .Where(predicate)
                 .ToList();
@@ -41,12 +41,12 @@ namespace TaskList.DAL.Repositories
 
         public TodoAndUsers Get(int id)
         {
-            return _databaseContext.TodoAndUsers.Find(id);
+            return _context.TodoAndUsers.Find(id);
         }
 
         public IEnumerable<TodoAndUsers> GetAll()
         {
-            return _databaseContext
+            return _context
                 .TodoAndUsers
                 .Include(o => o.User)
                 .Include(o => o.Todo);
@@ -54,7 +54,7 @@ namespace TaskList.DAL.Repositories
 
         public void Update(TodoAndUsers item)
         {
-            _databaseContext.TodoAndUsers.AddOrUpdate(item);
+            _context.TodoAndUsers.AddOrUpdate(item);
         }
     }
 }

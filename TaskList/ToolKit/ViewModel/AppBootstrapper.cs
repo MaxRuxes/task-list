@@ -1,17 +1,17 @@
 ﻿using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using TaskList.ViewModels;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 
-namespace TaskList.ToolKit.ViewModels
+namespace TaskList.ToolKit.ViewModel
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private CompositionContainer container;
+        private CompositionContainer _container;
 
         public AppBootstrapper()
         {
@@ -25,15 +25,17 @@ namespace TaskList.ToolKit.ViewModels
 
         protected override void Configure()
         {
-            container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
+            _container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance
+                .Select(x => new AssemblyCatalog(x))
+                .OfType<ComposablePartCatalog>()));
 
             var batch = new CompositionBatch();
 
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue(container);
+            batch.AddExportedValue(_container);
 
-            container.Compose(batch);
+            _container.Compose(batch);
         }
 
         protected override object GetInstance(Type service, string key)
@@ -41,14 +43,14 @@ namespace TaskList.ToolKit.ViewModels
             var contract = string.IsNullOrEmpty(key)
                 ? AttributedModelServices.GetContractName(service)
                 : key;
-            var exports = container.GetExportedValues<object>(contract);
+            var exports = _container.GetExportedValues<object>(contract).ToList();
 
-            if(exports.Count() > 0)
+            if(exports.Any())
             {
                 return exports.First();
             }
 
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+            throw new Exception($"Could not locate any instances of contract {contract}.");
         }
     }
 }

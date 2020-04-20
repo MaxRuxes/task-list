@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
 using TaskList.DAL.Interfaces;
 using TaskList.DAL.Entities;
 
@@ -23,8 +22,6 @@ namespace TaskList.DAL.Repositories
         {
             _databaseContext = new TaskListContext(connectionString);
         }
-
-        public Database Database => _databaseContext.Database;
 
         public IRepository<PriorityType> PriorityTypes => _priorityRepository ?? (_priorityRepository = new PriorityRepository(_databaseContext));
         public IRepository<ProjectInfo> ProjectInfo => _teamInfoRepository ?? (_teamInfoRepository = new ProjectInfoRepository(_databaseContext));

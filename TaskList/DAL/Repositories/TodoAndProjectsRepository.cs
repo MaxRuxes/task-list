@@ -9,30 +9,30 @@ namespace TaskList.DAL.Repositories
 {
     public class TodoAndProjectsRepository : IRepository<TodoAndProjects>
     {
-        private readonly TaskListContext _databaseContext;
+        private readonly TaskListContext _context;
 
         public TodoAndProjectsRepository(TaskListContext taskListContext)
         {
-            _databaseContext = taskListContext;
+            _context = taskListContext;
         }
 
         public TodoAndProjects Create(TodoAndProjects item)
         {
-            return _databaseContext.TodoAndProjects.Add(item);
+            return _context.TodoAndProjects.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.TodoAndProjects.Find(id);
+            var item = _context.TodoAndProjects.Find(id);
             if (item != null)
             {
-                _databaseContext.TodoAndProjects.Remove(item);
+                _context.TodoAndProjects.Remove(item);
             }
         }
 
         public IEnumerable<TodoAndProjects> Find(Func<TodoAndProjects, bool> predicate)
         {
-            return _databaseContext
+            return _context
                 .TodoAndProjects
                 .Where(predicate)
                 .ToList();
@@ -40,14 +40,14 @@ namespace TaskList.DAL.Repositories
 
         public TodoAndProjects Get(int id)
         {
-            return _databaseContext
+            return _context
                 .TodoAndProjects
                 .Find(id);
         }
 
         public IEnumerable<TodoAndProjects> GetAll()
         {
-            return _databaseContext
+            return _context
                 .TodoAndProjects
                 .Include(o => o.Project)
                 .Include(o => o.Todo);
@@ -55,12 +55,12 @@ namespace TaskList.DAL.Repositories
 
         public int GetCountForProject(int id)
         {
-            return _databaseContext.TodoAndProjects.Count(x => x.IdProject == id);
+            return _context.TodoAndProjects.Count(x => x.IdProject == id);
         }
 
         public void Update(TodoAndProjects item)
         {
-            _databaseContext.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
         }
     }
 }

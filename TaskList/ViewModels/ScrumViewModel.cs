@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using AutoMapper;
 using Caliburn.Micro;
 using Syncfusion.UI.Xaml.Kanban;
+using Syncfusion.Windows.Shared;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
 using TaskList.ToolKit.ViewModel;
@@ -46,42 +48,12 @@ namespace TaskList.ViewModels
             ProjectService = new ProjectService(Uow);
             TodoAndUsersService = new TodoAndUsersService(Uow);
 
-            SelectedCommand = new RelayCommand((Execute));
+            SelectedCommand = new RelayCommand((SelectItemChangedCommandExecute));
 
             StartExecuteCommand = new RelayCommand(StartExecuteCommandExecute);
             EndExecuteCommand = new RelayCommand(EndExecuteCommandExecute);
 
             UpdateData();
-        }
-
-        private void Execute(object o)
-        {
-            var args = (KanbanDragEventArgs) o;
-            var item = Mapper.Map<TodoDTO, TodoModel>(((CustomKanbanModel) args.SelectedCard.Content).CurrentTodo);
-            item.Owner = ((CustomKanbanModel) args.SelectedCard.Content).CurrentUser;
-            SelectedItem = item;
-            Refresh();
-        }
-
-        private void UpdateData()
-        {
-            var list = TodoService.GetAllTodo(CurrentProject.ProjectInfoId);
-            KanbanModels = new ObservableCollection<CustomKanbanModel>(list
-                .Select(x =>
-                {
-                    var model = new CustomKanbanModel(x); 
-                    model.CurrentUser = TodoAndUsersService.GetUserForTodo(x.TodoId);
-                    model.Assignee = model.CurrentUser.FullName;
-                    model.Title = x.Caption;
-                    model.ID = x.TodoId.ToString();
-                    model.Description = x.Content;
-                    model.Category = ResolveStateToCategory(x.State);
-                    model.ColorKey = ResolveStateToColorKey(x.State);
-                    model.ImageURL = new Uri(@"D:\Projects\TaskList\TaskList\ToolKit\iconsMan.png", UriKind.RelativeOrAbsolute);
-                    return model;
-                }));
-
-            Refresh();
         }
 
         public ICommand SelectedCommand { get; set; }
@@ -90,40 +62,10 @@ namespace TaskList.ViewModels
 
         public CustomKanbanModel CurrentTodo { get; set; }
 
-        private static string ResolveStateToCategory(int state)
-        {
-            switch (state)
-            {
-                case -1:
-                    return "Open";
-                case 0:
-                    return "In Progress";
-                case 1:
-                    return "Done";
-                default:
-                    return "Review";
-            }
-        }
-
-        private static string ResolveStateToColorKey(int state)
-        {
-            switch (state)
-            {
-                case -1:
-                    return "Low";
-                case 0:
-                    return "Normal";
-                case 1:
-                    return "Low";
-                default:
-                    return "High";
-            }
-        }
-
         public void AddTodo()
         {
             IsEditNow = true;
-            EditTodoModel = new TodoModel { State = -1, IdPriority = 1 };
+            EditTodoModel = new TodoModel {State = -1, IdPriority = 1};
         }
 
         public void EditTodo()
@@ -143,11 +85,29 @@ namespace TaskList.ViewModels
             UpdateData();
             SelectedItem = null;
             System.Windows.Forms.MessageBox.Show(@"Успешно удалено!");
-            
         }
 
         public void SaveTodo()
         {
+            if (EditTodoModel.Caption == null || EditTodoModel.Caption.IsNullOrWhiteSpace() ||
+                EditTodoModel.Content == null || EditTodoModel.Content.IsNullOrWhiteSpace() ||
+                EditTodoModel.EstimatedHours <= 0)
+            {
+                MessageBox.Show(
+                    $"Проверьте правильность введенных данных.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+
+                return;
+            }
+
+            if (EditTodoModel.Owner == null)
+            {
+                MessageBox.Show(
+                    $"Необходимо назначить исполнителя для текущей задачи.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
             if (_isEditExistRecord)
             {
                 TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
@@ -155,7 +115,8 @@ namespace TaskList.ViewModels
             }
             else
             {
-                TodoService.CreateTodo(CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
+                TodoService.CreateTodo(CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel),
+                    EditTodoModel.Owner);
             }
 
             NotifyOfPropertyChange(() => CountAllTodo);
@@ -176,13 +137,93 @@ namespace TaskList.ViewModels
 
         public void ChangeCurrentOwner()
         {
-            var viewModel = new WorkersSelectorViewModel(Uow, new[] { EditTodoModel.Owner });
+            var viewModel = new WorkersSelectorViewModel(Uow, new[] {EditTodoModel.Owner});
             if (WindowManager.ShowDialog(viewModel) != true)
             {
                 return;
             }
 
             EditTodoModel.Owner = viewModel.SelectedWorker;
+            Refresh();
+        }
+
+        private static string ResolveStateToColorKey(int state)
+        {
+            switch (state)
+            {
+                case -1:
+                {
+                    return "Low";
+                }
+                case 0:
+                {
+                    return "Normal";
+                }
+                case 1:
+                {
+                    return "Low";
+                }
+                default:
+                {
+                    return "High";
+                }
+            }
+        }
+
+        private static string ResolveStateToCategory(int state)
+        {
+            switch (state)
+            {
+                case -1:
+                {
+                    return "Open";
+                }
+                case 0:
+                {
+                    return "In Progress";
+                }
+                case 1:
+                {
+                    return "Done";
+                }
+                default:
+                {
+                    return "Review";
+                }
+            }
+        }
+
+        private void UpdateData()
+        {
+            var list = TodoService.GetAllTodo(CurrentProject.ProjectInfoId);
+            KanbanModels = new ObservableCollection<CustomKanbanModel>(list
+                .Select(x =>
+                {
+                    var model = new CustomKanbanModel(x)
+                    {
+                        CurrentUser = TodoAndUsersService.GetUserForTodo(x.TodoId)
+                    };
+
+                    model.Assignee = model.CurrentUser.FullName;
+                    model.Title = x.Caption;
+                    model.ID = x.TodoId.ToString();
+                    model.Description = x.Content;
+                    model.Category = ResolveStateToCategory(x.State);
+                    model.ColorKey = ResolveStateToColorKey(x.State);
+                    model.ImageURL = new Uri(@"D:\Projects\TaskList\TaskList\ToolKit\iconsMan.png",
+                        UriKind.RelativeOrAbsolute);
+                    return model;
+                }));
+
+            Refresh();
+        }
+
+        private void SelectItemChangedCommandExecute(object paramArgs)
+        {
+            var args = (KanbanDragEventArgs) paramArgs;
+            var item = Mapper.Map<TodoDTO, TodoModel>(((CustomKanbanModel) args.SelectedCard.Content).CurrentTodo);
+            item.Owner = ((CustomKanbanModel) args.SelectedCard.Content).CurrentUser;
+            SelectedItem = item;
             Refresh();
         }
 

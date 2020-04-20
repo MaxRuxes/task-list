@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:helpers="clr-namespace:TaskList.ViewModels.Helpers"
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         mc:Ignorable="d"
-        Title="Настройки информации о проекте" Height="450" Width="800"
+        Title="Настройки информации о проекте" 
+        Height="450" Width="800"
         Icon="../../ToolKit/icon_toolbar.png"
         d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:ProjectInfoViewModel}}">
     <Window.Resources>
@@ -16,6 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -70,7 +71,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Vertical">
                     <RadioButton Content="Agile"
-                             IsChecked="{Binding Path=IsAgile,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                 IsChecked="{Binding Path=IsAgile,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              IsEnabled="{Binding IsAddMode, UpdateSourceTrigger=PropertyChanged}"
                              GroupName="metod"/>
                     <RadioButton Content="Scrum"
@@ -92,6 +93,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+
                 <TextBlock Text="Сотрудники на проекте:"
                            HorizontalAlignment="Left"/>
 
@@ -136,10 +138,8 @@
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
-            <Button x:Name="SaveCommand"
-                    Content="Сохранить"/>
-            <Button x:Name="CancelCommand"
-                    Content="Отмена"/>
+            <Button x:Name="SaveCommand" Content="Сохранить"/>
+            <Button x:Name="CancelCommand" Content="Отмена"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -9,45 +9,45 @@ namespace TaskList.DAL.Repositories
 {
     public class PriorityRepository : IRepository<PriorityType>
     {
-        private TaskListContext db;
+        private readonly TaskListContext _context;
 
         public PriorityRepository(TaskListContext taskListContext)
         {
-            db = taskListContext;
+            _context = taskListContext;
         }
 
         public PriorityType Create(PriorityType item)
         {
-            return db.PriorityTypes.Add(item);
+            return _context.PriorityTypes.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = db.PriorityTypes.Find(id);
+            var item = _context.PriorityTypes.Find(id);
             if(item != null)
             {
-                db.PriorityTypes.Remove(item);
+                _context.PriorityTypes.Remove(item);
             }
         }
 
         public IEnumerable<PriorityType> Find(Func<PriorityType, bool> predicate)
         {
-            return db.PriorityTypes.Where(predicate).ToList();
+            return _context.PriorityTypes.Where(predicate).ToList();
         }
 
         public PriorityType Get(int id)
         {
-            return db.PriorityTypes.Find(id);
+            return _context.PriorityTypes.Find(id);
         }
 
         public IEnumerable<PriorityType> GetAll()
         {
-            return db.PriorityTypes;
+            return _context.PriorityTypes;
         }
 
         public void Update(PriorityType item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
         }
     }
 }

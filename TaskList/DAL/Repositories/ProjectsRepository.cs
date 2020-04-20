@@ -9,40 +9,40 @@ namespace TaskList.DAL.Repositories
 {
     public class ProjectsRepository : IRepository<Projects>
     {
-        private readonly TaskListContext _databaseContext;
+        private readonly TaskListContext _context;
 
         public ProjectsRepository(TaskListContext taskListContext)
         {
-            _databaseContext = taskListContext;
+            _context = taskListContext;
         }
 
         public Projects Create(Projects item)
         {
-            return _databaseContext.Projects.Add(item);
+            return _context.Projects.Add(item);
         }
 
         public void Delete(int id)
         {
-            var item = _databaseContext.Projects.Find(id);
+            var item = _context.Projects.Find(id);
             if (item != null)
             {
-                _databaseContext.Projects.Remove(item);
+                _context.Projects.Remove(item);
             }
         }
 
         public IEnumerable<Projects> Find(Func<Projects, bool> predicate)
         {
-            return _databaseContext.Projects.Where(predicate).ToList();
+            return _context.Projects.Where(predicate).ToList();
         }
 
         public Projects Get(int id)
         {
-            return _databaseContext.Projects.Find(id);
+            return _context.Projects.Find(id);
         }
 
         public IEnumerable<Projects> GetAll()
         {
-            return _databaseContext
+            return _context
                 .Projects
                 .Include(o => o.ProjectInfo)
                 .Include(o => o.User);
@@ -50,7 +50,7 @@ namespace TaskList.DAL.Repositories
 
         public void Update(Projects item)
         {
-            _databaseContext.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
         }
     }
 }

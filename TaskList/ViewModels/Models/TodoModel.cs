@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaskList.BLL.DTO;
 
 namespace TaskList.ViewModels.Models
@@ -25,7 +21,7 @@ namespace TaskList.ViewModels.Models
 
         public TodoModel Copy()
         {
-            return new TodoModel()
+            return new TodoModel
             {
                 TodoId = TodoId,
                 Owner = Owner,

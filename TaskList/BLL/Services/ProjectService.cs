@@ -10,13 +10,13 @@ namespace TaskList.BLL.Services
 {
     public class ProjectService : IProjectService
     {
-        private IUnitOfWork Database { get; set; }
-        private readonly IMapper mapper;
+        private readonly IUnitOfWork _database;
+        private readonly IMapper _mapper;
 
         public ProjectService(IUnitOfWork uow)
         {
-            Database = uow;
-            mapper = new MapperConfiguration(cfg =>
+            _database = uow;
+            _mapper = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<ProjectInfoDTO, ProjectInfo>();
                 cfg.CreateMap<ProjectInfo, ProjectInfoDTO>();
@@ -25,54 +25,54 @@ namespace TaskList.BLL.Services
 
         public IEnumerable<ProjectInfoDTO> GetAllProjects()
         {
-            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.ProjectInfo.GetAll());
+            return _mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(_database.ProjectInfo.GetAll());
         }
 
         public ProjectInfoDTO CreateProject(ProjectInfoDTO project)
         {
-            var input = mapper.Map<ProjectInfoDTO, ProjectInfo>(project);
-            var output = Database.ProjectInfo.Create(input);
-            Database.Save();
+            var input = _mapper.Map<ProjectInfoDTO, ProjectInfo>(project);
+            var output = _database.ProjectInfo.Create(input);
+            _database.Save();
 
-            return mapper.Map<ProjectInfo, ProjectInfoDTO>(output);
+            return _mapper.Map<ProjectInfo, ProjectInfoDTO>(output);
         }
 
         public void UpdateProject(ProjectInfoDTO projectInfo)
         {
-            var input = mapper.Map<ProjectInfoDTO, ProjectInfo>(projectInfo);
-            Database.ProjectInfo.Update(input);
-            Database.Save();
+            var input = _mapper.Map<ProjectInfoDTO, ProjectInfo>(projectInfo);
+            _database.ProjectInfo.Update(input);
+            _database.Save();
         }
 
         public void DeleteProject(int idProject)
         {
-            var todoAndProjectses = Database.TodoAndProjects.Find(x => x.IdProject == idProject);
+            var todoAndProjectses = _database.TodoAndProjects.Find(x => x.IdProject == idProject);
             foreach (var item in todoAndProjectses)
             {
-                var usersTask = Database.TodoAndUsers.Find(x => x.IdTodo == item.IdTodo);
+                var usersTask = _database.TodoAndUsers.Find(x => x.IdTodo == item.IdTodo);
                 foreach (var task in usersTask)
                 {
-                    Database.TodoAndUsers.Delete(task.TodoAndUsersId);
+                    _database.TodoAndUsers.Delete(task.TodoAndUsersId);
                 }
 
-                Database.TodoAndProjects.Delete(item.TodoAndProjectsId);
+                _database.TodoAndProjects.Delete(item.TodoAndProjectsId);
 
-                Database.Todos.Delete(item.IdTodo);
+                _database.Todos.Delete(item.IdTodo);
             }
 
-            var projects = Database.Projects.Find(x => x.IdProjectInfo == idProject);
+            var projects = _database.Projects.Find(x => x.IdProjectInfo == idProject);
             foreach (var project in projects)
             {
-                Database.Projects.Delete(project.ProjectsId);
+                _database.Projects.Delete(project.ProjectsId);
             }
 
-            Database.ProjectInfo.Delete(idProject);
-            Database.Save();
+            _database.ProjectInfo.Delete(idProject);
+            _database.Save();
         }
 
         public int GetCostForProject(int idProject)
         {
-            var todoForProject = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+            var todoForProject = _database.TodoAndProjects.Find(x => x.IdProject == idProject)
                 .ToList();
             if (!todoForProject.Any())
             {
@@ -83,14 +83,14 @@ namespace TaskList.BLL.Services
             var summ = 0;
             foreach (var idTodo in allTodos)
             {
-                var usersWithTodo = Database.TodoAndUsers.Find(x => x.IdTodo == idTodo).FirstOrDefault();
+                var usersWithTodo = _database.TodoAndUsers.Find(x => x.IdTodo == idTodo).FirstOrDefault();
                 if (usersWithTodo == null)
                 {
                     return 0;
                 }
 
-                var user = Database.Users.Get(usersWithTodo.Iduser);
-                var todo = Database.Todos.Get(idTodo);
+                var user = _database.Users.Get(usersWithTodo.Iduser);
+                var todo = _database.Todos.Get(idTodo);
 
                 summ += user.RatePerHour * todo.EstimatedHours;
             }
@@ -100,50 +100,44 @@ namespace TaskList.BLL.Services
 
         public int GetCountWorkersForProject(int idProject)
         {
-            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            var project = _database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
             if (project == null)
             {
                 return 0;
             }
 
-            var workersCount = Database.Projects.Find(x => x.IdProjectInfo == idProject).Count();
+            var workersCount = _database.Projects.Find(x => x.IdProjectInfo == idProject).Count();
             return workersCount;
         }
 
         public int GetCountTodoForProject(int idProject)
         {
-            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            var project = _database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
             if (project == null)
             {
                 return 0;
             }
 
-            var todoCount = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+            var todoCount = _database.TodoAndProjects.Find(x => x.IdProject == idProject)
                 .Select(x=>x.IdTodo)
                 .ToList();
-            var todos = Database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x=>x.EstimatedHours);
+            var todos = _database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x=>x.EstimatedHours);
             return todos;
         }
 
         public int GetSpentTimeTodoForProject(int idProject)
         {
-            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            var project = _database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
             if (project == null)
             {
                 return 0;
             }
 
-            var todoCount = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+            var todoCount = _database.TodoAndProjects.Find(x => x.IdProject == idProject)
                 .Select(x => x.IdTodo)
                 .ToList();
-            var todos = Database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x => x.SpentTime);
+            var todos = _database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x => x.SpentTime);
             return todos;
-        }
-
-
-        public IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId)
-        {
-            return mapper.Map<IEnumerable<ProjectInfo>, List<ProjectInfoDTO>>(Database.Projects.Find(o => o.IdUser == userId).Select(o => o.ProjectInfo)); 
         }
     }
 }

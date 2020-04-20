@@ -72,9 +72,17 @@ namespace TaskList.ViewModels
             {
                 _editTodoModel = value;
                 NotifyOfPropertyChange(() => EditTodoModel);
+                NotifyOfPropertyChange(() => IsEditTodoModelEnabled);
             }
         }
-        
+
+        #region Commands
+
+        public ICommand StartExecuteCommand { get; set; }
+        public ICommand EndExecuteCommand { get; set; }
+
+        #endregion
+
         public abstract void Dispose();
 
         protected int GetAllTodoForProjectCount()
@@ -95,18 +103,18 @@ namespace TaskList.ViewModels
             NotifyOfPropertyChange(() => EditTodoModel.State);
             Refresh();
         }
-        public ICommand StartExecuteCommand { get; set; }
-        public ICommand EndExecuteCommand { get; set; }
 
         public void EndExecuteCommandExecute(object o)
         {
             EditTodoModel.State = 1;
             NotifyOfPropertyChange(() => EditTodoModel.State);
+
             EditTodoModel.EndRealDate = DateTime.Today;
             NotifyOfPropertyChange(() => EditTodoModel.EndRealDate);
-            var valuew = (EditTodoModel.EndRealDate - EditTodoModel.StartDate).Days;
-            valuew = valuew == 0 ? 1 : valuew;
-            EditTodoModel.SpentTime = valuew * 8;
+
+            var days = (EditTodoModel.EndRealDate - EditTodoModel.StartDate).Days;
+            days = days == 0 ? 1 : days;
+            EditTodoModel.SpentTime = days * 8;
             NotifyOfPropertyChange(() => EditTodoModel.SpentTime);
             NotifyOfPropertyChange(() => EditTodoModel);
             Refresh();

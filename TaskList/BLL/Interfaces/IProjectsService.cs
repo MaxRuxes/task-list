@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using TaskList.BLL.DTO;
-using TaskList.DAL.Entities;
 
 namespace TaskList.BLL.Interfaces
 {

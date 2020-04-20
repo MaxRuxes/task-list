@@ -99,8 +99,7 @@
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Center" 
-                                Orientation="Horizontal">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <TextBlock Text="Общее число задач: " Margin="0"/>
                         <TextBlock Text="{Binding CountAllTodo}" 
                                    Margin="0"
@@ -129,10 +128,8 @@
                 </Style>
             </Grid.Resources>
 
-            <StackPanel Orientation="Vertical"
-                        Grid.Row="0">
-                <Button x:Name="ImportAndUrgentCommand" 
-                        Content="Важные и срочные">
+            <StackPanel Orientation="Vertical" Grid.Row="0">
+                <Button x:Name="ImportAndUrgentCommand" Content="Важные и срочные">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Style.Triggers>
@@ -146,8 +143,7 @@
                     </Button.Style>
                 </Button>
 
-                <Button x:Name="ImportAndNonUrgentCommand"
-                    Content="Важные и несрочные" >
+                <Button x:Name="ImportAndNonUrgentCommand" Content="Важные и несрочные" >
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Style.Triggers>
@@ -161,8 +157,7 @@
                     </Button.Style>
                 </Button>
 
-                <Button x:Name="UnImportAndUrgentCommand" 
-                    Content="Неважные и срочные">
+                <Button x:Name="UnImportAndUrgentCommand" Content="Неважные и срочные">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Style.Triggers>
@@ -176,8 +171,7 @@
                     </Button.Style>
                 </Button>
 
-                <Button x:Name="UnImportAndNonUrgentCommand" 
-                    Content="Неважные и несрочные" >
+                <Button x:Name="UnImportAndNonUrgentCommand" Content="Неважные и несрочные" >
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Style.Triggers>
@@ -245,8 +239,7 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <StackPanel Grid.Row="0" Name="WorkArea"
-                                Grid.Column="0">
+                    <StackPanel Grid.Row="0" Name="WorkArea" Grid.Column="0">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="Visibility" Value="Visible"/>
@@ -336,7 +329,7 @@
                                   Width="5"
                                   Grid.Row="0"
                                   Grid.RowSpan="2"
-                                  Visibility="{Binding EditTodoModel, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                  Visibility="{Binding EditTodoModel, Converter={StaticResource NullToVisibilityConverter}}" />
 
                     <Border Grid.Row="0" Grid.RowSpan="2"
                             Grid.Column="2"
@@ -376,6 +369,7 @@
                                         <Setter Property="HorizontalAlignment" Value="Left"/>
                                     </Style>
                                 </Grid.Resources>
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -440,8 +434,7 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock 
-                                           Text="{Binding EditTodoModel.Owner.FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    <TextBlock Text="{Binding EditTodoModel.Owner.FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                     <Button x:Name="ChangeCurrentOwner"
                                             Grid.Column="1"
                                             IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"

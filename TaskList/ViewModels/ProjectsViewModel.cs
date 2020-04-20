@@ -24,11 +24,12 @@ namespace TaskList.ViewModels
         public ProjectsViewModel(IWindowManager windowManager)
         {
 
-            var connectionString = $"Server=127.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
+            var connectionString =
+                $"Server=127.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
 
             _windowManager = windowManager;
             _connectionString = connectionString;
-            
+
             _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
             _projectService = new ProjectService(_uow);
             _projectsService = new ProjectsService(_uow);
@@ -50,7 +51,7 @@ namespace TaskList.ViewModels
             {
                 _currentProject = value;
                 NotifyOfPropertyChange(() => CurrentProject);
-                NotifyOfPropertyChange(()=> IsCurrentProjectNull);
+                NotifyOfPropertyChange(() => IsCurrentProjectNull);
             }
         }
 
@@ -107,8 +108,8 @@ namespace TaskList.ViewModels
         {
             var vm = new ProjectInfoViewModel(_windowManager, _uow, project.ProjectInfoId, false)
             {
-                Description = project.StackTecnology, 
-                ProjectName = project.NameProject, 
+                Description = project.StackTecnology,
+                ProjectName = project.NameProject,
                 IsAgile = project.IsAgile,
                 IdProject = project.ProjectInfoId,
                 IsScrum = !project.IsAgile
@@ -131,28 +132,20 @@ namespace TaskList.ViewModels
 
             Projects.Clear();
             var projectsNames = _projectService.GetAllProjects().ToList();
-            projectsNames.ForEach((x)=> Projects.Add(x));
-            CurrentProject = Projects.First(x=> x.ProjectInfoId == project.ProjectInfoId);
+            projectsNames.ForEach((x) => Projects.Add(x));
+            CurrentProject = Projects.First(x => x.ProjectInfoId == project.ProjectInfoId);
         }
 
         public void OpenWorkersCommand()
         {
             var workers = new WorkersForProjectViewModel(_uow);
-
-            if (_windowManager.ShowDialog(workers) != true)
-            {
-                return;
-            }
+            _windowManager.ShowDialog(workers);
         }
 
         public void OpenStatisticsCommand()
         {
             var statistic = new StatisticViewModel(_uow);
-
-            if (_windowManager.ShowDialog(statistic) != true)
-            {
-                return;
-            }
+            _windowManager.ShowDialog(statistic);
         }
     }
 }

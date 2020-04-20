@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
 using TaskList.DAL.Entities;
@@ -11,11 +7,10 @@ using TaskList.DAL.Interfaces;
 
 namespace TaskList.BLL.Services
 {
-    class TodoAndUsersService : ITodoAndUsersService
+    public class TodoAndUsersService : ITodoAndUsersService
     {
         private readonly UserService _userService;
         private readonly IUnitOfWork _database;
-        private readonly IMapper _mapper;
 
         public TodoAndUsersService(IUnitOfWork uow)
         {
