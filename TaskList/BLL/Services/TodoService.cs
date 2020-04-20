@@ -25,7 +25,7 @@ namespace TaskList.BLL.Services
             }).CreateMapper();
         }
 
-        public void CreateTodo(int userId, int idProject, TodoDTO todo, UserDTO owner)
+        public void CreateTodo(int idProject, TodoDTO todo, UserDTO owner)
         {
             var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
@@ -35,7 +35,7 @@ namespace TaskList.BLL.Services
 
             var item =_database.Todos.Create(_mapper.Map<TodoDTO, Todo>(todo));
 
-            _database.TodoAndUsers.Create(new TodoAndUsers { Iduser = userId, IdTodo = todo.TodoId });
+            _database.TodoAndUsers.Create(new TodoAndUsers { Iduser = owner.UserId, IdTodo = todo.TodoId });
             _database.TodoAndProjects.Create(new TodoAndProjects {IdProject = idProject, IdTodo = item.TodoId});
 
             _database.Save();

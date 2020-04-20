@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Windows;
 using Caliburn.Micro;
+using Syncfusion.Windows.Shared;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
@@ -100,6 +102,30 @@ namespace TaskList.ViewModels
 
         public void SaveCommand()
         {
+            if (ProjectName == null || Description == null ||
+                ProjectName.Trim().IsNullOrWhiteSpace() || 
+                ProjectName == "" ||
+                Description.Trim().IsNullOrWhiteSpace() ||
+                Description == "")
+            {
+                MessageBox.Show(
+                    $"Проверьте правильность введенных данных.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+
+                return;
+            }
+
+            if (Workers.Count == 0)
+            {
+
+                MessageBox.Show(
+                    $"Выберите хотя бы одного сотрудника в проект. Если сотрудники отсутсвуют, вернитесь на начальную форму и" +
+                    $" в соответствующем окне добавьте нового сотрудника.",
+                    "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
+
             TryClose(true);
         }
 

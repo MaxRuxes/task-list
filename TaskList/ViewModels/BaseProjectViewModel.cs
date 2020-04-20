@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 using AutoMapper;
 using Caliburn.Micro;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Interfaces;
-using TaskList.BLL.Services;
 using TaskList.DAL.Interfaces;
 using TaskList.ViewModels.Models;
 
@@ -23,6 +23,7 @@ namespace TaskList.ViewModels
         protected IProjectService ProjectService;
         protected ITodoAndUsersService TodoAndUsersService;
         private TodoModel _selectedItem;
+        private bool _isEditNow;
 
         protected BaseProjectViewModel(ProjectInfoDTO project)
         {
@@ -34,6 +35,18 @@ namespace TaskList.ViewModels
         public ProjectInfoDTO CurrentProject { get; internal set; }
         public string CountAllTodo => GetAllTodoForProjectCount().ToString();
 
+
+        public bool IsEditNow
+        {
+            get => _isEditNow;
+            set
+            {
+                _isEditNow = value;
+                NotifyOfPropertyChange(() => IsEditNow);
+            }
+        }
+
+        public bool IsEditTodoModelEnabled => EditTodoModel != null;
 
         public TodoModel SelectedItem
         {
@@ -48,6 +61,7 @@ namespace TaskList.ViewModels
                 }
 
                 NotifyOfPropertyChange(() => SelectedItem);
+                NotifyOfPropertyChange(()=>EditTodoModel);
             }
         }
 
@@ -72,6 +86,30 @@ namespace TaskList.ViewModels
         {
             WindowManager.ShowWindow(new ProjectsViewModel(WindowManager));
             (GetView() as Window)?.Close();
+        }
+
+        public void StartExecuteCommandExecute(object o)
+        {
+            EditTodoModel.StartDate = DateTime.Today;
+            EditTodoModel.State = 0;
+            NotifyOfPropertyChange(() => EditTodoModel.State);
+            Refresh();
+        }
+        public ICommand StartExecuteCommand { get; set; }
+        public ICommand EndExecuteCommand { get; set; }
+
+        public void EndExecuteCommandExecute(object o)
+        {
+            EditTodoModel.State = 1;
+            NotifyOfPropertyChange(() => EditTodoModel.State);
+            EditTodoModel.EndRealDate = DateTime.Today;
+            NotifyOfPropertyChange(() => EditTodoModel.EndRealDate);
+            var valuew = (EditTodoModel.EndRealDate - EditTodoModel.StartDate).Days;
+            valuew = valuew == 0 ? 1 : valuew;
+            EditTodoModel.SpentTime = valuew * 8;
+            NotifyOfPropertyChange(() => EditTodoModel.SpentTime);
+            NotifyOfPropertyChange(() => EditTodoModel);
+            Refresh();
         }
     }
 }

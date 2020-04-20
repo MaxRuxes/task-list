@@ -5,7 +5,7 @@ namespace TaskList.BLL.Interfaces
 {
     public interface ITodoService
     {
-        void CreateTodo(int userId, int idProject, TodoDTO todo, UserDTO owner);
+        void CreateTodo(int idProject, TodoDTO todo, UserDTO owner);
         void UpdateTodo(TodoDTO todo, UserDTO owner);
         void DeleteTodo(int idTodo, int idProject);
         TodoDTO GetTodo(int idTodo);

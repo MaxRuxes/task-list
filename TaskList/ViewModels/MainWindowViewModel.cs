@@ -17,7 +17,6 @@ namespace TaskList.ViewModels
     {
         private int _idPriorityType;
         private bool _isEditExistRecord;
-        private bool _isEditNow;
 
 
         [ImportingConstructor]
@@ -72,15 +71,6 @@ namespace TaskList.ViewModels
             }
         }
 
-        public bool IsEditNow
-        {
-            get => _isEditNow;
-            set
-            {
-                _isEditNow = value;
-                NotifyOfPropertyChange(() => IsEditNow);
-            }
-        }
 
         public ICommand SelectedItemChangedCommand { get; set; }
 
@@ -149,7 +139,7 @@ namespace TaskList.ViewModels
             }
             else
             {
-                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
+                TodoService.CreateTodo(CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
             }
 
             UpdateItemCollection(IdPriorityType);
@@ -250,31 +240,7 @@ namespace TaskList.ViewModels
 
         #endregion
 
-        public ICommand StartExecuteCommand { get; set; }
-        public ICommand EndExecuteCommand { get; set; }
-
-        public void StartExecuteCommandExecute(object o)
-        {
-            EditTodoModel.StartDate = DateTime.Today;
-            EditTodoModel.State = 0;
-            NotifyOfPropertyChange(()=> EditTodoModel.State);
-            Refresh();
-        }
-
-        public void EndExecuteCommandExecute(object o)
-        {
-            EditTodoModel.State = 1;
-            NotifyOfPropertyChange(() => EditTodoModel.State);
-            EditTodoModel.EndRealDate = DateTime.Today;
-            NotifyOfPropertyChange(() => EditTodoModel.EndRealDate);
-            var valuew = (EditTodoModel.EndRealDate - EditTodoModel.StartDate).Days;
-            valuew = valuew == 0 ? 1 : valuew;
-            EditTodoModel.SpentTime = valuew * 8;
-            NotifyOfPropertyChange(() => EditTodoModel.SpentTime);
-            NotifyOfPropertyChange(()=> EditTodoModel);
-            Refresh();
-        }
-
+        
         public override void Dispose()
         {
             Uow.Dispose();

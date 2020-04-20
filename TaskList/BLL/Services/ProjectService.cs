@@ -46,6 +46,26 @@ namespace TaskList.BLL.Services
 
         public void DeleteProject(int idProject)
         {
+            var todoAndProjectses = Database.TodoAndProjects.Find(x => x.IdProject == idProject);
+            foreach (var item in todoAndProjectses)
+            {
+                var usersTask = Database.TodoAndUsers.Find(x => x.IdTodo == item.IdTodo);
+                foreach (var task in usersTask)
+                {
+                    Database.TodoAndUsers.Delete(task.TodoAndUsersId);
+                }
+
+                Database.TodoAndProjects.Delete(item.TodoAndProjectsId);
+
+                Database.Todos.Delete(item.IdTodo);
+            }
+
+            var projects = Database.Projects.Find(x => x.IdProjectInfo == idProject);
+            foreach (var project in projects)
+            {
+                Database.Projects.Delete(project.ProjectsId);
+            }
+
             Database.ProjectInfo.Delete(idProject);
             Database.Save();
         }

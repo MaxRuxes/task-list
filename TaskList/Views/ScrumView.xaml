@@ -119,6 +119,16 @@
                 </Style>
             </Grid.Resources>
 
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,0,10">
+                <Button x:Name="AddTodo" Content="Добавить"/>
+                <Button x:Name="EditTodo" Content="Редактировать" 
+                        IsEnabled="{Binding IsEditTodoModelEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="DeleteTodo" Content="Удалить"
+                        IsEnabled="{Binding IsEditTodoModelEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
 
             <Button x:Name="BackToProjectsCommand"
                     Grid.Row="1"
@@ -126,43 +136,47 @@
                     VerticalAlignment="Bottom"/>
         </Grid>
 
+        <!-- Рабочая часть -->
         <Grid Grid.Row="1"
               Grid.Column="1"
               Background="AliceBlue">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <kanban:SfKanban x:Name="SfKanban" MinColumnWidth="150" 
-                             ColumnMappingPath="Category" 
                              ItemsSource="{Binding KanbanModels}"
-                             
+                             Grid.Column="0"
+                             CardTappedCommand="{Binding SelectedCommand}"
                              AutoGenerateColumns="False">
-                <kanban:KanbanColumn  Categories="Open" Title="Сделать"></kanban:KanbanColumn>
-                <kanban:KanbanColumn Categories="In Progress" Title="В процессе"></kanban:KanbanColumn>
-                <kanban:KanbanColumn Categories="Review,Done" Title="Выполнено"></kanban:KanbanColumn>
+                <kanban:SfKanban.IndicatorColorPalette>
+                    <kanban:ColorMapping Key="Low" Color="Blue"/>
+                    <kanban:ColorMapping Key="Normal" Color="Green" />
+                    <kanban:ColorMapping Key="High" Color="Red" />
+                </kanban:SfKanban.IndicatorColorPalette>
+
+                <kanban:KanbanColumn AllowDrag="false" Categories="Open" Title="Сделать"></kanban:KanbanColumn>
+                <kanban:KanbanColumn AllowDrag="false" Categories="In Progress" Title="В процессе"></kanban:KanbanColumn>
+                <kanban:KanbanColumn AllowDrag="false" Categories="Review,Done" Title="Выполнено"></kanban:KanbanColumn>
             </kanban:SfKanban>
 
+            <GridSplitter Grid.Column="1"
+                          Focusable="False"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="MediumAquamarine" 
+                          ShowsPreview="true"
+                          Width="5"
+                          Visibility="{Binding EditTodoModel, Converter={StaticResource NullToVisibilityConverter}}"/>
 
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,10">
-                <Button x:Name="AddTodo" Content="Добавить"/>
-                <Button x:Name="EditTodo" Content="Редактировать" />
-                <Button x:Name="DeleteTodo" Content="Удалить" />
-            </StackPanel>
-
-            <Border Grid.Row="0" Grid.RowSpan="2"
-                    Grid.Column="1"
+            <Border Grid.Row="0" 
+                            Grid.Column="2"
                             Margin="5,0"
+                            MinWidth="400"
+                            Visibility="{Binding EditTodoModel, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NullToVisibilityConverter}}"
                             Background="Azure">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -176,13 +190,12 @@
                                        TextTrimming="CharacterEllipsis">
                         <TextBlock.Text>
                             <MultiBinding StringFormat='{}Подробная информация задачи "{0}"'>
-                                <Binding Path="SelectedItem.Caption"/>
+                                <Binding Path="EditTodoModel.Caption"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
 
-                    <Grid Grid.Row="0" Grid.IsSharedSizeScope="True"
-                          Grid.RowSpan="2"
+                    <Grid Grid.Row="1" Grid.IsSharedSizeScope="True"
                                   Margin="0,15">
                         <Grid.Resources>
                             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -199,6 +212,7 @@
                             </Style>
                         </Grid.Resources>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -226,21 +240,48 @@
 
 
                         <TextBlock Grid.Row="2" Grid.Column="0" 
-                                           Text="Время выполнения: " />
+                                           Text="Время выполнения (час.): " />
                         <TextBox Grid.Row="2" Grid.Column="1" 
                                          Text="{Binding EditTodoModel.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
+                        <ContentControl Grid.Row="3"
+                                                Grid.Column="0" Grid.ColumnSpan="2"
+                                                Margin="0,0,0,20"
+                                                Content="{Binding}">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="-1">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource StartExecute}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource EndExecute}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource DoneExecute}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
 
-                        <TextBlock Grid.Row="3" Grid.Column="0"
-                                           Text="Дата начала: " />
-                        <DatePicker Grid.Row="3" Grid.Column="1"
-                                            Margin="3,0,3,5"
-                                            Text="{Binding EditTodoModel.StartDate}" 
-                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
+                        <TextBlock Grid.Row="4" Grid.Column="0" 
+                                           Text="Исполнитель: " />
+                        <Grid Grid.Row="4" Grid.Column="1" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding EditTodoModel.Owner.FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button x:Name="ChangeCurrentOwner"
+                                            Grid.Column="1"
+                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"
+                                            Content="Изменить"/>
+                        </Grid>
 
-                        <StackPanel Grid.Row="4"
+                        <StackPanel Grid.Row="5"
                                             Grid.Column="0"
                                             Grid.ColumnSpan="2">
                             <StackPanel.Style>
@@ -254,6 +295,12 @@
                                     </Style.Triggers>
                                 </Style>
                             </StackPanel.Style>
+
+                            <Border Grid.Column="0" Grid.ColumnSpan="2"
+                                            BorderThickness="1.5"
+                                            Margin="0,0,0,10"
+                                            BorderBrush="Bisque"/>
+
                             <Button x:Name="SaveTodo" Content="Сохранить" />
                             <Button x:Name="CancelTodo" Content="Отмена"/>
                         </StackPanel>

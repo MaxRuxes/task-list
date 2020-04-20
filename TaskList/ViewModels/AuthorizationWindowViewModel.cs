@@ -28,7 +28,7 @@ namespace TaskList.ViewModels
             try
             {
                 var connectionString =
-                    $"Server=12.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
+                    $"Server=127.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
                 var connection = new MySqlConnection(connectionString);
                 connection.Open();
                 connection.Close();
