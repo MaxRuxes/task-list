@@ -128,16 +128,138 @@
 
         <Grid Grid.Row="1"
               Grid.Column="1"
-              Background="Aquamarine">
-            <kanban:SfKanban MinColumnWidth="150" 
+              Background="AliceBlue">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <kanban:SfKanban x:Name="SfKanban" MinColumnWidth="150" 
                              ColumnMappingPath="Category" 
-                             ItemsSource="{Binding TodoItems}"
+                             ItemsSource="{Binding KanbanModels}"
+                             
                              AutoGenerateColumns="False">
-                <kanban:KanbanColumn Categories="Open" Title="Сделать"></kanban:KanbanColumn>
+                <kanban:KanbanColumn  Categories="Open" Title="Сделать"></kanban:KanbanColumn>
                 <kanban:KanbanColumn Categories="In Progress" Title="В процессе"></kanban:KanbanColumn>
                 <kanban:KanbanColumn Categories="Review,Done" Title="Выполнено"></kanban:KanbanColumn>
             </kanban:SfKanban>
+
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,10">
+                <Button x:Name="AddTodo" Content="Добавить"/>
+                <Button x:Name="EditTodo" Content="Редактировать" />
+                <Button x:Name="DeleteTodo" Content="Удалить" />
+            </StackPanel>
+
+            <Border Grid.Row="0" Grid.RowSpan="2"
+                    Grid.Column="1"
+                            Margin="5,0"
+                            Background="Azure">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                                       FontSize="18"
+                                       FontFamily="Segoe UI SemiBold"
+                                       TextTrimming="CharacterEllipsis">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat='{}Подробная информация задачи "{0}"'>
+                                <Binding Path="SelectedItem.Caption"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <Grid Grid.Row="0" Grid.IsSharedSizeScope="True"
+                          Grid.RowSpan="2"
+                                  Margin="0,15">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                                <Setter Property="Margin" Value="0,0,0,5"/>
+                                <Setter Property="MinHeight" Value="32"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="Margin" Value="0,0,5,5"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="caption"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="Название: "/>
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                         Text="{Binding EditTodoModel.Caption, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                           Text="Описание: " />
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                                         Text="{Binding EditTodoModel.Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" 
+                                           Text="Время выполнения: " />
+                        <TextBox Grid.Row="2" Grid.Column="1" 
+                                         Text="{Binding EditTodoModel.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                           Text="Дата начала: " />
+                        <DatePicker Grid.Row="3" Grid.Column="1"
+                                            Margin="3,0,3,5"
+                                            Text="{Binding EditTodoModel.StartDate}" 
+                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                        <StackPanel Grid.Row="4"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" 
+                                                             Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Button x:Name="SaveTodo" Content="Сохранить" />
+                            <Button x:Name="CancelTodo" Content="Отмена"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
         </Grid>
 
     </Grid>

@@ -136,11 +136,16 @@
             </i:Interaction.Triggers>
         </Button>
 
+        <StackPanel HorizontalAlignment="Left"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Orientation="Horizontal">
         <Button x:Name="OpenWorkersCommand"
                 Content="Сотрудники"
-                Margin="10"
-                Grid.Column="0"
-                Grid.Row="1"
-                HorizontalAlignment="Left"/>
+                Margin="10"/>
+        <Button x:Name="OpenStatisticsCommand"
+                Content="Статистика"
+                Margin="0,10,10,10"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -5,13 +5,14 @@ namespace TaskList.BLL.Interfaces
 {
     public interface ITodoService
     {
-        void CreateTodo(int userId, int idProject, TodoDTO todo);
-        void UpdateTodo(TodoDTO todo);
+        void CreateTodo(int userId, int idProject, TodoDTO todo, UserDTO owner);
+        void UpdateTodo(TodoDTO todo, UserDTO owner);
         void DeleteTodo(int idTodo, int idProject);
         TodoDTO GetTodo(int idTodo);
         IEnumerable<TodoDTO> GetAllTodosForProject(int idPriority, int idProject);
 
         void Dispose();
         int GetCountForProject(int currentProjectProjectInfoId);
+        IEnumerable<TodoDTO> GetAllTodo(int idProject);
     }
 }

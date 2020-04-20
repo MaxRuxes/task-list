@@ -26,12 +26,9 @@ namespace TaskList.ViewModels
         {
 
             var connectionString = $"Server=127.0.0.1;database=mydb;uid=root;pwd=1234;SslMode=Required;Allow Zero Datetime=true";
-            var connection = new MySqlConnection(connectionString);
-
 
             _windowManager = windowManager;
             _connectionString = connectionString;
-
             
             _uow = new DAL.Repositories.EfUnitOfWork(connectionString);
             _projectService = new ProjectService(_uow);
@@ -61,28 +58,28 @@ namespace TaskList.ViewModels
 
         public void SelectProject(ProjectInfoDTO project)
         {
+            BaseProjectViewModel viewModel;
+
             if (CurrentProject.IsAgile)
             {
-                _windowManager.ShowWindow(new MainWindowViewModel(_windowManager, _connectionString)
-                {
-                    CurrentProject = project
-                });
+                viewModel = new MainWindowViewModel(_windowManager, _connectionString, project);
             }
             else
             {
-                _windowManager.ShowDialog(new ScrumViewModel(_windowManager, _connectionString)
-                {
-                    CurrentProject = project
-                });
+                viewModel = new ScrumViewModel(_windowManager, _connectionString, project);
             }
+
+            _windowManager.ShowDialog(viewModel);
 
             (GetView() as Window)?.Close();
         }
 
         public void CreateProjectCommand()
         {
-            var vm = new ProjectInfoViewModel(_windowManager, _uow, 0);
-            vm.IsAgile = true;
+            var vm = new ProjectInfoViewModel(_windowManager, _uow, 0)
+            {
+                IsAgile = true
+            };
             vm.IsScrum = !vm.IsAgile;
             if (_windowManager.ShowDialog(vm) != true)
             {
@@ -144,6 +141,16 @@ namespace TaskList.ViewModels
             var workers = new WorkersForProjectViewModel(_uow);
 
             if (_windowManager.ShowDialog(workers) != true)
+            {
+                return;
+            }
+        }
+
+        public void OpenStatisticsCommand()
+        {
+            var statistic = new StatisticViewModel(_uow);
+
+            if (_windowManager.ShowDialog(statistic) != true)
             {
                 return;
             }

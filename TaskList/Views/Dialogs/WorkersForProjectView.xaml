@@ -55,6 +55,10 @@
                     <GridViewColumn Header="Телеграм-контакт" 
                                     Width="200"
                                     DisplayMemberBinding="{Binding Path=TelegramContact}"/>
+                    <GridViewColumn Header="Часовая ставка" 
+                                    Width="200"
+                                    DisplayMemberBinding="{Binding Path=RatePerHour}"/>
+
                 </GridView>
             </ListView.View>
         </ListView>
@@ -104,6 +108,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
@@ -112,8 +117,9 @@
                        HorizontalAlignment="Left"
                        Margin="0,0,0,10"/>
                 <TextBox Grid.Row="0" Grid.Column="1"
-                     Margin="0,0,0,5"
-                     Text="{Binding Path=EditWorker.FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                         Margin="0,0,0,5"
+                         Text="{Binding Path=EditWorker.FullName, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Должность: "
@@ -121,7 +127,8 @@
                        HorizontalAlignment="Left"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                          Margin="0,0,0,5"
-                         Text="{Binding Path=EditWorker.Role,UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Path=EditWorker.Role,UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="Телеграм-контакт: "
@@ -129,9 +136,19 @@
                        Margin="0,0,0,10"/>
                 <TextBox Grid.Row="2" Grid.Column="1"
                          Margin="0,0,0,5"
-                         Text="{Binding Path=EditWorker.TelegramContact, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Path=EditWorker.TelegramContact, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" />
 
-                <StackPanel Grid.Row="3" 
+                <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="Часовая ставка ($):"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,10"/>
+                <TextBox Grid.Row="3" Grid.Column="1"
+                         Margin="0,0,0,5"
+                         Text="{Binding Path=EditWorker.RatePerHour, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}" />
+
+                <StackPanel Grid.Row="4" 
                             Grid.Column="0" Grid.ColumnSpan="2"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">

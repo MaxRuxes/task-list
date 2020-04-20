@@ -97,8 +97,11 @@
     <Reference Include="Syncfusion.Data.WPF, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.Data.WPF.18.1.0.42\lib\net46\Syncfusion.Data.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Licensing, Version=18.1460.0.43, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Licensing.18.1.0.43\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    <Reference Include="Syncfusion.Licensing, Version=18.1460.0.44, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.18.1.0.44\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfChart.WPF, Version=18.1460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfChart.WPF.18.1.0.44\lib\net46\Syncfusion.SfChart.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfGrid.WPF, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <HintPath>..\packages\Syncfusion.SfGrid.WPF.18.1.0.42\lib\net46\Syncfusion.SfGrid.WPF.dll</HintPath>
@@ -168,11 +171,13 @@
     <Compile Include="BLL\DTO\UserDTO.cs" />
     <Compile Include="BLL\DTO\ProjectInfoDTO.cs" />
     <Compile Include="BLL\Interfaces\IProjectService.cs" />
+    <Compile Include="BLL\Interfaces\ITodoAndUsersService.cs" />
     <Compile Include="BLL\Interfaces\ITodoService.cs" />
     <Compile Include="BLL\Interfaces\IUserService.cs" />
     <Compile Include="BLL\Interfaces\IProjectsService.cs" />
     <Compile Include="BLL\Services\ProjectService.cs" />
     <Compile Include="BLL\Services\ProjectsService.cs" />
+    <Compile Include="BLL\Services\TodoAndUsersService.cs" />
     <Compile Include="BLL\Services\TodoService.cs" />
     <Compile Include="BLL\Services\UserService.cs" />
     <Compile Include="DAL\Entities\PriorityType.cs" />
@@ -194,16 +199,25 @@
     <Compile Include="DAL\Repositories\TodosRepository.cs" />
     <Compile Include="DAL\Repositories\UsersRepository.cs" />
     <Compile Include="ToolKit\ViewModel\AppBootstrapper.cs" />
+    <Compile Include="ToolKit\ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModels\Dialogs\ProjectInfoViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\StatisticViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\WorkersForProjectViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\WorkersSelectorViewModel.cs" />
     <Compile Include="ViewModels\BaseProjectViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\ChartViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\CustomKanbanModel.cs" />
     <Compile Include="ViewModels\Helpers\IsEqualConverter.cs" />
     <Compile Include="ViewModels\Helpers\NullVisibilityConverter.cs" />
+    <Compile Include="ViewModels\Models\PriorityModel.cs" />
+    <Compile Include="ViewModels\Models\TodoModel.cs" />
     <Compile Include="ViewModels\ProjectsViewModel.cs" />
     <Compile Include="ViewModels\ScrumViewModel.cs" />
     <Compile Include="Views\Dialogs\ProjectInfoView.xaml.cs">
       <DependentUpon>ProjectInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\StatisticView.xaml.cs">
+      <DependentUpon>StatisticView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\WorkersForProjectView.xaml.cs">
       <DependentUpon>WorkersForProjectView.xaml</DependentUpon>
@@ -222,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ProjectInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\StatisticView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

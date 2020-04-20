@@ -1,0 +1,71 @@
+﻿<Window x:Class="TaskList.Views.StatisticView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:chart="http://schemas.syncfusion.com/wpf"
+        xmlns:viewModels="clr-namespace:TaskList.ViewModels"
+        mc:Ignorable="d"
+        Icon="../../ToolKit/icon_toolbar.png"
+        Title="Сводная статистика" 
+        Height="650" Width="900"
+        MinHeight="350" MinWidth="480"
+        MaxHeight="1000" MaxWidth="1200"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        d:DataContext="{d:DesignInstance d:Type={x:Type viewModels:StatisticViewModel}}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Views/GlobalResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <Button x:Name="ShowCostChart"
+                    Content="Ценовой график"/>
+            <Button x:Name="ShowEmployeeChart" 
+                    Content="График сотрудников"/>
+            <Button x:Name="ShowTodoChart"
+                    Content="График нагруженности"/>
+            <Button x:Name="ShowHoursChart"
+                    Content="Часовой график" />
+        </StackPanel>
+
+
+        <Grid Grid.Column="1" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <chart:SfChart 
+                       Margin="10"
+                       Header="{Binding CurrentNameChart, UpdateSourceTrigger=PropertyChanged}">
+            <chart:SfChart.PrimaryAxis>
+                <chart:CategoryAxis Header="{Binding CurrentNameForAxis, UpdateSourceTrigger=PropertyChanged}" />
+            </chart:SfChart.PrimaryAxis>
+
+            <chart:SfChart.SecondaryAxis>
+                <chart:NumericalAxis Header="{Binding CurrentValueForAxis, UpdateSourceTrigger=PropertyChanged}" />
+            </chart:SfChart.SecondaryAxis>
+
+            <chart:ColumnSeries  ItemsSource="{Binding Data}" XBindingPath="Name" YBindingPath="Value" >
+            </chart:ColumnSeries>
+        </chart:SfChart>
+
+            <TextBlock Grid.Row="1"
+                       Text="Что отображает график?"/>
+            <TextBlock Grid.Row="2"
+                       HorizontalAlignment="Left"
+                       Text="{Binding CurrentDescription, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+    </Grid>
+</Window>

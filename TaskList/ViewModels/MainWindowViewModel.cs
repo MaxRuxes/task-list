@@ -6,7 +6,9 @@ using System.Windows.Input;
 using AutoMapper;
 using TaskList.BLL.DTO;
 using TaskList.BLL.Services;
+using TaskList.ToolKit.ViewModel;
 using TaskList.ViewModels.Helpers;
+using TaskList.ViewModels.Models;
 
 namespace TaskList.ViewModels
 {
@@ -19,21 +21,40 @@ namespace TaskList.ViewModels
 
 
         [ImportingConstructor]
-        public MainWindowViewModel(IWindowManager windowManager, string connectionString)
+        public MainWindowViewModel(IWindowManager windowManager, string connectionString, ProjectInfoDTO project)
+            : base(project)
         {
             WindowManager = windowManager;
             ConnectionString = connectionString;
 
-            Mapper = new MapperConfiguration((cfg)=> { }).CreateMapper();
+            Mapper = new MapperConfiguration((cfg) =>
+            {
+                cfg.CreateMap<TodoDTO, TodoModel>()
+                    .ForMember(x=>x.Owner, q=> q.Ignore())
+                    .ForMember(x=>x.StateString, q=> q.Ignore());
+                cfg.CreateMap<TodoModel, TodoDTO>();
+
+                cfg.CreateMap<PriorityTypeDTO, PriorityModel>()
+                    .ForMember(x => x.PriorityContent, x => x.MapFrom(m => m.NamePriority))
+                    .ForMember(x => x.PriorityId, x => x.MapFrom(m => m.PriorityTypeId));
+                cfg.CreateMap<PriorityModel, PriorityTypeDTO>()
+                    .ForMember(x => x.NamePriority, x => x.MapFrom(m => m.PriorityContent))
+                    .ForMember(x => x.PriorityTypeId, x => x.MapFrom(m => m.PriorityId));
+
+            }).CreateMapper();
 
             Uow = new DAL.Repositories.EfUnitOfWork(connectionString);
 
             TodoService = new TodoService(Uow);
             UserService = new UserService(Uow);
             ProjectService = new ProjectService(Uow);
+            TodoAndUsersService = new TodoAndUsersService(Uow);
 
-            CurrentPriorityType = "Не выбран";
+             CurrentPriorityType = "Не выбран";
             NotifyOfPropertyChange(() => CountAllTodo);
+
+            StartExecuteCommand = new RelayCommand(StartExecuteCommandExecute);
+            EndExecuteCommand = new RelayCommand(EndExecuteCommandExecute);
         }
 
 
@@ -98,25 +119,23 @@ namespace TaskList.ViewModels
         public void AddTodo()
         {
             IsEditNow = true;
-            SelectedItem = new TodoDTO() {StartDate = DateTime.UtcNow, IdPriority = IdPriorityType};
+            EditTodoModel = new TodoModel {State = -1, IdPriority = IdPriorityType };
         }
 
         public void EditTodo()
         {
             IsEditNow = true;
             _isEditExistRecord = true;
-
-            NotifyOfPropertyChange(() => SelectedItem);
         }
 
         public void DeleteTodo()
         {
-            if (SelectedItem == null)
+            if (EditTodoModel == null)
             {
                 return;
             }
 
-            TodoService.DeleteTodo(SelectedItem.TodoId, CurrentProject.ProjectInfoId);
+            TodoService.DeleteTodo(EditTodoModel.TodoId, CurrentProject.ProjectInfoId);
             System.Windows.Forms.MessageBox.Show(@"Успешно удалено!");
             UpdateItemCollection(IdPriorityType);
         }
@@ -125,12 +144,12 @@ namespace TaskList.ViewModels
         {
             if (_isEditExistRecord)
             {
-                TodoService.UpdateTodo(SelectedItem);
+                TodoService.UpdateTodo(Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
                 _isEditExistRecord = false;
             }
             else
             {
-                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoDTO, TodoDTO>(SelectedItem));
+                TodoService.CreateTodo(1, CurrentProject.ProjectInfoId, Mapper.Map<TodoModel, TodoDTO>(EditTodoModel), EditTodoModel.Owner);
             }
 
             UpdateItemCollection(IdPriorityType);
@@ -147,6 +166,18 @@ namespace TaskList.ViewModels
             EditTodoModel = SelectedItem;
         }
 
+        public void ChangeCurrentOwner()
+        {
+            var viewModel = new WorkersSelectorViewModel(Uow, new []{EditTodoModel.Owner});
+            if (WindowManager.ShowDialog(viewModel) != true)
+            {
+                return;
+            }
+
+            EditTodoModel.Owner = viewModel.SelectedWorker;
+            Refresh();
+        }
+
         #endregion
 
         #region Helpers methods
@@ -154,9 +185,17 @@ namespace TaskList.ViewModels
         private void UpdateItemCollection(int id)
         {
             TodoItems.Clear();
+            
             TodoService.GetAllTodosForProject(id, CurrentProject.ProjectInfoId)
                 .ToList()
-                .ForEach(o => TodoItems.Add(o));
+                .ForEach(o =>
+                {
+                    var owner = TodoAndUsersService.GetUserForTodo(o.TodoId);
+                    var mappingModel = Mapper.Map<TodoDTO, TodoModel>(o);
+                    mappingModel.Owner = owner;
+                    mappingModel.StateString = ResolveState(mappingModel.State);
+                    TodoItems.Add(mappingModel);
+                });
 
             NotifyOfPropertyChange(() => TodoItems);
 
@@ -194,7 +233,47 @@ namespace TaskList.ViewModels
             }
         }
 
+        private string ResolveState(int state)
+        {
+            switch (state)
+            {
+                case -1:
+                    return "Открыт";
+                case 0:
+                    return "В процессе";
+                default:
+                    return "Выполнен";
+                
+            }
+            
+        }
+
         #endregion
+
+        public ICommand StartExecuteCommand { get; set; }
+        public ICommand EndExecuteCommand { get; set; }
+
+        public void StartExecuteCommandExecute(object o)
+        {
+            EditTodoModel.StartDate = DateTime.Today;
+            EditTodoModel.State = 0;
+            NotifyOfPropertyChange(()=> EditTodoModel.State);
+            Refresh();
+        }
+
+        public void EndExecuteCommandExecute(object o)
+        {
+            EditTodoModel.State = 1;
+            NotifyOfPropertyChange(() => EditTodoModel.State);
+            EditTodoModel.EndRealDate = DateTime.Today;
+            NotifyOfPropertyChange(() => EditTodoModel.EndRealDate);
+            var valuew = (EditTodoModel.EndRealDate - EditTodoModel.StartDate).Days;
+            valuew = valuew == 0 ? 1 : valuew;
+            EditTodoModel.SpentTime = valuew * 8;
+            NotifyOfPropertyChange(() => EditTodoModel.SpentTime);
+            NotifyOfPropertyChange(()=> EditTodoModel);
+            Refresh();
+        }
 
         public override void Dispose()
         {

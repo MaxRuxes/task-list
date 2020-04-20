@@ -17,7 +17,7 @@ namespace TaskList.ViewModels
         {
             var userService = new UserService(unitOfWork);
             var list = userService.GetAllUsers()
-                .Where(x => x.IsActive && !exists.Any(q => q.UserId == x.UserId))
+                .Where(x => x.IsActive && exists.Where(q => q != null).All(q => q.UserId != x.UserId))
                 .Select(x => x);
             Workers = new ObservableCollection<UserDTO>(list);
         }

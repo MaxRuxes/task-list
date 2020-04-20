@@ -25,7 +25,7 @@ namespace TaskList.BLL.Services
             }).CreateMapper();
         }
 
-        public void CreateTodo(int userId, int idProject, TodoDTO todo)
+        public void CreateTodo(int userId, int idProject, TodoDTO todo, UserDTO owner)
         {
             var todoItem = _database.Todos.Get(todo.TodoId);
             if (todoItem != null)
@@ -85,6 +85,19 @@ namespace TaskList.BLL.Services
                 currentProjectProjectInfoId);
         }
 
+        public IEnumerable<TodoDTO> GetAllTodo(int idProject)
+        {
+            var items = _database.TodoAndProjects
+                .Find(o => o.IdProject == idProject)
+                .Select(x => x.IdTodo);
+
+
+            var todos = _database.Todos
+                .Find(x => items.Contains(x.TodoId));
+            return _mapper
+                .Map<IEnumerable<Todo>, List<TodoDTO>>(todos);
+        }
+
         public IEnumerable<TodoDTO> GetAllTodosForProject(int idPrior, int idProject)
         {
             var items = _database.TodoAndProjects
@@ -103,8 +116,15 @@ namespace TaskList.BLL.Services
             return _mapper.Map<Todo, TodoDTO>(_database.Todos.Get(idTodo));
         }
 
-        public void UpdateTodo(TodoDTO todo)
+        public void UpdateTodo(TodoDTO todo, UserDTO owner)
         {
+            var old = _database.TodoAndUsers.Find(x => x.IdTodo == todo.TodoId);
+            foreach (var todoAndUserse in old)
+            {
+                todoAndUserse.Iduser = owner.UserId;
+                _database.TodoAndUsers.Update(todoAndUserse);
+            }
+
             _database.Todos.Update(_mapper.Map<TodoDTO, Todo>(todo));
             _database.Save();
         }

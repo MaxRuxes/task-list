@@ -50,6 +50,76 @@ namespace TaskList.BLL.Services
             Database.Save();
         }
 
+        public int GetCostForProject(int idProject)
+        {
+            var todoForProject = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+                .ToList();
+            if (!todoForProject.Any())
+            {
+                return 0;
+            }
+
+            var allTodos = todoForProject.Select(x => x.IdTodo);
+            var summ = 0;
+            foreach (var idTodo in allTodos)
+            {
+                var usersWithTodo = Database.TodoAndUsers.Find(x => x.IdTodo == idTodo).FirstOrDefault();
+                if (usersWithTodo == null)
+                {
+                    return 0;
+                }
+
+                var user = Database.Users.Get(usersWithTodo.Iduser);
+                var todo = Database.Todos.Get(idTodo);
+
+                summ += user.RatePerHour * todo.EstimatedHours;
+            }
+
+            return summ;
+        }
+
+        public int GetCountWorkersForProject(int idProject)
+        {
+            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            if (project == null)
+            {
+                return 0;
+            }
+
+            var workersCount = Database.Projects.Find(x => x.IdProjectInfo == idProject).Count();
+            return workersCount;
+        }
+
+        public int GetCountTodoForProject(int idProject)
+        {
+            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            if (project == null)
+            {
+                return 0;
+            }
+
+            var todoCount = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+                .Select(x=>x.IdTodo)
+                .ToList();
+            var todos = Database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x=>x.EstimatedHours);
+            return todos;
+        }
+
+        public int GetSpentTimeTodoForProject(int idProject)
+        {
+            var project = Database.ProjectInfo.Find(x => x.ProjectInfoId == idProject).FirstOrDefault();
+            if (project == null)
+            {
+                return 0;
+            }
+
+            var todoCount = Database.TodoAndProjects.Find(x => x.IdProject == idProject)
+                .Select(x => x.IdTodo)
+                .ToList();
+            var todos = Database.Todos.Find(x => todoCount.Contains(x.TodoId)).Sum(x => x.SpentTime);
+            return todos;
+        }
+
 
         public IEnumerable<ProjectInfoDTO> GetProjectsForUser(int userId)
         {

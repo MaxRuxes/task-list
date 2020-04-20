@@ -12,5 +12,11 @@ namespace TaskList.BLL.Interfaces
         void UpdateProject(ProjectInfoDTO projectInfo);
         void DeleteProject(int idProject);
 
+        int GetCostForProject(int idProject);
+
+        int GetCountWorkersForProject(int idProject);
+        int GetCountTodoForProject(int idProject);
+        int GetSpentTimeTodoForProject(int idProject);
+
     }
 }

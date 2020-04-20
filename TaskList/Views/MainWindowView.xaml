@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TaskList.ViewModels"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:vModels="clr-namespace:TaskList.BLL.DTO"
+        xmlns:models="clr-namespace:TaskList.ViewModels.Models"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Список дел" Height="600" Width="925"
@@ -17,6 +17,69 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="GlobalResource.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="StartExecute">
+                <Button Command="{Binding StartExecuteCommand}" Content="Начать выполнение"
+                        IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EndExecute" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Text="Дата начала: " />
+                    <TextBlock  Grid.Column="1" Margin="3,0,3,5" Height="25"
+                                Text="{Binding EditTodoModel.StartDate, UpdateSourceTrigger=PropertyChanged, StringFormat=d}"
+                                IsEnabled="False"/>
+                    <Button Command="{Binding EndExecuteCommand}"
+                            IsEnabled="{Binding IsEditNow,UpdateSourceTrigger=PropertyChanged}"
+                            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+                            Content="Закончить выполнение"/>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DoneExecute" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="Дата начала: " />
+                    <TextBlock  Grid.Column="1" Grid.Row="0"
+                                 Margin="3,0,3,5"
+                                 IsEnabled="False"
+                                 Text="{Binding EditTodoModel.StartDate, UpdateSourceTrigger=PropertyChanged, StringFormat=d}" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               Text="Дата окончания: " />
+                    <TextBlock  Grid.Column="1" Grid.Row="1"
+                                 Margin="3,0,3,5"
+                                 IsEnabled="False"
+                                 Text="{Binding EditTodoModel.EndRealDate, UpdateSourceTrigger=PropertyChanged, StringFormat=d}" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                               Text="Затрачено (час.): " />
+                    <TextBlock Grid.Column="1" Grid.Row="2"
+                               Margin="3,0,3,5"
+                               Text="{Binding EditTodoModel.SpentTime}" />
+                </Grid>
+            </DataTemplate>
+
+            
         </ResourceDictionary>
     </Window.Resources>
 
@@ -279,13 +342,13 @@
                                              ShowHeader="False">
 
                             <syncfusion:CardView.HeaderTemplate>
-                                <DataTemplate DataType="{x:Type vModels:TodoDTO}">
+                                <DataTemplate DataType="{x:Type models:TodoModel}">
                                     <TextBlock Text="{Binding Path=Caption}" Margin="5,0,0,0"/>
                                 </DataTemplate>
                             </syncfusion:CardView.HeaderTemplate>
 
                             <syncfusion:CardView.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vModels:TodoDTO}">
+                                <DataTemplate DataType="{x:Type models:TodoModel}">
                                     <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBoxItem>
                                             <StackPanel Orientation="Horizontal">
@@ -296,15 +359,15 @@
 
                                         <ListBoxItem>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Оцененное время:"/>
-                                                <TextBlock Text="{Binding Path=EstimatedHours}"
+                                                <TextBlock Text="Исполнитель: "/>
+                                                <TextBlock Text="{Binding Path=Owner.FullName}"
                                                        Margin="5,0,0,0"/>
                                             </StackPanel>
                                         </ListBoxItem>
                                         <ListBoxItem>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Приоритет: "/>
-                                                <TextBlock Text="{Binding Path=Priority.NamePriority}"
+                                                <TextBlock Text="Статус: "/>
+                                                <TextBlock Text="{Binding Path=StateString}"
                                                        Margin="5,0,0,0"/>
                                             </StackPanel>
                                         </ListBoxItem>
@@ -334,12 +397,12 @@
                                   Width="5"
                                   Grid.Row="0"
                                   Grid.RowSpan="2"
-                                  Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                  Visibility="{Binding EditTodoModel, Converter={StaticResource NullToVisibilityConverter}}"/>
 
                     <Border Grid.Row="0" Grid.RowSpan="2"
                             Grid.Column="2"
                             Margin="5,0"
-                            Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
+                            Visibility="{Binding EditTodoModel, Converter={StaticResource NullToVisibilityConverter}}"
                             Background="Azure">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -380,6 +443,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <Grid.ColumnDefinitions>
@@ -402,21 +466,50 @@
 
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" 
-                                           Text="Время выполнения: " />
+                                           Text="Время выполнения (час.): " />
                                 <TextBox Grid.Row="2" Grid.Column="1" 
                                          Text="{Binding EditTodoModel.EstimatedHours, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                          IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
 
 
-                                <TextBlock Grid.Row="3" Grid.Column="0"
-                                           Text="Дата начала: " />
-                                <DatePicker Grid.Row="3" Grid.Column="1"
-                                            Margin="3,0,3,5"
-                                            Text="{Binding EditTodoModel.StartDate}" 
-                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ContentControl Grid.Row="3"
+                                                Grid.Column="0" Grid.ColumnSpan="2"
+                                                Margin="0,0,0,20"
+                                                Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="-1">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource StartExecute}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource EndExecute}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EditTodoModel.State, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource DoneExecute}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
 
 
-                                <StackPanel Grid.Row="4"
+                                <TextBlock Grid.Row="4" Grid.Column="0" 
+                                           Text="Исполнитель: " />
+                                <Grid Grid.Row="4" Grid.Column="1" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock 
+                                           Text="{Binding EditTodoModel.Owner.FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    <Button x:Name="ChangeCurrentOwner"
+                                            Grid.Column="1"
+                                            IsEnabled="{Binding IsEditNow, UpdateSourceTrigger=PropertyChanged}"
+                                            Content="Изменить"/>
+                                </Grid>
+
+                                <StackPanel Grid.Row="5"
                                             Grid.Column="0"
                                             Grid.ColumnSpan="2">
                                     <StackPanel.Style>
@@ -430,6 +523,12 @@
                                             </Style.Triggers>
                                         </Style>
                                     </StackPanel.Style>
+
+                                    <Border Grid.Column="0" Grid.ColumnSpan="2"
+                                            BorderThickness="1.5"
+                                            Margin="0,0,0,10"
+                                            BorderBrush="Bisque"/>
+
                                     <Button x:Name="SaveTodo" Content="Сохранить" />
                                     <Button x:Name="CancelTodo" Content="Отмена"/>
                                 </StackPanel>
